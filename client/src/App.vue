@@ -4,9 +4,13 @@
     <header class="wrapper__header">
       <h1>Awesomelist</h1>
       <div class="username">
+<<<<<<< HEAD
         <div class="image">
           <img src="./assets/images/user.png" alt="" srcset="">
         </div>
+=======
+        <div class="image"></div>
+>>>>>>> 55873d6cb4a3f3829b1b5872682246e023bfc39b
         <span>Ángel Guerrero</span>
       </div>
     </header>
@@ -59,10 +63,17 @@
       </div>
       <aside class="main__aside-right">
         <div class="menu">
+<<<<<<< HEAD
           <div class="menu__list">Profile</div>
           <div class="menu__list">Account</div>
           <div class="menu__list">Settings</div>
           <div class="menu__list">Logout</div>
+=======
+          <div class="menu__list">Perfil</div>
+          <div class="menu__list">Cuenta</div>
+          <div class="menu__list">Configuración</div>
+          <div class="menu__list">Cerrar sesión</div>
+>>>>>>> 55873d6cb4a3f3829b1b5872682246e023bfc39b
         </div>
       </aside>
     </main>
@@ -142,12 +153,20 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: space-around;
+<<<<<<< HEAD
 
   border-left: 1px solid lighten($color: $wrapper-header-background-color, $amount: 5%);
   background-color: darken($color: $wrapper-header-background-color, $amount: 22%);
 
   &:hover {
     cursor: pointer;
+=======
+  border-left: 1px solid lighten($color: $wrapper-header-background-color, $amount: 5%);
+  
+  &:hover {
+    cursor: pointer;
+    background-color: #2043cf;
+>>>>>>> 55873d6cb4a3f3829b1b5872682246e023bfc39b
   }
 
   .image {
@@ -181,7 +200,11 @@ h1 {
   }
   .main__aside-right {
     width: 300px;
+<<<<<<< HEAD
     background-color: $main-aside-right-background-color;
+=======
+    background-color: #373941;
+>>>>>>> 55873d6cb4a3f3829b1b5872682246e023bfc39b
     border-left: 1px solid #e4e4e4;
     color: #ffffff;
   }
@@ -192,11 +215,20 @@ h1 {
   display: flex;
   flex-direction: column;
   .menu__list {
+<<<<<<< HEAD
     border-bottom: 1px solid lighten($color: $main-aside-right-background-color, $amount: 5%);
     padding: 10px 25px;
     &:hover {
       cursor: pointer;
       background-color: lighten($color: $main-aside-right-background-color, $amount: 10%);
+=======
+    border-bottom: 1px solid #494949;
+    padding: 10px;
+    &:hover {
+      cursor: pointer;
+      background-color: #2043cf;
+      // background-color: lighten($color: $main-aside-right-background-color, $amount: 10%);
+>>>>>>> 55873d6cb4a3f3829b1b5872682246e023bfc39b
     }
   }
 }
