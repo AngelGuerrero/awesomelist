@@ -1,0 +1,31 @@
+$body-background-color-light: #E9F1F7;
+
+$wrapper-header-background-color: #54426B;
+
+$main-aside-right-background-color: #3c3741;
+
+$todos-background-color: rgba(140, 118, 182, 0.644);
+
+$border-color: #C1C1C1;
+
+$text-color: #707070;
+
+// Navbar sizes
+$navbar-height: 70px;
+$navbar-padding: 5px;
+$navbar-total-height: $navbar-height + ($navbar-padding * 2);
+
+// Asides
+// Left
+$aside-left-width: 30%;
+$aside-left-min-w: 280px;
+// Right
+$aside-right-width: 30%;
+$aside-right-min-w: 300px;
+
+// Main
+$main-content-width: 30%;
+$main-content-min-w: 300px;
+
+// Footer
+$footer-padding: 2px;

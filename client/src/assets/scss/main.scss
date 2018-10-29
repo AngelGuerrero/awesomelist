@@ -1,0 +1,102 @@
+@import '@/assets/scss/partials/variables.scss';
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  color: $text-color;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 14px;
+}
+
+.container {
+  padding: 15px;
+  margin: 5px 0px;
+}
+
+// Error with collapse component 
+.el-collapse-item__header {
+  display: flex;
+}
+
+.el-collapse-item__arrow,
+.el-icon-arrow-right {
+  float: none;
+  display: flex;
+  align-items: center;
+}
+
+.btn-large {
+  width: 100%;
+}
+
+.container {
+  padding: 0px 5px;
+}
+
+.symb-icon {
+  padding: 10px;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+// Flex system
+%flex-container {
+  display: flex;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.row-v-center {
+  @extend .row;
+  align-items: center;
+}
+
+.row-h-center {
+  @extend .row;
+  justify-content: center;
+}
+
+.column {
+  @extend %flex-container;
+  flex-direction: column;
+}
+
+.column-v-center {
+  justify-content: center;
+}
+
+.column-h-center {
+  align-items: center;
+}
+
+.around {
+  justify-content: space-around;
+}
+
+.between {
+  justify-content: space-between;
+}
+
+.start {
+  justify-content: flex-start;
+}
+
+.end {
+  justify-content: flex-end;
+}
+
+// Flex grow from 1 to 12, children
+@for $v from 1 to 12 {
+  .grow-#{$v} {
+    flex-grow: #{$v}
+  }
+}
