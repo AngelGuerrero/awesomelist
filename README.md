@@ -2,7 +2,7 @@
 Awesomelist es una simple aplicación de lista de tareas.
 
 ## Características
-Este proyecto pretende ser una simple aplicación para administrar tareas, pero pretende tener algunas características que aumenten la calidad de este proyecto.
+Este proyecto pretende ser una simple aplicación para administrar tareas, pero con algunas características que aumenten la calidad de este.
 
 ### Proveedor de API
 Se pretende que a través de un servidor proporcione una API para que se pueda consumir desde otra aplicación, ya sea una cliente de escritorio un cliente móvil.
@@ -35,3 +35,4 @@ El principal objetivo para hacer esta aplicación es aprender las tecnologías m
 # Documentación
 
 Se puede encontrar documentación en cada archivo `README` para la parte de back-end y front-end.
+
