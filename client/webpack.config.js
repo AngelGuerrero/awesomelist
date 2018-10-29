@@ -1,3 +1,5 @@
+import path from 'path'
+
 module.exports = {
   module: {
     rules: [
@@ -9,10 +11,14 @@ module.exports = {
           {
             loader: 'sass-loader',
             options: {
-              includePaths: [path.resolve(__dirname, 'node_modules')],
-            },
+              includePaths: [path.resolve(__dirname, 'node_modules')]
+            }
           }
         ]
+      },
+      {
+        test: /\.pug$/,
+        loader: 'pug-plain-loader'
       }
     ]
   }

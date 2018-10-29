@@ -1,21 +1,29 @@
-# client
+# Cliente: Aplicación web para consumir API Rest
 
-## Project setup
+Para la instalación de este cliente tipo: `Aplicación web`, se deben ejecutar las siguientes instrucciones.
+
+## Configuración de proyecto e instalación de dependencias
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Compila y realiaza "hot-reloads" en modo desarrollo
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Compila y minifica archivos para producción
 ```
 npm run build
 ```
 
-### Lints and fixes files
+### Checha y corrige errores en archivos
 ```
 npm run lint
 ```
+
+## Framework UI
+
+Para los elementos de la interfaz de usuario se usa `element.js`: [https://element.eleme.io/#/es](https://element.eleme.io/#/es).
+
+Cabe mencionar que no se están importando todos los elementos, se importa únicamente lo que se necesita, entonces se registra en el archivo: `main.js` y con ello se puede utilizar en cualquier componente de la aplicación Vue.js.
