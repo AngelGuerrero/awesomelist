@@ -1,8 +1,11 @@
 <template lang="pug">
-  aside.aside__right(class="column between" v-show="visible")
+  aside(class="aside__right column between"
+        :class="{ mobile: mobile }"
+        v-show="visible")
+    .screen(v-show="mobile" @click="disappear()")
     .column.grow-1
       header.row
-        i.icon-close(class="symb-icon fas fa-times fa-lg row-v-center")
+        i.icon-close(class="symb-icon fas fa-times fa-lg row-v-center" @click="disappear()")
         h3.title(class="grow-1 row-h-center") Aprender Erlang
 
       .duetime(class="container row-v-center")
@@ -28,6 +31,8 @@
 </template>
 
 <script>
+import EventBus from '@/EventBus'
+
 export default {
   name: 'AsideRight',
 
@@ -40,9 +45,15 @@ export default {
     },
 
     // It is the size accord to the device
-    size: {
-      type: String,
+    mobile: {
+      type: Boolean,
       required: true
+    }
+  },
+
+  methods: {
+    disappear () {
+      EventBus.$emit('change-aside-right-state')
     }
   }
 }
@@ -59,7 +70,8 @@ export default {
   width: $aside-right-width;
   max-width: $aside-right-min-w;
   padding: 5px;
-  background-color: white;
+  background-color: $aside-right-background-color;
+  color: black;
   overflow-y: auto;
 }
 
@@ -88,5 +100,32 @@ export default {
 
 button {
   width: 100%;
+}
+
+.screen {
+  position: fixed;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: white;
+  opacity: 0.7;
+}
+
+.mobile {
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  right: 0;
+  height: 100%;
+}
+
+@media screen and (max-width: 425px) {
+  .mobile {
+    background-color: black;
+    width: 100%;
+    max-width: 100%;
+  }
 }
 </style>

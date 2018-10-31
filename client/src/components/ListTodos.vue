@@ -1,11 +1,25 @@
 <template lang="pug">
 
-  .column.container
+  .container
     //- pre {{ $data }}
-    .task__box(v-for="task in list")
-      el-checkbox(:label="task.title" v-model="task.checked")
-      .task__options
-        i.el-icon-more.more__icon
+    .column
+      .task__box(v-for="task in pendingList")
+        el-checkbox(:label="task.title"
+                    v-model="task.checked"
+                    @change="completeTask(task)")
+        .task__options
+          i.el-icon-more.more__icon
+
+    .div(v-show="completedList.length > 0")
+      el-button(type="primary" @click="showCompleted = !showCompleted" size="small") Show completed tasks
+
+    .column(v-show="showCompleted")
+      .task__box(class="completed" v-for="task in completedList")
+        el-checkbox(v-model="task.checked"
+                    @change="uncompleteTask(task)")
+          span(class="completed") {{ task.title }}
+        .task__options
+          i.el-icon-more.more__icon
 
 </template>
 
@@ -15,14 +29,11 @@ export default {
 
   data () {
     return {
-      list: [
-        {
-          title: 'Create layout for H3 page',
-          checked: true
-        },
+      showCompleted: false,
+      pendingList: [
         {
           title: 'Learn Elm',
-          checked: true
+          checked: false
         },
         {
           title: 'Learn Elixir',
@@ -33,28 +44,45 @@ export default {
           checked: false
         },
         {
-          title: 'Finish Blog',
-          checked: false
-        },
-        {
-          title: 'Upload progress of awesomelist project',
-          checked: false
-        },
-        {
           title: 'This is a task with a loooooooooooooooooooooooooooooong text',
           checked: false
         }
-      ]
+      ],
+      completedList: []
+    }
+  },
+
+  methods: {
+    completeTask (task) {
+      this.completedList.push(task)
+
+      // Remove element from pending list
+      this.pendingList = this.pendingList.filter((a) => { return a !== task })
+    },
+
+    uncompleteTask (task) {
+      // Push element into pending list
+      this.pendingList.push(task)
+
+      // Remove element from completed list
+      this.completedList = this.completedList.filter((a) => { return a !== task })
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.column {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  // border: 1px solid tomato;
+}
+
 .task__box {
-  border: 1px solid rgb(101, 139, 243);
+  background-color: white;
+  // border: 1px solid rgb(101, 139, 243);
   border-radius: 5px;
-  margin-bottom: 10px;
+  margin-bottom: 2px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -65,6 +93,12 @@ export default {
     padding: 7px;
     overflow: hidden;
   }
+}
+
+.completed {
+  opacity: 0.6;
+  text-decoration: line-through;
+  font-style: italic;
 }
 
 .more__icon {

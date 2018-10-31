@@ -1,12 +1,8 @@
 <template lang="pug">
-  //-
-  //- Is visible if the 'visible' variable is true
-  //-
-  //- If the 'mobile' variable is true
-  //- this will take all available screen size
-  //-
-  aside.aside__left.column.between(:class="{ mobile: mobile }" v-show="visible")
-    .screen(@click="disappear()")
+  aside(class="aside__left column between"
+        :class="{ mobile: mobile }"
+        v-show="visible")
+    .screen(v-show="mobile" @click="disappear()")
     .column.start
       header(class="row-v-center between")
         h3.title All projects
@@ -18,7 +14,7 @@
           |  {{ project.title }}
 
     .project__properties(class="container column between")
-      .properties__header(class="column")
+      .properties__header
         h3.properties__title Project
         p.properties__description Description of the project
       .buttons(class="container")
@@ -36,6 +32,13 @@
 </template>
 
 <script>
+// This component will be visible if the 'visible' variable is true
+//
+// If the 'mobile' variable is true, then
+// this will take all available screen size
+
+import EventBus from '@/EventBus'
+
 export default {
   name: 'AsideLeft',
 
@@ -92,8 +95,9 @@ export default {
   },
 
   methods: {
+    // Emit an event for change the component visibility, through EventBus
     disappear () {
-      this.visible = false
+      EventBus.$emit('change-aside-left-state')
     }
   }
 }
@@ -102,11 +106,15 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/scss/partials/variables.scss';
 
+* {
+  // border: 1px solid tomato;
+}
+
 .aside__left {
-  border: 1px solid yellow;
   width: $aside-left-width;
   max-width: $aside-left-min-w;
-  background-color: white;
+  background-color: $aside-left-background-color;
+  color: black;
 }
 
 header {
@@ -122,7 +130,7 @@ header {
     width: 100%;
     padding: 10px;
     text-decoration: none;
-    color: #333333;
+    color: $main-aside-right-background-color;
     &:first-of-type {
       border-top: 1px solid #eee5e8;
     }
@@ -135,17 +143,16 @@ header {
 .project__properties {
   overflow-x: hidden;
   overflow-y: auto;
-  height: 40%;
+  min-height: 40%;
 }
 
-// overwrite previous classes
 .screen {
   background-color: white;
   width: 100%;
   height: 100vh;
   position: fixed;
   z-index: -1;
-  opacity: 0.6;
+  opacity: 0.9;
 }
 
 .mobile {

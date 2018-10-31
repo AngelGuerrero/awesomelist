@@ -1,22 +1,19 @@
 <template lang="pug">
-  #app
+  #app(class="column between")
     app-navbar
-    #main(v-if="mobile")
-      app-aside-left(:visible="true" :mobile="true")
+    #main
+      app-aside-left(:visible="asideLeft" :mobile="mobile")
       .main__content
         app-createTodo
         app-listTodos
-      app-aside-right(:visible="false" size="large")
-    #main(v-else)
-      .main__content
-        app-createTodo
-        app-listTodos
-    #footer Este es el footer
+      app-aside-right(:visible="asideRight" :mobile="mobile")
+    #footer Awesomelist - {{ date.getFullYear() }}
 
 </template>
 
 <script>
 // App components
+import EventBus from './EventBus'
 import Navbar from './components/Navbar'
 import CreateTodo from './components/CreateTodo'
 import ListTodos from './components/ListTodos'
@@ -36,21 +33,39 @@ export default {
 
   data () {
     return {
-      mobile: true
+      mobile: false,
+      asideLeft: true,
+      asideRight: false,
+      date: ''
     }
   },
 
   created: function () {
+    this.date = new Date()
+
+    // Check device width
+    if (window.innerWidth < 800) {
+      this.mobile = true
+      this.asideLeft = false
+    }
+
+    // Check and add a listener when resize window
     this.resize()
     window.addEventListener('resize', this.resize)
+
+    // Listen global events from components through EventBus
+    EventBus.$on('change-aside-left-state', () => { this.asideLeft = !this.asideLeft })
+
+    EventBus.$on('change-aside-right-state', () => { this.asideRight = !this.asideRight })
   },
 
   methods: {
     resize () {
       if (window.innerWidth < 800) {
         this.mobile = true
+        this.asideLeft = false
       } else {
-        this.mobile = true
+        this.mobile = false
       }
     }
   }
@@ -63,26 +78,25 @@ export default {
 
 #app {
   height: 100vh;
-  border: 1px solid #333333;
 }
 
 #main {
-  border: 1px solid tomato;
   overflow-y: auto;
-  height: calc(100vh - #{$navbar-total-height});
+  height: calc(99vh - #{$navbar-height} - #{$footer-padding });
 }
 
 .main__content {
-  border: 1px solid green;
+  background-color: lightblue;
   flex-grow: 1;
   overflow-y: auto;
+  height: 100%;
 }
 
 #footer {
   padding: $footer-padding 0px;
   text-align: center;
-  border: 1px solid #333333;
-  background-color: lightblue;
+  color: #ffffff;
+  background-color: $wrapper-header-background-color;
 }
 
 @media screen and (min-width: 800px) {

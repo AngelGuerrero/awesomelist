@@ -2,7 +2,9 @@
 
   nav.row-v-center.between
     div(class="control__aside row-v-center")
-      i(class="fas fa-bars fa-lg bars-icon")
+      i(class="fas fa-bars fa-lg bars-icon"
+        @click="changeAsideLeft()"
+      )
       h3.nav__title Project name
     .nav__hamburguer
       el-dropdown
@@ -13,7 +15,7 @@
           el-dropdown-item Projects
           el-dropdown-item Project properties
           el-dropdown-item Logout
-    .nav__user
+    .nav__user(@click="changeAsideRight()")
       .user__image
         img(src="@/assets/images/user.png")
       .user__name Ángel Guerrero
@@ -21,23 +23,34 @@
 </template>
 
 <script>
+import EventBus from '@/EventBus'
+
 export default {
-  name: 'Navbar'
+  name: 'Navbar',
+
+  methods: {
+    // Emit events for change the components visibility, through EventBus
+    changeAsideLeft () {
+      EventBus.$emit('change-aside-left-state')
+    },
+
+    changeAsideRight () {
+      EventBus.$emit('change-aside-right-state')
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/scss/partials/variables.scss';
 
-* {
-  // border: 1px solid tomato;
-}
-
 nav {
-  height: 50px;
-  border: 1px solid $border-color;
-  &:hover {
-    cursor: pointer;
+  height: $navbar-height;
+  background-color: $wrapper-header-background-color;
+  color: white;
+
+  & p, i, li {
+    color: white;
   }
 }
 
@@ -47,6 +60,9 @@ nav {
 
 .bars-icon {
   padding: 10px;
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .nav__title {
@@ -62,12 +78,18 @@ nav {
   background-color: #332c2b;
   color: white;
 
+  &:hover {
+    cursor: pointer;
+    background-color: lighten(#332c2b, 5%);
+  }
+
   .user__image {
     max-width: 45px;
     margin: 1px;
     padding: 3px;
     border: 1px dashed tomato;
     border-radius: 50%;
+    background-color: black;
     img {
       border-radius: 50%;
       width: 100%;
