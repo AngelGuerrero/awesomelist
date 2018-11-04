@@ -4,8 +4,8 @@
     #main
       app-aside-left(:visible="asideLeft" :mobile="mobile")
       .main__content
-        app-createTodo
-        app-listTodos
+        app-create-todo
+        app-todo-list
       app-aside-right(:visible="asideRight" :mobile="mobile")
     #footer Awesomelist - {{ date.getFullYear() }}
 
@@ -14,28 +14,39 @@
 <script>
 // App components
 import EventBus from './EventBus'
-import Navbar from './components/Navbar'
-import CreateTodo from './components/CreateTodo'
-import ListTodos from './components/ListTodos'
-import AsideLeft from './components/AsideLeft'
-import AsideRight from './components/AsideRight'
+
+// Todo components
+import AppNavbar from './components/Layout/Navbar'
+import AppCreateTodo from './components/Layout/CreateTodo'
+import AppTodoList from './components/Layout/TodoList'
+import AppAsideLeft from './components/Layout/AsideLeft'
+import AppAsideRight from './components/Layout/AsideRight'
 
 export default {
   name: 'App',
 
   components: {
-    AppNavbar: Navbar,
-    AppCreateTodo: CreateTodo,
-    AppListTodos: ListTodos,
-    AppAsideRight: AsideRight,
-    AppAsideLeft: AsideLeft
+    AppNavbar,
+    AppCreateTodo,
+    AppTodoList,
+    AppAsideRight,
+    AppAsideLeft
   },
 
   data () {
     return {
+      // If the window size is less than 800 px
+      // then change to mobile version
       mobile: false,
-      asideLeft: true,
-      asideRight: false,
+
+      // The aside left loads the projects list
+      asideLeft: false,
+
+      // Default aside false
+      // It changes to true when loads detail from specify task
+      asideRight: true,
+
+      // Date of the site
       date: ''
     }
   },
@@ -43,13 +54,13 @@ export default {
   created: function () {
     this.date = new Date()
 
-    // Check device width
-    if (window.innerWidth < 800) {
-      this.mobile = true
+    // Check and add a listener when resize window
+    if (window.innerWidth < 700) {
       this.asideLeft = false
+    } else {
+      this.asideLeft = true
     }
 
-    // Check and add a listener when resize window
     this.resize()
     window.addEventListener('resize', this.resize)
 
@@ -61,9 +72,8 @@ export default {
 
   methods: {
     resize () {
-      if (window.innerWidth < 800) {
+      if (window.innerWidth < 700) {
         this.mobile = true
-        this.asideLeft = false
       } else {
         this.mobile = false
       }
@@ -82,7 +92,8 @@ export default {
 
 #main {
   overflow-y: auto;
-  height: calc(99vh - #{$navbar-height} - #{$footer-padding });
+  height: calc(100vh - #{$navbar-height} - #{$footer-padding });
+  display: flex;
 }
 
 .main__content {
@@ -97,17 +108,5 @@ export default {
   text-align: center;
   color: #ffffff;
   background-color: $wrapper-header-background-color;
-}
-
-@media screen and (min-width: 800px) {
-  #main {
-    // background-color: #333333;
-    display: flex;
-  }
-
-  .main__content {
-    width: $main-content-width;
-    min-width: $main-content-min-w;
-  }
 }
 </style>

@@ -1,7 +1,6 @@
 <template lang="pug">
 
   .container
-    //- pre {{ $data }}
     .column
       .task__box(v-for="task in pendingList")
         el-checkbox(:label="task.title"
@@ -25,7 +24,7 @@
 
 <script>
 export default {
-  name: 'ListTodos',
+  name: 'TodoList',
 
   data () {
     return {
@@ -75,12 +74,10 @@ export default {
 .column {
   padding-top: 15px;
   padding-bottom: 15px;
-  // border: 1px solid tomato;
 }
 
 .task__box {
   background-color: white;
-  // border: 1px solid rgb(101, 139, 243);
   border-radius: 5px;
   margin-bottom: 2px;
   display: flex;

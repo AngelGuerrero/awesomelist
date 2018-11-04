@@ -15,10 +15,10 @@
           el-dropdown-item Projects
           el-dropdown-item Project properties
           el-dropdown-item Logout
-    .nav__user(@click="changeAsideRight()")
+    .nav__user(class="row-v-center between" @click="changeAsideRight()")
       .user__image
-        img(src="@/assets/images/user.png")
-      .user__name Ángel Guerrero
+        img(src="@/assets/images/wendy.jpg")
+      .user__name(class="grow-1 row-v-center row-h-center") Ángel Guerrero
 
 </template>
 
@@ -73,35 +73,30 @@ nav {
 .nav__user {
   // Display none for mobile
   display: none;
-  width: $aside-right-min-w;
-  height: 100%;
-  background-color: #332c2b;
+  width: $aside-right-width;
+  height: $navbar-height;
+  background-color: darken($color: $wrapper-header-background-color, $amount: 20);
   color: white;
 
   &:hover {
     cursor: pointer;
-    background-color: lighten(#332c2b, 5%);
+    background-color: lighten($wrapper-header-background-color, 20%);
   }
 
   .user__image {
-    max-width: 45px;
-    margin: 1px;
-    padding: 3px;
+    max-width: $navbar-height;
+    height: $navbar-height;
     border: 1px dashed tomato;
     border-radius: 50%;
+    overflow: hidden;
     background-color: black;
-    img {
-      border-radius: 50%;
-      width: 100%;
-    }
   }
+}
 
-  .user__name {
-    flex-grow: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+img {
+  // border-radius: 50%;
+  width: 100%;
+  height: auto;
 }
 
 .more__icon {

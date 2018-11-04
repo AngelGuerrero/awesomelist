@@ -68,7 +68,7 @@ export default {
 
 .aside__right {
   width: $aside-right-width;
-  max-width: $aside-right-min-w;
+  min-width: $aside-right-width;
   padding: 5px;
   background-color: $aside-right-background-color;
   color: black;

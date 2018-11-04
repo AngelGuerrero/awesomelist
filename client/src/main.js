@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
+
 import {
   Button,
   Dropdown,
@@ -26,6 +27,6 @@ Vue.use(CollapseItem)
 Vue.use(Form)
 Vue.use(FormItem)
 
-new Vue({
+window.vm0 = new Vue({
   render: h => h(App)
 }).$mount('#app')
