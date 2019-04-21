@@ -1,9 +1,9 @@
 <template lang="pug">
   .new
-    .new__header(class="row-v-center around")
+    .new__header(class="row-v-center")
       i.plus-icon(class="symb-icon fas fa-arrow-left"
-                     @click="changeComponent")
-      h3.title(class="grow-1") Create a new project
+                  @click="changeComponent")
+      h3.title Create a new project
     .new__form(class="container")
       el-form(size="mini")
         el-input(v-model="projectName"
@@ -68,6 +68,10 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/scss/partials/variables.scss';
+
+.title {
+  padding: 0px 10px;
+}
 
 .new {
   background-color: white;

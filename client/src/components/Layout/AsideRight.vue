@@ -79,6 +79,7 @@ export default {
   padding: 10px;
   margin: 10px 0px;
   border: 1px solid #333333;
+  background-color: white;
   border-radius: 5px;
   text-align: center;
 }
@@ -123,7 +124,7 @@ button {
 
 @media screen and (max-width: 425px) {
   .mobile {
-    background-color: black;
+    background-color: $aside-right-background-color;
     width: 100%;
     max-width: 100%;
   }

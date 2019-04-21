@@ -88,15 +88,15 @@ export default {
 
   &__header {
     max-height: 50px;
-    background-color: #aa51fd;
+    background-color: #011627;
     color: white;
   }
 
   &__list {
     overflow-y: auto;
     max-height: 50%;
-    background-color: white;
-    color: darken($color: $wrapper-header-background-color, $amount: 20);
+    background-color: #F6F7F8;
+    color: black;
 
     .list__item {
       border-top: 1px solid #f1f1f1;

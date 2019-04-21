@@ -18,7 +18,7 @@
     .nav__user(class="row-v-center between" @click="changeAsideRight()")
       .user__image
         img(src="@/assets/images/wendy.jpg")
-      .user__name(class="grow-1 row-v-center row-h-center") Ángel Guerrero
+      .user__name(class="grow-1 row-v-center row-h-center") Wendy Argente
 
 </template>
 
