@@ -1,38 +1,29 @@
-# Awesome list
-Awesomelist es una simple aplicación de lista de tareas.
+# Cliente: Aplicación web para consumir API Rest
 
-## Características
-Este proyecto pretende ser una simple aplicación para administrar tareas, pero con algunas características que aumenten la calidad de este.
+Para la instalación de este cliente tipo: `Aplicación web`, se deben ejecutar las siguientes instrucciones.
 
-### Proveedor de API
-Se pretende que a través de un servidor proporcione una API para que se pueda consumir desde otra aplicación, ya sea una cliente de escritorio un cliente móvil.
+## Configuración de proyecto e instalación de dependencias
+```
+npm install
+```
 
-### Registro de usuarios
-A través de la API que se proporcionará, debe de contar con métodos para poder registrar y autenticar usuarios para poder obtener la información del usuario en cuestión.
+### Compila y realiaza "hot-reloads" en modo desarrollo
+```
+npm run serve
+```
 
-### Estructura
-Se pretende que inicialmente tenga una estructura simple pero con la oportunidad de agregar más características a la aplicación, no sólo una _lista de tareas_ sino también:
+### Compila y minifica archivos para producción
+```
+npm run build
+```
 
-- Crear proyectos y agrupar las tareas.
-- Colaboración en proyectos con otros usuarios registrados.
-- Integración de otras API's para compartir documentos (Dropbox, Google Drive, OneDrive).
+### Checha y corrige errores en archivos
+```
+npm run lint
+```
 
-## Tecnologías
+## Framework UI
 
-#### Para la parte del back-end
+Para los elementos de la interfaz de usuario se usa `element.js`: [https://element.eleme.io/#/es](https://element.eleme.io/#/es).
 
-Se pretende crear los servicios con [Express.js](http://expressjs.com/es/) por la facilidad que proporciona [Node.js](https://nodejs.org/es/).
-
-#### Para la parte del front-end
-
-Para consumir los servicios una aplicación web utilizando [Vue.js](https://vuejs.org/) y que con estas mismas tecnologías web del cliente, se puedan reutilizar en una aplicación de escritorio usando [Electron.js](https://electronjs.org/) o una aplicación móvil usando [Flutter](https://flutter.io/).
-
-Por el stack que quiero integrar, se pretende usar como manejador de base de datos [MongoDB](https://www.mongodb.com/).
-
-## Motivación
-El principal objetivo para hacer esta aplicación es aprender las tecnologías mencionadas y la integración entre éstas para construir aplicaciones escalables y de fácil mantenimiento.
-
-# Documentación
-
-Se puede encontrar documentación en cada archivo `README` para la parte de back-end y front-end.
-
+Cabe mencionar que no se están importando todos los elementos, se importa únicamente lo que se necesita, entonces se registra en el archivo: `main.js` y con ello se puede utilizar en cualquier componente de la aplicación Vue.js.
