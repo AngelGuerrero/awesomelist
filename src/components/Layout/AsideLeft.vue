@@ -97,7 +97,7 @@ export default {
   z-index: 10;
   max-width: auto;
   height: calc(100vh - #{$navbar-height});
-  top: calc(#{navbar-height});
+  top: $navbar-height;
 }
 
 @media screen and (max-width: 425px) {
