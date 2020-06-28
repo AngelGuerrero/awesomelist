@@ -1,12 +1,12 @@
 <template lang="pug">
   #app(class="column between")
-    app-navbar
+    navbar
     #main
-      app-aside-left(:visible="asideLeft" :mobile="mobile")
+      //- aside-left(:visible="asideLeft" :mobile="mobile")
       .main__content
-        app-create-todo
-        app-todo-list
-      app-aside-right(:visible="asideRight" :mobile="mobile")
+        todo-create
+        todo-list
+      //- aside-right(:visible="asideRight" :mobile="mobile")
     #footer Awesomelist - {{ date.getFullYear() }}
 </template>
 
@@ -14,21 +14,21 @@
 import EventBus from './EventBus'
 
 // Todo components
-import AppNavbar from './components/Layout/Navbar'
-import AppCreateTodo from './components/Layout/CreateTodo'
-import AppTodoList from './components/Layout/TodoList'
-import AppAsideLeft from './components/Layout/AsideLeft'
-import AppAsideRight from './components/Layout/AsideRight'
+import Navbar from './components/Layout/Navbar'
+import TodoCreate from './components/Todo/TodoCreate'
+import TodoList from './components/Todo/TodoList'
+// import Sidebar from './components/Layout/Sidebar'
+// import AsideRight from './components/Layout/AsideRight'
 
 export default {
   name: 'App',
 
   components: {
-    AppNavbar,
-    AppCreateTodo,
-    AppTodoList,
-    AppAsideRight,
-    AppAsideLeft
+    Navbar,
+    TodoCreate,
+    TodoList
+    // AppdeRight,
+    // AppdeLeft
   },
 
   data () {
@@ -95,9 +95,10 @@ export default {
 }
 
 .main__content {
-  flex-grow: 1;
-  overflow-y: auto;
+  width: 100%;;
   height: 100%;
+  padding: 10px;
+  overflow-y: auto;
 }
 
 #footer {

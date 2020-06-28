@@ -56,6 +56,7 @@ nav {
 .nav__title {
   margin: 0px;
   padding-left: 10px;
+  font-size: 1.2rem;
   font-weight: 400;
 }
 
