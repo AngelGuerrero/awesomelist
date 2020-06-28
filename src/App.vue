@@ -8,11 +8,9 @@
         app-todo-list
       app-aside-right(:visible="asideRight" :mobile="mobile")
     #footer Awesomelist - {{ date.getFullYear() }}
-
 </template>
 
 <script>
-// App components
 import EventBus from './EventBus'
 
 // Todo components
@@ -44,7 +42,7 @@ export default {
 
       // Default aside false
       // It changes to true when loads detail from specify task
-      asideRight: true,
+      asideRight: false,
 
       // Date of the site
       date: ''
@@ -97,7 +95,6 @@ export default {
 }
 
 .main__content {
-  background-color: lightblue;
   flex-grow: 1;
   overflow-y: auto;
   height: 100%;

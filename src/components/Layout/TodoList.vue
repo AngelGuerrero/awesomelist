@@ -6,8 +6,6 @@
         el-checkbox(:label="task.title"
                     v-model="task.checked"
                     @change="completeTask(task)")
-        .task__options
-          i.el-icon-more.more__icon
 
     .div(v-show="completedList.length > 0")
       el-button(type="primary" @click="showCompleted = !showCompleted" size="small") Show completed tasks
@@ -56,7 +54,7 @@ export default {
       this.completedList.push(task)
 
       // Remove element from pending list
-      this.pendingList = this.pendingList.filter((a) => { return a !== task })
+      this.pendingList = this.pendingList.filter(a => a !== task)
     },
 
     uncompleteTask (task) {
@@ -78,6 +76,7 @@ export default {
 
 .task__box {
   background-color: white;
+  border: 1px solid #dadada;
   border-radius: 5px;
   margin-bottom: 2px;
   display: flex;
