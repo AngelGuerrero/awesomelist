@@ -3,10 +3,10 @@
     navbar
     #main
       //- aside-left(:visible="asideLeft" :mobile="mobile")
-      .main__content
+      .main__content(ref="parentSideBar" id="parentx" class="dev")
         todo-create
         todo-list
-      //- aside-right(:visible="asideRight" :mobile="mobile")
+        aside-right(:visible="asideRight" :mobile="mobile")
     #footer Awesomelist - {{ date.getFullYear() }}
 </template>
 
@@ -18,7 +18,7 @@ import Navbar from './components/Layout/Navbar'
 import TodoCreate from './components/Todo/TodoCreate'
 import TodoList from './components/Todo/TodoList'
 // import Sidebar from './components/Layout/Sidebar'
-// import AsideRight from './components/Layout/AsideRight'
+import AsideRight from './components/Layout/AsideRight'
 
 export default {
   name: 'App',
@@ -26,8 +26,8 @@ export default {
   components: {
     Navbar,
     TodoCreate,
-    TodoList
-    // AppdeRight,
+    TodoList,
+    AsideRight
     // AppdeLeft
   },
 
@@ -42,7 +42,7 @@ export default {
 
       // Default aside false
       // It changes to true when loads detail from specify task
-      asideRight: false,
+      asideRight: true,
 
       // Date of the site
       date: ''
@@ -53,11 +53,7 @@ export default {
     this.date = new Date()
 
     // Check and add a listener when resize window
-    if (window.innerWidth < 700) {
-      this.asideLeft = false
-    } else {
-      this.asideLeft = true
-    }
+    this.asideLeft = window.innerWidth < 700
 
     this.resize()
     window.addEventListener('resize', this.resize)

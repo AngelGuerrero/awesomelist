@@ -1,5 +1,5 @@
 <template lang="pug">
-  aside(class="aside__right column between"
+  aside(class="aside__right"
         :class="{ mobile: mobile }"
         v-show="visible")
     .screen(v-show="mobile" @click="disappear()")
@@ -62,10 +62,6 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/scss/partials/variables.scss';
 
-* {
-  // border: 1px solid tomato;
-}
-
 .aside__right {
   width: $aside-right-width;
   min-width: $aside-right-width;
@@ -73,6 +69,7 @@ export default {
   background-color: $aside-right-background-color;
   color: black;
   overflow-y: auto;
+  position: absolute;
 }
 
 .container {

@@ -1,6 +1,9 @@
 <template lang="pug">
   div
-    el-input(placeholder="Nueva tarea" v-model="todo" @change="createTodo")
+    el-input(placeholder="Nueva tarea"
+             size="large"
+             v-model="todo"
+             @change="createTodo")
 </template>
 
 <script>

@@ -5,13 +5,13 @@ import { firestorePlugin } from 'vuefire'
 
 import {
   IconsPlugin,
-  FormInputPlugin
+  ListGroupPlugin
 } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-// import Vuesax from 'vuesax'
-// import 'vuesax/dist/vuesax.css'
+import Vuesax from 'vuesax'
+import 'vuesax/dist/vuesax.css'
 // import 'material-icons/iconfont/material-icons.css'
 
 import {
@@ -44,10 +44,10 @@ Vue.use(FormItem)
 
 //
 // Bootstrap
-Vue.use(FormInputPlugin)
+Vue.use(ListGroupPlugin)
 Vue.use(IconsPlugin)
 
-// Vue.use(Vuesax)
+Vue.use(Vuesax)
 
 //
 // Firestore

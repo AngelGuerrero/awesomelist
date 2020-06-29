@@ -1,18 +1,18 @@
 <template lang="pug">
   div
     .column
-      .todo__box(v-for="todo in getUncompletedTodos")
-        el-checkbox(:label="todo.title"
-                    v-model="todo.done"
-                    @change="completeTodo(todo)")
+      b-list-group
+        b-list-group-item(v-for="todo in getUncompletedTodos" :key="todo.id" class="my-1 border radius" button)
+          el-checkbox(size="medium" :label="todo.title" v-model="todo.done" @change="completeTodo(todo)")
 
     .div
-      el-button(type="primary" size="small" @click="showCompletedTodos = !showCompletedTodos") Mostrar tareas completadas
+      el-button(type="primary" size="small" @click="toggleTodoList") {{ getBtnText }}
 
     .column(v-show="showCompletedTodos")
-      .todo__box(class="completed" v-for="todo in getCompletedTodos" :key="todo.id")
-        el-checkbox(v-model="todo.done" @change="uncompleteTodo(todo)")
-          span(class="completed") {{ todo.title }}
+      b-list-group
+        b-list-group-item(v-for="todo in getCompletedTodos" :key="todo.id" class="my-1 border radius" button)
+          el-checkbox(v-model="todo.done" :label="todo.title" @change="uncompleteTodo(todo)")
+            span(class="completed") {{ todo.title }}
 
 </template>
 
@@ -23,12 +23,19 @@ export default {
   name: 'TodoList',
 
   data: () => ({
-    showCompletedTodos: true
+    showCompletedTodos: true,
+
+    btnText: 'Mostrar tareas completadas'
   }),
 
   computed: {
     ...mapState('todo', ['todos']),
-    ...mapGetters('todo', ['getUncompletedTodos', 'getCompletedTodos'])
+
+    ...mapGetters('todo', ['getUncompletedTodos', 'getCompletedTodos']),
+
+    getBtnText: function () {
+      return this.showCompletedTodos ? 'Ocultar tareas completadas' : 'Mostrar tareas completadas'
+    }
   },
 
   created () {
@@ -44,6 +51,10 @@ export default {
 
     uncompleteTodo (todo) {
       this.updateTodoToDone({ id: todo.id, done: false })
+    },
+
+    toggleTodoList () {
+      this.showCompletedTodos = !this.showCompletedTodos
     }
   }
 }
