@@ -1,13 +1,6 @@
 <template lang="pug">
   div
-<<<<<<< HEAD
     b-input(placeholder="Nueva tarea" v-model="todo" @change="createTodo")
-=======
-    el-input(placeholder="Nueva tarea"
-             size="large"
-             v-model="todo"
-             @change="createTodo")
->>>>>>> 40470bb4c92e89c0d3ede2942b47bf161c88546d
 </template>
 
 <script>

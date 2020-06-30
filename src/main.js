@@ -7,28 +7,18 @@ import { firestorePlugin } from 'vuefire'
 // Bootstrap
 import {
   IconsPlugin,
-<<<<<<< HEAD
   FormInputPlugin,
   ListGroupPlugin,
   LayoutPlugin,
   ButtonPlugin
-=======
-  ListGroupPlugin
->>>>>>> 40470bb4c92e89c0d3ede2942b47bf161c88546d
 } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-<<<<<<< HEAD
 //
 // Vuesax
 import Vuesax from 'vuesax'
 import 'vuesax/dist/vuesax.css'
-=======
-import Vuesax from 'vuesax'
-import 'vuesax/dist/vuesax.css'
-// import 'material-icons/iconfont/material-icons.css'
->>>>>>> 40470bb4c92e89c0d3ede2942b47bf161c88546d
 
 import {
   Button,
@@ -57,16 +47,14 @@ Vue.use(FormItem)
 //
 // Bootstrap
 Vue.use(ListGroupPlugin)
+Vue.use(FormInputPlugin)
 Vue.use(IconsPlugin)
 Vue.use(ListGroupPlugin)
 Vue.use(LayoutPlugin)
 Vue.use(ButtonPlugin)
 
-<<<<<<< HEAD
 //
 // Vuesax
-=======
->>>>>>> 40470bb4c92e89c0d3ede2942b47bf161c88546d
 Vue.use(Vuesax)
 
 //
