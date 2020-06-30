@@ -23,6 +23,7 @@ export default {
     },
 
     changeAsideRight () {
+      console.log('Emitiendo evento...')
       EventBus.$emit('change-aside-right-state')
     }
   }
