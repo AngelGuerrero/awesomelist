@@ -5,6 +5,11 @@ export default {
   namespaced: true,
 
   state: {
+    //
+    // Selected todo is the To Do that currently
+    // will be updated or modifyied clicked by the
+    // user in TodoList component.
+    //
     todo: null,
 
     todos: []
@@ -28,13 +33,25 @@ export default {
       return bindFirestoreRef('todos', db.collection('todos'))
     }),
 
-    saveTodo: async ({ commit }, payload) => {
+    saveTodo: async ({ context }, payload) => {
       db.collection('todos')
         .add(payload)
         .then(response => {
           console.log(`Todo created successfully with id: ${response.id}`)
         }).catch(error => {
           console.log(`Something went wront ${error}`)
+        })
+    },
+
+    getTodoById: async ({ context }, id) => {
+      db.collection('todos')
+        .doc(id)
+        .get()
+        .then((response) => {
+          console.log(response)
+        // commit('setTodo', response)
+        }).catch((error) => {
+          console.log(`Error getting todo: ${error}`)
         })
     },
 

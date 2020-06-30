@@ -68,7 +68,7 @@ nav {
   .user__image {
     max-width: $navbar-height;
     height: $navbar-height;
-    padding: 4px;
+    padding: 8px;
     &:hover {
       cursor: pointer;
       background-color: darken($wrapper-header-background-color, 10%);

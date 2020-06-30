@@ -3,24 +3,28 @@ import App from './App.vue'
 import { store } from './store'
 import { firestorePlugin } from 'vuefire'
 
+//
+// Bootstrap
 import {
   IconsPlugin,
-  FormInputPlugin
+  FormInputPlugin,
+  ListGroupPlugin,
+  LayoutPlugin,
+  ButtonPlugin
 } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-// import Vuesax from 'vuesax'
-// import 'vuesax/dist/vuesax.css'
-// import 'material-icons/iconfont/material-icons.css'
+//
+// Vuesax
+import Vuesax from 'vuesax'
+import 'vuesax/dist/vuesax.css'
 
 import {
   Button,
   Dropdown,
   DropdownMenu,
   DropdownItem,
-  Input,
-  Checkbox,
   Collapse,
   CollapseItem,
   Form,
@@ -35,8 +39,6 @@ Vue.use(Button)
 Vue.use(Dropdown)
 Vue.use(DropdownMenu)
 Vue.use(DropdownItem)
-Vue.use(Input)
-Vue.use(Checkbox)
 Vue.use(Collapse)
 Vue.use(CollapseItem)
 Vue.use(Form)
@@ -46,8 +48,13 @@ Vue.use(FormItem)
 // Bootstrap
 Vue.use(FormInputPlugin)
 Vue.use(IconsPlugin)
+Vue.use(ListGroupPlugin)
+Vue.use(LayoutPlugin)
+Vue.use(ButtonPlugin)
 
-// Vue.use(Vuesax)
+//
+// Vuesax
+Vue.use(Vuesax)
 
 //
 // Firestore

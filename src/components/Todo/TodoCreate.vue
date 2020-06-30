@@ -1,6 +1,6 @@
 <template lang="pug">
   div
-    el-input(placeholder="Nueva tarea" v-model="todo" @change="createTodo")
+    b-input(placeholder="Nueva tarea" v-model="todo" @change="createTodo")
 </template>
 
 <script>

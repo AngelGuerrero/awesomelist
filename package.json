@@ -12,7 +12,6 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.4",
     "@fortawesome/free-solid-svg-icons": "^5.3.1",
     "@fortawesome/vue-fontawesome": "^0.1.1",
-    "axios": "^0.18.0",
     "bootstrap": "^4.5.0",
     "bootstrap-vue": "^2.15.0",
     "element-ui": "^2.4.8",
@@ -23,7 +22,7 @@
     "vue": "^2.5.17",
     "vue-router": "^3.0.1",
     "vuefire": "^2.2.2",
-    "vuesax": "^3.11.17",
+    "vuesax": "^4.0.1-alpha.22",
     "vuex": "^3.4.0",
     "vuexfire": "^3.2.2"
   },
