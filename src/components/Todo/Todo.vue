@@ -7,16 +7,18 @@
                 @selectTodo="selectTodo"
                 @checkTodo="completeTodo")
 
-      el-button(type="primary"
-                size="small"
-                class="my-2"
-                @click="showCompletedTodos = !showCompletedTodos") {{ getBtnText }}
+      b-button(v-if="thereAreCompletedTodos"
+              variant="primary"
+              size="sm"
+              class="my-2"
+              @click="showCompletedTodos = !showCompletedTodos") {{ getBtnText }}
 
-      todo-list(v-show="showCompletedTodos"
+      todo-list(v-if="thereAreCompletedTodos"
+                v-show="showCompletedTodos"
                 :todolist="getCompletedTodos"
                 @selectTodo="selectTodo"
                 @checkTodo="uncompleteTodo"
-                class="completed")
+                :class="{ 'completed': thereAreCompletedTodos }")
 
     .detail(class="ml-2")
       todo-detail(v-if="showTodoDetail" :todo="selectedTodo" @close="selectedTodo = null")
@@ -48,6 +50,10 @@ export default {
 
     ...mapGetters('todo', ['getUncompletedTodos', 'getCompletedTodos']),
 
+    thereAreCompletedTodos () {
+      return this.getCompletedTodos.length > 0
+    },
+
     getBtnText () {
       return this.showCompletedTodos ? 'Ocultar tareas completadas' : 'Mostrar tareas completadas'
     },
@@ -57,19 +63,31 @@ export default {
     }
   },
 
+  //
+  // NOTE: FIX WATCH PROPERTY
+  watch: {
+    todos (val) {
+      // this.selectedTodo = val.filter(el => !el.done)[0]
+    }
+  },
+
   created () {
     this.getTodos()
   },
 
   methods: {
-    ...mapActions('todo', ['getTodos', 'updateTodoToDone']),
+    ...mapActions('todo', ['getTodos', 'updateTodoById']),
 
     completeTodo (todo) {
-      this.updateTodoToDone({ id: todo.id, done: true })
+      todo.done = true
+      todo.lastUpdated = new Date()
+      this.updateTodoById(todo)
     },
 
     uncompleteTodo (todo) {
-      this.updateTodoToDone({ id: todo.id, done: false })
+      todo.done = false
+      todo.lastUpdated = new Date()
+      this.updateTodoById(todo)
     },
 
     selectTodo (todo) {

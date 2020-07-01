@@ -25,9 +25,6 @@
         .description__content
           p Estoy aprendiendo Erlang y es genial
 
-    .section
-      el-button(type="danger") Eliminar tarea
-
 </template>
 
 <script>

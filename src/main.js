@@ -10,7 +10,9 @@ import {
   FormInputPlugin,
   ListGroupPlugin,
   LayoutPlugin,
-  ButtonPlugin
+  ButtonPlugin,
+  SpinnerPlugin,
+  CalendarPlugin
 } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -21,28 +23,18 @@ import Vuesax from 'vuesax'
 import 'vuesax/dist/vuesax.css'
 
 import {
-  Button,
   Dropdown,
   DropdownMenu,
-  DropdownItem,
-  Collapse,
-  CollapseItem,
-  Form,
-  FormItem
+  DropdownItem
 } from 'element-ui'
 
 Vue.config.productionTip = false
 
 //
 // Element UI
-Vue.use(Button)
 Vue.use(Dropdown)
 Vue.use(DropdownMenu)
 Vue.use(DropdownItem)
-Vue.use(Collapse)
-Vue.use(CollapseItem)
-Vue.use(Form)
-Vue.use(FormItem)
 
 //
 // Bootstrap
@@ -52,6 +44,8 @@ Vue.use(IconsPlugin)
 Vue.use(ListGroupPlugin)
 Vue.use(LayoutPlugin)
 Vue.use(ButtonPlugin)
+Vue.use(SpinnerPlugin)
+Vue.use(CalendarPlugin)
 
 //
 // Vuesax

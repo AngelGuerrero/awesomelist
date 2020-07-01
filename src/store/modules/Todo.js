@@ -17,11 +17,11 @@ export default {
 
   getters: {
     getUncompletedTodos (state) {
-      return state.todos.filter(ele => !ele.done)
+      return state.todos.filter(ele => !ele.done).sort((a, b) => b.created - a.created)
     },
 
     getCompletedTodos (state) {
-      return state.todos.filter(ele => ele.done)
+      return state.todos.filter(ele => ele.done).sort((a, b) => a.created - b.created)
     }
   },
 
@@ -55,19 +55,12 @@ export default {
         })
     },
 
-    updateTodoToDone: async ({ context }, { id, done }) => {
+    updateTodoById: async ({ context }, todo) => {
       db.collection('todos')
-        .doc(id)
-        .update({
-          done: done,
-          lastUpdated: new Date()
-        })
-        .then(function () {
-          console.log('todo updated successfully')
-        })
-        .catch(function (error) {
-          console.error(error)
-        })
+        .doc(todo.id)
+        .update(todo)
+        .then(_ => console.log('Todo updated successfully'))
+        .catch(error => console.log(`Something went wrong: ${error}`))
     },
 
     deleteTodoById: async ({ context }, id) => {

@@ -4,7 +4,7 @@
     #main
       .main__content
         todo
-    #footer Awesomelist - {{ new Date().getFullYear() }}
+    #footer By Ángel Guerrero
 </template>
 
 <script>

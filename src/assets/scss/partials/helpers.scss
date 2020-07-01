@@ -24,26 +24,28 @@
 }
 
 .column-v-center {
+  @extend .column;
   justify-content: center;
 }
 
 .column-h-center {
+  @extend .column;
   align-items: center;
 }
 
-.around {
+.jc-around {
   justify-content: space-around;
 }
 
-.between {
+.jc-between {
   justify-content: space-between;
 }
 
-.start {
+.jc-start {
   justify-content: flex-start;
 }
 
-.end {
+.jc-end {
   justify-content: flex-end;
 }
 
