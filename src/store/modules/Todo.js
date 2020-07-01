@@ -16,11 +16,11 @@ export default {
   },
 
   getters: {
-    getUncompletedTodos: function (state) {
+    getUncompletedTodos (state) {
       return state.todos.filter(ele => !ele.done)
     },
 
-    getCompletedTodos: function (state) {
+    getCompletedTodos (state) {
       return state.todos.filter(ele => ele.done)
     }
   },
@@ -68,6 +68,14 @@ export default {
         .catch(function (error) {
           console.error(error)
         })
+    },
+
+    deleteTodoById: async ({ context }, id) => {
+      db.collection('todos')
+        .doc(id)
+        .delete()
+        .then(() => console.log('Todo deleted successfully'))
+        .catch((error) => console.error(`Something went wrong: ${error}`))
     }
   }
 }

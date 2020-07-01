@@ -14,6 +14,7 @@
 
       todo-list(v-show="showCompletedTodos"
                 :todolist="getCompletedTodos"
+                @selectTodo="selectTodo"
                 @checkTodo="uncompleteTodo"
                 class="completed")
 
@@ -53,14 +54,6 @@ export default {
 
     showTodoDetail () {
       return this.selectedTodo !== null
-    }
-  },
-
-  //
-  // NOTE: DELETE WATCH PROPERTY
-  watch: {
-    todos (val) {
-      this.selectedTodo = val[0]
     }
   },
 

@@ -1,10 +1,23 @@
 <template lang="pug">
   sidebar(@close="close")
-
+    //- If no data was received
     .wrapper(v-if="!todo")
       h3 No data to show
 
+    //- Main todo detail content
     .wrapper(v-else)
+      //- Modal
+      vs-dialog(overflow-hidden blur prevent-close v-model="modal.active")
+        template(#header)
+          h6(class="font-weight-bolder text-danger") Eliminar tarea
+        div(class="w-100 h-100 d-flex flex-column justify-content-center align-items-center")
+          p ¿Desea eliminar la tarea '{{ todo.title }}' ?
+        template(#footer)
+          div(class="d-flex justify-content-between")
+            vs-button(primary transparent @click="modal.active = false") Cancelar
+            vs-button(danger transparent @click="deleteTodo") Confirmar
+
+      //- Content
       .sidebar__content(class="container")
         .content__header
           b-list-group
@@ -54,15 +67,20 @@
             div
               p Actualizado: hace unos segundos
 
+      //- Footer
       .sidebar__footer(class="row-v-center between")
+        //- Close component
         b-icon(icon="arrow-bar-right" class="h4 mb-0" @click="close")
+        //- Information about todo
         p.mb-0 {{ todo.createdBy }}
-        b-button(variant="danger" size="sm")
+        //- Delete todo
+        b-button(variant="danger" size="sm" @click="modal.active = true")
           b-icon(icon="trash-fill")
 </template>
 
 <script>
 import Sidebar from '@/components/Layout/Sidebar'
+import { mapActions } from 'vuex'
 
 export default {
   components: {
@@ -77,6 +95,14 @@ export default {
     }
   },
 
+  data () {
+    return {
+      modal: {
+        active: false
+      }
+    }
+  },
+
   watch: {
     todo (val) {
       console.log(val)
@@ -84,8 +110,16 @@ export default {
   },
 
   methods: {
+    ...mapActions('todo', ['deleteTodoById']),
+
     close () {
       this.$emit('close')
+    },
+
+    deleteTodo () {
+      this.deleteTodoById(this.todo.id)
+      this.modal.active = false
+      this.close()
     }
   }
 }
