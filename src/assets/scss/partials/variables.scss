@@ -1,22 +1,15 @@
-$body-background-color-light: #FF3366;
 
+// Navbar
 $wrapper-header-background-color: #0078d7;
 $wrapper-header-front-color: #ffffff;
-
-$main-aside-right-background-color: #011627;
-
-$todos-background-color: rgba(140, 118, 182, 0.644);
-
-$border-color: #C1C1C1;
-
-$text-color: #707070;
-
-// Navbar sizes
 $navbar-height: 50px;
 
 // Asides Left
-$aside-left-width: 250px;
-$aside-left-background-color: #f7f7f7;
+$sidebar-background-color: #f7f7f7;
+$sidebar-bg-color: #f5f5f5;
 
 // Footer
 $footer-padding: 10px;
+
+$header-color: darken($color: $wrapper-header-background-color, $amount: 10);
+$text-color: #707070;

@@ -49,6 +49,14 @@
   justify-content: flex-end;
 }
 
+.no-wrapp {
+  flex-wrap: nowrap;
+}
+
+.wrapp {
+  flex-wrap: wrap;
+}
+
 // Flex grow from 1 to 12, children
 @for $v from 1 to 12 {
   .grow-#{$v} {
@@ -58,4 +66,13 @@
 
 .dev {
   border: 1px dashed tomato;
+}
+.dev-blue {
+  border: 1px dashed blue;
+}
+.dev-dark {
+  border: 1px dashed black;
+}
+.dev-light {
+  border: 1px dashed lightblue;
 }

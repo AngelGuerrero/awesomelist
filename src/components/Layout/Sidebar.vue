@@ -66,6 +66,9 @@ export default {
   overflow: hidden;
   width: 350px;
   height: 100%;
+  @media screen and (max-width: 648px) {
+    width: 100%;
+  }
 }
 
 .desktop {

@@ -5,13 +5,6 @@ export default {
   namespaced: true,
 
   state: {
-    //
-    // Selected todo is the To Do that currently
-    // will be updated or modifyied clicked by the
-    // user in TodoList component.
-    //
-    todo: null,
-
     todos: []
   },
 

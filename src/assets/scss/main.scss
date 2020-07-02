@@ -8,25 +8,33 @@
   outline: none !important;
 }
 
-.dev {
-  border: 1px solid tomato !important;
-}
 
 body {
   margin: 0;
   padding: 0;
-  color: $text-color !important;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+  // font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
   font-size: 13px !important;
+  scroll-behavior: smooth;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity .5s;
+// 
+// Transitions
+::-webkit-scrollbar {
+  width: 8px;
+  height: 5px;
 }
 
-.fade-enter,
-.fade-leave-to
-  {
-  opacity: 0;
+::-webkit-scrollbar-track-piece {
+  background-color: lightgrey;
+}
+
+::-webkit-scrollbar-thumb:vertical {
+  height: 10px;
+  background-color: darken($color: $wrapper-header-background-color, $amount: 10);
+}
+
+@for $i from 1 to 6 {
+  h#{$i} {
+    color: $header-color;
+  }
 }

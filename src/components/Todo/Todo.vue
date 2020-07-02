@@ -1,8 +1,10 @@
 <template lang="pug">
-  div(class="w-100 h-100 d-flex justify-content-between")
-    .content(class="w-100 h-100 p-3")
+  div(class="w-100 h-100 d-flex")
+    .menu
+      todo-menu
+    .content(class="flex-grow-1 h-100 p-3")
+      h1(class="h3") Tareas
       todo-create
-
       todo-list(:todolist="getUncompletedTodos"
                 @selectTodo="selectTodo"
                 @checkTodo="completeTodo")
@@ -26,6 +28,7 @@
 </template>
 
 <script>
+import TodoMenu from '@/components/Todo/TodoMenu'
 import TodoList from '@/components/Todo/TodoList'
 import TodoCreate from '@/components/Todo/TodoCreate'
 import TodoDetail from '@/components/Todo/TodoDetail'
@@ -34,12 +37,15 @@ import { mapState, mapGetters, mapActions } from 'vuex'
 
 export default {
   components: {
+    TodoMenu,
     TodoList,
     TodoCreate,
     TodoDetail
   },
 
   data: () => ({
+    showMenu: false,
+
     showCompletedTodos: true,
 
     currentId: null
@@ -70,10 +76,9 @@ export default {
       deep: true,
       immediate: false,
       handler (todos) {
-        if (todos.length <= 0) return
-
-        const uncompleteTodo = todos[0]
-        this.currentId = uncompleteTodo.id
+        // if (todos.length <= 0) return
+        // const uncompleteTodo = todos[0]
+        // this.currentId = uncompleteTodo.id
       }
     }
   },
@@ -105,6 +110,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.content {
+  overflow: auto;
+  @media screen and (max-width: 648px) {
+    margin-left: 40px;
+  }
+}
+
 .completed {
   opacity: 0.6;
   text-decoration: line-through;

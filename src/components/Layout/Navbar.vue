@@ -2,7 +2,8 @@
 
   nav(class="row-v-center between")
     div(class="control__aside row-v-center")
-      i(class="fas fa-bars fa-lg bars-icon" @click="changeAsideLeft()")
+      b-button(variant="default" size="sm" class="mx-1")
+        b-icon(icon="grid-fill" variant="light")
       h3.nav__title Awesomelist
     .nav__user(class="row-v-center between " @click="changeAsideRight()")
       .user__image
@@ -55,6 +56,7 @@ nav {
 }
 
 .nav__title {
+  color: white;
   margin: 0px;
   padding-left: 10px;
   font-size: 1.2rem;

@@ -27,17 +27,17 @@
             b-list-group-item(button class="list-item mb-0")
               vs-checkbox(v-model="todo.done" @change="toggleTodoCompleted" class="mr-3")
               .todotitle__editable(contenteditable
-                        v-text="todo.title"
-                        @blur="onEditTodoTitle"
-                        @keyup.enter="endEditTodoTitle"
-                        class="py-1 radius w-100 font-weight-bolder")
+                                  v-text="todo.title"
+                                  @blur="onEditTodoTitle"
+                                  @keyup.enter="endEditTodoTitle"
+                                  class="py-1 radius w-100 font-weight-bolder")
 
         div
           //- Related to 'Add to my day'
           b-list-group.my-2
-            b-list-group-item(button class="list-item text-muted")
-              b-icon(icon="brightness-high" class="h5 mb-0 mr-4")
-              span Agregar a mi día
+            b-list-group-item(button @click="onToggleTodoToMyDay" :variant="getTodoToMyDayVariant")
+              b-icon(icon="brightness-high" :variant="getTodoToMyDayVariant" class="h5 mb-0 mr-4")
+              span {{ getTodoToMyDayInformation }}
 
           //- Related to 'Due Date'
           b-list-group.my-2
@@ -112,14 +112,15 @@
       //- Footer
       .sidebar__footer.row-v-center.jc-between
         //- Close component
-        b-icon(icon="arrow-bar-right" class="h4 mb-0" @click="close")
+        b-button(size="sm" variant="light" @click="close")
+          b-icon(icon="arrow-bar-right")
 
         //- Information about todo
         p.mb-0 {{ getCreationTodoInformation }}
 
         //- Delete todo
-        b-button(variant="danger" size="sm" @click="modal.active = true")
-          b-icon(icon="trash-fill")
+        b-button(size="sm" variant="light" @click="modal.active = true")
+          b-icon(icon="trash" variant="danger")
 
 </template>
 
@@ -163,6 +164,14 @@ export default {
   },
 
   computed: {
+    getTodoToMyDayInformation () {
+      return this.todo.isOnMyDay ? 'Tarea para el día de hoy' : 'Agregar a mi día'
+    },
+
+    getTodoToMyDayVariant () {
+      return this.todo.isOnMyDay ? 'primary' : 'default'
+    },
+
     getInformationDueDate () {
       const today = moment().format('YYYY-MM-DD')
 
@@ -246,6 +255,12 @@ export default {
       this.$el.querySelector('.todotitle__editable').blur()
     },
 
+    onToggleTodoToMyDay () {
+      if (!this.todo.isOnMyDay) return this.todoToMyDay(true)
+
+      this.todoToMyDay(!this.todo.isOnMyDay)
+    },
+
     onFocusTodoNote () {
       const editable = this.$el.querySelector('.todonote__editable')
       editable.innerText = this.todo.note ? this.todo.note : ''
@@ -292,6 +307,8 @@ export default {
 
     toggleTodoCompleted () {
       this.updateTodoById(this.todo)
+
+      if (this.todo.done) this.close()
     },
 
     toggleDueDate () {
@@ -300,6 +317,11 @@ export default {
       }
 
       this.duedate.visible = !this.duedate.visible
+    },
+
+    todoToMyDay (value) {
+      this.todo.isOnMyDay = value
+      this.updateTodoById(this.todo)
     },
 
     addDueTime () {
@@ -329,8 +351,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+//
+// Variables
+@import '@/assets/scss/partials/variables.scss';
 $sidebar-footer-hight: 40px;
-$background-color: #f5f5f5;
+
+.list-group-item {
+  transition: all 2s;
+}
 
 .enfasis-border {
   border: 1px solid #5d9eff !important;
@@ -340,7 +368,7 @@ $background-color: #f5f5f5;
 .wrapper {
   height: 100%;
   overflow-y: auto;
-  background-color: $background-color;
+  background-color: $sidebar-bg-color;
 }
 
 .sidebar__content {
@@ -355,7 +383,7 @@ $background-color: #f5f5f5;
   z-index: 999;
   top: 0;
   right: 0;
-  background-color: $background-color;
+  background-color: $sidebar-bg-color;
 }
 
 .list-item {
