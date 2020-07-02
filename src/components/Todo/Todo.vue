@@ -21,7 +21,7 @@
                 :class="{ 'completed': thereAreCompletedTodos }")
 
     .detail(class="ml-2")
-      todo-detail(v-if="showTodoDetail" :todo="selectedTodo" @close="selectedTodo = null")
+      todo-detail(v-if="showTodoDetail" :id="currentId" @close="currentId = null")
 
 </template>
 
@@ -42,7 +42,7 @@ export default {
   data: () => ({
     showCompletedTodos: true,
 
-    selectedTodo: null
+    currentId: null
   }),
 
   computed: {
@@ -59,15 +59,22 @@ export default {
     },
 
     showTodoDetail () {
-      return this.selectedTodo !== null
+      return this.currentId !== null
     }
   },
 
   //
   // NOTE: FIX WATCH PROPERTY
   watch: {
-    todos (val) {
-      // this.selectedTodo = val.filter(el => !el.done)[0]
+    getUncompletedTodos: {
+      deep: true,
+      immediate: false,
+      handler (todos) {
+        if (todos.length <= 0) return
+
+        const uncompleteTodo = todos[0]
+        this.currentId = uncompleteTodo.id
+      }
     }
   },
 
@@ -91,7 +98,7 @@ export default {
     },
 
     selectTodo (todo) {
-      this.selectedTodo = todo
+      this.currentId = todo.id
     }
   }
 }

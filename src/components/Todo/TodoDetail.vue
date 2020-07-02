@@ -26,76 +26,88 @@
             //- Tarea
             b-list-group-item(button class="list-item mb-0")
               vs-checkbox(v-model="todo.done" @change="toggleTodoCompleted" class="mr-3")
-              .editable(contenteditable
+              .todotitle__editable(contenteditable
                         v-text="todo.title"
                         @blur="onEditTodoTitle"
                         @keyup.enter="endEditTodoTitle"
                         class="py-1 radius w-100 font-weight-bolder")
 
-        b-list-group
-          //- Add to my day
-          b-list-group-item(button class="list-item text-muted")
-            b-icon(icon="brightness-high" class="h5 mb-0 mr-4")
-            span Agregar a mi día
-
-          //- Time
+        div
+          //- Related to 'Add to my day'
           b-list-group.my-2
-            //- Remind me
+            b-list-group-item(button class="list-item text-muted")
+              b-icon(icon="brightness-high" class="h5 mb-0 mr-4")
+              span Agregar a mi día
+
+          //- Related to 'Due Date'
+          b-list-group.my-2
+            //- DueDate: Remind me
             b-list-group-item(button class="text-muted")
               b-icon(icon="bell" class="text-muted h5 mb-0 mr-4")
               span Recordarme
 
-            //- Due Time
-            b-list-group(class="duetime__container rounded-0" :class="{ 'enfasis-border': duetime.visible }")
-              b-list-group-item(v-if="!duetime.visible"
+            //- DueDate: Due Time Widget
+            b-list-group(class="duedate__container rounded-0" :class="{ 'enfasis-border': duedate.visible }")
+              b-list-group-item(v-if="!duedate.visible"
                                 button
-                                @click="toggleDuetime"
+                                @click="toggleDueDate"
                                 class="text-muted border-top-0 border-bottom-0 rounded-0")
-                b-icon(icon="calendar-date" :class="getDuetimeStatusClass" class="h5 mb-0 mr-4")
-                span(:class="getDuetimeStatusClass") {{ getInformationDuetime }}
+                b-icon(icon="calendar-date" :class="getDueDateStatusClass" class="h5 mb-0 mr-4")
+                span(:class="getDueDateStatusClass") {{ getInformationDueDate }}
 
-              .duetime__calendar(v-else
+              .duedate__calendar(v-else
                                 class="column-v-center column-h-center p-2")
                 div(class="w-100 row-v-center")
                   b-button(variant="danger"
                           size="sm"
-                          @click="toggleDuetime"
+                          @click="toggleDueDate"
                           class="my-2 mx-2 w-100") Cancelar
-                  b-button(v-if="duetime.value"
+                  b-button(v-if="duedate.value"
                           variant="success"
                           size="sm"
                           @click="addDueTime"
                           class="my-2 mx-2 w-100") Aceptar
 
-                b-calendar(v-model="duetime.value"
+                b-calendar(v-model="duedate.value"
                           @context="onContext"
                           locale="es-MX"
                           class="w-100 column-v-center column-h-center")
-            //- Repeat
+            //- DueDate: Repeat
             b-list-group-item(button class="text-muted ")
               b-icon(icon="arrow-repeat" class="text-muted h5 mb-0 mr-4")
               span Repetir
 
-          //- Category
-          b-list-group-item(button class="list-item text-muted")
-            b-icon(icon="tag" class="text-muted h5 mb-0 mr-4")
-            span Agregar una categoría
+          //- Related to 'Category'
+          b-list-group.my-2
+            b-list-group-item(button class="text-muted")
+              b-icon(icon="tag" class="text-muted h5 mb-0 mr-4")
+              span Agregar una categoría
 
-          //- Adjunt file
-          b-list-group-item(button class="list-item text-muted")
-            b-icon(icon="paperclip" class="text-muted h5 mb-0 mr-4")
-            span Agregar archivo
+          //- Related to 'Adjunt file'
+          b-list-group.my-2
+            b-list-group-item(button class="text-muted")
+              b-icon(icon="paperclip" class="text-muted h5 mb-0 mr-4")
+              span Agregar archivo
 
-          //- Notes
-          b-list-group-item(class="item-editable border d-flex my-1 rounded p-2")
-            textarea(v-model="note"
-                    @focus="onFocusTodoNote"
-                    @keyup.enter="endEditTodoNote"
-                    @blur="onEditTodoNote"
-                    class="text-area w-100"
-                    :placeholder="getTodoNoteInformation")
-            div
-              p {{ getUpdatedDifference }}
+          //- Related to 'Notes'
+          b-list-group.my-2
+            b-list-group-item(button class="bg-white my-1 h-100 rounded p-2")
+              div(v-if="editing.note" class="w-100 mb-3")
+                b-button(variant="default"
+                        size="sm"
+                        class="text-dark w-50"
+                        @click="onCancelEditTodoNote") Cancelar
+                b-button(variant="default"
+                        size="sm"
+                        class="text-success w-50"
+                        @click="onEditTodoNote") Guardar
+              .todonote__editable(contenteditable
+                                  v-html="todo.note || 'Agregar una nota'"
+                                  @focus="onFocusTodoNote"
+                                  @keyup.enter="endEditTodoNote"
+                                  class="w-100 h-100")
+              div.my-3
+                  p.text-muted {{ getUpdatedDifference }}
 
       //- Footer
       .sidebar__footer.row-v-center.jc-between
@@ -115,6 +127,7 @@
 import moment from 'moment'
 import Sidebar from '@/components/Layout/Sidebar'
 import { mapActions } from 'vuex'
+import { db } from '@/data/FirebaseConfig'
 
 export default {
   components: {
@@ -122,8 +135,8 @@ export default {
   },
 
   props: {
-    todo: {
-      type: Object,
+    id: {
+      type: String,
       required: false,
       default: null
     }
@@ -131,41 +144,46 @@ export default {
 
   data () {
     return {
+      todo: null,
+
       modal: {
         active: false
       },
 
-      duetime: {
+      duedate: {
         visible: false,
         value: '',
         context: null
       },
 
-      note: ''
+      editing: {
+        note: false
+      }
     }
   },
 
   computed: {
-    getInformationDuetime () {
+    getInformationDueDate () {
       const today = moment().format('YYYY-MM-DD')
 
-      return this.todo.duetime
-        ? (this.todo.duetime.ymd === today
+      return this.todo.duedate
+        ? (this.todo.duedate.ymd === today
 
           ? 'La tarea vence hoy'
-          : this.todo.duetime.formatted)
+          : this.todo.duedate.formatted)
 
         : 'Agregar fecha de vencimiento'
     },
 
-    getDuetimeStatusClass () {
-      if (!this.todo.duetime) return 'text-muted'
+    getDueDateStatusClass () {
+      if (!this.todo.duedate) return 'text-muted'
 
-      const duetime = moment(this.duetime.value)
-      const now = moment().format()
-      const diff = duetime.diff(now, 'days')
+      const now = moment()
 
-      return diff >= 0 ? 'text-success' : 'text-danger'
+      const duedate = moment(this.todo.duedate.ymd)
+      const hours = duedate.diff(now, 'hours')
+
+      return hours > 0 ? 'text-success' : 'text-danger'
     },
 
     getCreationTodoInformation () {
@@ -179,14 +197,15 @@ export default {
     },
 
     getUpdatedDifference () {
-      const lastUpdated = this.todo.lastUpdated
+      if (!this.todo.lastUpdated) return ''
+
       let difference
 
-      if (lastUpdated.seconds) {
+      if (this.todo.lastUpdated) {
         const date = new Date(this.todo.lastUpdated.seconds * 1000)
         difference = moment(date).fromNow()
       } else {
-        difference = moment(lastUpdated).fromNow()
+        difference = moment(this.todo.lastUpdated).fromNow()
       }
 
       return `Actualizado: ${difference}`
@@ -194,8 +213,12 @@ export default {
   },
 
   watch: {
-    todo (val) {
-      this.duetime.value = val.duetime.ymd
+    id: {
+      deep: true,
+      immediate: true,
+      handler (id) {
+        this.$bind('todo', db.collection('todos').doc(id))
+      }
     }
   },
 
@@ -204,14 +227,14 @@ export default {
   },
 
   mounted () {
-    this.duetime.value = this.todo ? (this.todo.duetime ? this.todo.duetime.ymd : '') : ''
+    this.duedate.value = this.todo ? (this.todo.duedate ? this.todo.duedate.ymd : '') : ''
   },
 
   methods: {
     ...mapActions('todo', ['deleteTodoById', 'updateTodoById']),
 
-    onEditTodoTitle (evt) {
-      const txt = evt.target.innerText.trim()
+    onEditTodoTitle (ev) {
+      const txt = ev.target.innerText.trim()
 
       this.todo.title = txt
       this.todo.lastUpdated = new Date()
@@ -220,50 +243,76 @@ export default {
     },
 
     endEditTodoTitle () {
-      this.$el.querySelector('.editable').blur()
+      this.$el.querySelector('.todotitle__editable').blur()
     },
 
     onFocusTodoNote () {
-      if (this.todo.note) {
-        this.note = this.todo.note
-      }
+      const editable = this.$el.querySelector('.todonote__editable')
+      editable.innerText = this.todo.note ? this.todo.note : ''
+      this.editing.note = true
     },
 
     onEditTodoNote () {
-      this.todo.note = this.note.trim()
+      const editable = this.$el.querySelector('.todonote__editable')
+      const txt = editable.innerText
+
+      if ((txt === '') || (txt === this.todo.note)) {
+        return this.onCancelEditTodoNote()
+      }
+
+      this.todo.note = txt
       this.todo.lastUpdated = new Date()
+
       this.note = null
+      this.editing.note = false
 
       this.updateTodoById(this.todo)
     },
 
-    endEditTodoNote () {
-      this.$el.querySelector('.text-area').blur()
+    endEditTodoNote (ev) {
+      //
+      // Control + Enter
+      if (ev.ctrlKey) {
+        this.onEditTodoNote(ev)
+        return this.$el.querySelector('.todonote__editable').blur()
+      }
+    },
+
+    onCancelEditTodoNote () {
+      const editable = this.$el.querySelector('.todonote__editable')
+
+      this.editing.note = false
+      editable.innerText = this.todo.note ? this.todo.note : 'Agregar una nota'
+      editable.blur()
     },
 
     onContext (ctx) {
-      this.duetime.context = ctx
+      this.duedate.context = ctx
     },
 
     toggleTodoCompleted () {
       this.updateTodoById(this.todo)
     },
 
-    toggleDuetime () {
-      this.duetime.visible = !this.duetime.visible
+    toggleDueDate () {
+      if (this.todo.duedate) {
+        this.duedate.value = this.todo.duedate.ymd
+      }
+
+      this.duedate.visible = !this.duedate.visible
     },
 
     addDueTime () {
-      const duetime = {
-        ymd: this.duetime.context.selectedYMD,
-        date: this.duetime.context.selectedDate,
-        formatted: this.duetime.context.selectedFormatted
+      const duedate = {
+        ymd: this.duedate.context.selectedYMD,
+        date: this.duedate.context.selectedDate,
+        formatted: this.duedate.context.selectedFormatted
       }
-      this.todo.duetime = duetime
+      this.todo.duedate = duedate
       this.todo.lastUpdated = new Date()
 
       this.updateTodoById(this.todo)
-      this.toggleDuetime()
+      this.toggleDueDate()
     },
 
     deleteTodo () {
@@ -318,7 +367,7 @@ $background-color: #f5f5f5;
   border-radius: 3px !important;
 }
 
-.editable {
+.todotitle__editable {
   border: 1px solid transparent;
 
   &:hover {
@@ -332,29 +381,14 @@ $background-color: #f5f5f5;
   }
 }
 
-.item-editable {
-  display: flex !important;
-  flex-direction: column;
-  padding: 0;
-  &:hover {
-    border-color: #999999 !important;
-  }
+.todonote__editable {
+  white-space: pre-line;
+  padding: 10px;
+  border: 1px solid transparent;
+
   &:focus-within {
-    border-color: #4971e5 !important;
-  }
-  textarea {
-    width: 100% !important;
-    padding: 5px;
-    border: 1px solid transparent;
-    resize: none;
-    &::placeholder {
-      font-style: italic;
-    }
-  }
-  p {
-    margin: 5px 0;
-    font-size: 12px;
-    color: #999999;
+    @extend .enfasis-border;
+    font-style: normal;
   }
 }
 
@@ -369,7 +403,7 @@ $background-color: #f5f5f5;
   border-top: 1px solid #e9e9e9;
 }
 
-.duetime__container {
+.duedate__container {
   background: white !important;
   background-color: white !important;
 }
