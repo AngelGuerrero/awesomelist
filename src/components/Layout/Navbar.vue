@@ -36,7 +36,7 @@ export default {
 
 nav {
   height: $navbar-height;
-  background-color: $wrapper-header-background-color;
+  background-color: $header_bg_color;
   color: white;
 
   & p, i, li {
@@ -74,7 +74,7 @@ nav {
     padding: 8px;
     &:hover {
       cursor: pointer;
-      background-color: darken($wrapper-header-background-color, 10%);
+      background-color: darken($header_bg_color, 10%);
     }
     img {
       border-radius: 50%;

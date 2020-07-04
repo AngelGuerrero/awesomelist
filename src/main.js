@@ -12,7 +12,8 @@ import {
   LayoutPlugin,
   ButtonPlugin,
   SpinnerPlugin,
-  CalendarPlugin
+  CalendarPlugin,
+  CollapsePlugin
 } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -46,6 +47,7 @@ Vue.use(LayoutPlugin)
 Vue.use(ButtonPlugin)
 Vue.use(SpinnerPlugin)
 Vue.use(CalendarPlugin)
+Vue.use(CollapsePlugin)
 
 //
 // Vuesax

@@ -30,7 +30,7 @@ body {
 
 ::-webkit-scrollbar-thumb:vertical {
   height: 10px;
-  background-color: darken($color: $wrapper-header-background-color, $amount: 10);
+  background-color: darken($color: $header_bg_color, $amount: 10);
 }
 
 @for $i from 1 to 6 {

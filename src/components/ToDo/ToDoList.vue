@@ -25,11 +25,11 @@ export default {
 
   methods: {
     emitSelect (todo) {
-      this.$emit('selectTodo', todo)
+      this.$emit('selectToDo', todo)
     },
 
     emitCheck (todo) {
-      this.$emit('checkTodo', todo)
+      this.$emit('checkToDo', todo)
     }
   }
 }

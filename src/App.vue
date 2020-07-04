@@ -3,7 +3,7 @@
     navbar
     #main
       .main__content
-        todo
+        to-do
     #footer By Ángel Guerrero
 </template>
 
@@ -11,13 +11,13 @@
 import Navbar from './components/Layout/Navbar'
 import Sidebar from './components/Layout/Sidebar'
 
-import Todo from './components/Todo/Todo'
+import ToDo from './components/ToDo/ToDo'
 
 export default {
   components: {
     Navbar,
     Sidebar,
-    Todo
+    ToDo
   }
 }
 </script>
@@ -47,6 +47,6 @@ export default {
   padding: $footer-padding 0px;
   text-align: center;
   color: #ffffff;
-  background-color: $wrapper-header-background-color;
+  background-color: $header_bg_color;
 }
 </style>

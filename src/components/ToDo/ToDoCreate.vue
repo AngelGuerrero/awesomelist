@@ -1,6 +1,6 @@
 <template lang="pug">
   div
-    b-input(placeholder="Nueva tarea" v-model="todo" @change="createTodo")
+    b-input(placeholder="Nueva tarea" v-model="todo" @change="createToDo")
 </template>
 
 <script>
@@ -13,10 +13,10 @@ export default {
   }),
 
   methods: {
-    ...mapActions('todo', [ 'saveTodo' ]),
+    ...mapActions('todo', [ 'saveToDo' ]),
 
-    createTodo () {
-      this.saveTodo({
+    createToDo () {
+      this.saveToDo({
         title: this.todo,
         done: false,
         created: new Date(),

@@ -17,7 +17,7 @@
         template(#footer)
           div(class="d-flex justify-content-between")
             vs-button(primary transparent @click="modal.active = false") Cancelar
-            vs-button(danger transparent @click="deleteTodo") Confirmar
+            vs-button(danger transparent @click="deleteToDo") Confirmar
 
       //- Content
       .sidebar__content.container
@@ -25,19 +25,19 @@
           b-list-group
             //- Tarea
             b-list-group-item(button class="list-item mb-0")
-              vs-checkbox(v-model="todo.done" @change="toggleTodoCompleted" class="mr-3")
+              vs-checkbox(v-model="todo.done" @change="toggleToDoCompleted" class="mr-3")
               .todotitle__editable(contenteditable
                                   v-text="todo.title"
-                                  @blur="onEditTodoTitle"
-                                  @keyup.enter="endEditTodoTitle"
+                                  @blur="onEditToDoTitle"
+                                  @keyup.enter="endEditToDoTitle"
                                   class="py-1 radius w-100 font-weight-bolder")
 
         div
           //- Related to 'Add to my day'
           b-list-group.my-2
-            b-list-group-item(button @click="onToggleTodoToMyDay" :variant="getTodoToMyDayVariant")
-              b-icon(icon="brightness-high" :variant="getTodoToMyDayVariant" class="h5 mb-0 mr-4")
-              span {{ getTodoToMyDayInformation }}
+            b-list-group-item(button @click="onToggleToDoToMyDay" :variant="getToDoToMyDayVariant")
+              b-icon(icon="brightness-high" :variant="getToDoToMyDayVariant" class="h5 mb-0 mr-4")
+              span {{ getToDoToMyDayInformation }}
 
           //- Related to 'Due Date'
           b-list-group.my-2
@@ -96,15 +96,15 @@
                 b-button(variant="default"
                         size="sm"
                         class="text-dark w-50"
-                        @click="onCancelEditTodoNote") Cancelar
+                        @click="onCancelEditToDoNote") Cancelar
                 b-button(variant="default"
                         size="sm"
                         class="text-success w-50"
-                        @click="onEditTodoNote") Guardar
+                        @click="onEditToDoNote") Guardar
               .todonote__editable(contenteditable
                                   v-html="todo.note || 'Agregar una nota'"
-                                  @focus="onFocusTodoNote"
-                                  @keyup.enter="endEditTodoNote"
+                                  @focus="onFocusToDoNote"
+                                  @keyup.enter="endEditToDoNote"
                                   class="w-100 h-100")
               div.my-3
                   p.text-muted {{ getUpdatedDifference }}
@@ -116,7 +116,7 @@
           b-icon(icon="arrow-bar-right")
 
         //- Information about todo
-        p.mb-0 {{ getCreationTodoInformation }}
+        p.mb-0 {{ getCreationToDoInformation }}
 
         //- Delete todo
         b-button(size="sm" variant="light" @click="modal.active = true")
@@ -164,11 +164,11 @@ export default {
   },
 
   computed: {
-    getTodoToMyDayInformation () {
+    getToDoToMyDayInformation () {
       return this.todo.isOnMyDay ? 'Tarea para el día de hoy' : 'Agregar a mi día'
     },
 
-    getTodoToMyDayVariant () {
+    getToDoToMyDayVariant () {
       return this.todo.isOnMyDay ? 'primary' : 'default'
     },
 
@@ -195,13 +195,13 @@ export default {
       return hours > 0 ? 'text-success' : 'text-danger'
     },
 
-    getCreationTodoInformation () {
+    getCreationToDoInformation () {
       const created = new Date(this.todo.created)
       const m = moment(created.seconds).format('DD MMMM YYYY')
       return `Tarea creada el: ${m}`
     },
 
-    getTodoNoteInformation () {
+    getToDoNoteInformation () {
       return this.todo.note ? this.todo.note : 'Agregar una nota'
     },
 
@@ -240,39 +240,39 @@ export default {
   },
 
   methods: {
-    ...mapActions('todo', ['deleteTodoById', 'updateTodoById']),
+    ...mapActions('todo', ['deleteToDoById', 'updateToDoById']),
 
-    onEditTodoTitle (ev) {
+    onEditToDoTitle (ev) {
       const txt = ev.target.innerText.trim()
 
       this.todo.title = txt
       this.todo.lastUpdated = new Date()
 
-      this.updateTodoById(this.todo)
+      this.updateToDoById(this.todo)
     },
 
-    endEditTodoTitle () {
+    endEditToDoTitle () {
       this.$el.querySelector('.todotitle__editable').blur()
     },
 
-    onToggleTodoToMyDay () {
+    onToggleToDoToMyDay () {
       if (!this.todo.isOnMyDay) return this.todoToMyDay(true)
 
       this.todoToMyDay(!this.todo.isOnMyDay)
     },
 
-    onFocusTodoNote () {
+    onFocusToDoNote () {
       const editable = this.$el.querySelector('.todonote__editable')
       editable.innerText = this.todo.note ? this.todo.note : ''
       this.editing.note = true
     },
 
-    onEditTodoNote () {
+    onEditToDoNote () {
       const editable = this.$el.querySelector('.todonote__editable')
       const txt = editable.innerText
 
       if ((txt === '') || (txt === this.todo.note)) {
-        return this.onCancelEditTodoNote()
+        return this.onCancelEditToDoNote()
       }
 
       this.todo.note = txt
@@ -281,19 +281,19 @@ export default {
       this.note = null
       this.editing.note = false
 
-      this.updateTodoById(this.todo)
+      this.updateToDoById(this.todo)
     },
 
-    endEditTodoNote (ev) {
+    endEditToDoNote (ev) {
       //
       // Control + Enter
       if (ev.ctrlKey) {
-        this.onEditTodoNote(ev)
+        this.onEditToDoNote(ev)
         return this.$el.querySelector('.todonote__editable').blur()
       }
     },
 
-    onCancelEditTodoNote () {
+    onCancelEditToDoNote () {
       const editable = this.$el.querySelector('.todonote__editable')
 
       this.editing.note = false
@@ -305,8 +305,8 @@ export default {
       this.duedate.context = ctx
     },
 
-    toggleTodoCompleted () {
-      this.updateTodoById(this.todo)
+    toggleToDoCompleted () {
+      this.updateToDoById(this.todo)
 
       if (this.todo.done) this.close()
     },
@@ -321,7 +321,7 @@ export default {
 
     todoToMyDay (value) {
       this.todo.isOnMyDay = value
-      this.updateTodoById(this.todo)
+      this.updateToDoById(this.todo)
     },
 
     addDueTime () {
@@ -333,12 +333,12 @@ export default {
       this.todo.duedate = duedate
       this.todo.lastUpdated = new Date()
 
-      this.updateTodoById(this.todo)
+      this.updateToDoById(this.todo)
       this.toggleDueDate()
     },
 
-    deleteTodo () {
-      this.deleteTodoById(this.todo.id)
+    deleteToDo () {
+      this.deleteToDoById(this.todo.id)
       this.modal.active = false
       this.close()
     },
@@ -368,7 +368,7 @@ $sidebar-footer-hight: 40px;
 .wrapper {
   height: 100%;
   overflow-y: auto;
-  background-color: $sidebar-bg-color;
+  background-color: $sidebar_bg_light;
 }
 
 .sidebar__content {
@@ -383,7 +383,7 @@ $sidebar-footer-hight: 40px;
   z-index: 999;
   top: 0;
   right: 0;
-  background-color: $sidebar-bg-color;
+  background-color: $sidebar_bg_light;
 }
 
 .list-item {

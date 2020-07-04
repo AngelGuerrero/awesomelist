@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { vuexfireMutations } from 'vuexfire'
 
-import todo from '@/store/modules/Todo'
+import todo from '@/store/modules/ToDo'
 
 Vue.use(Vuex)
 
