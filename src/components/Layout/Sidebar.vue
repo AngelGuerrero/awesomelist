@@ -1,6 +1,5 @@
 <template lang="pug">
   aside(:class="getSidebarClasses")
-
     .backdrop(v-if="mobile" @click="close()")
 
     div(:class="getSlotClasses")
@@ -50,23 +49,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/partials/variables.scss';
-
 .aside-full {
   width: 100%;
   height: 100%;
 }
 
 .mobile {
+  width: 100%;
   position: absolute;
   z-index: 99;
   top: 0;
   right: 0;
   overflow: hidden;
-  width: 350px;
   height: 100%;
-  @media screen and (max-width: 648px) {
-    width: 100%;
+  @include media-screen-md {
+    width: 350px;
   }
 }
 

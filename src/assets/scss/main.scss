@@ -1,6 +1,3 @@
-@import '@/assets/scss/partials/variables.scss';
-@import '@/assets/scss/partials/helpers.scss';
-
 *,
 *::before,
 *::after {
@@ -12,7 +9,7 @@
 body {
   margin: 0;
   padding: 0;
-  // font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
   font-size: 13px !important;
   scroll-behavior: smooth;
 }
@@ -37,4 +34,17 @@ body {
   h#{$i} {
     color: $header-color;
   }
+}
+
+
+.pre-dev {
+  position: fixed;
+  z-index: 1000 !important;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 80%;
+  padding: 20px;
+  background-color: black;
+  color: rgb(51, 255, 0) !important;
 }

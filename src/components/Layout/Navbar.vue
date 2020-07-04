@@ -32,8 +32,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/partials/variables.scss';
-
 nav {
   height: $navbar-height;
   background-color: $header_bg_color;

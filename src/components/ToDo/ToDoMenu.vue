@@ -1,37 +1,33 @@
 <template lang="pug">
-  .wrapper(class="border shadow h-100 d-flex flex-column" :class="{ 'wrapper--fixed': isFixed }")
+  .wrapper(class="border shadow" :class="{ 'wrapper--fixed': isFixed }")
     //- Toggle button set aside
-    div.w-100
+    .item_button__container
       b-button(variant="light" class="rounded-0" @click="isFixed = !isFixed")
         b-icon(v-if="isFixed" icon="toggle-on" variant="primary")
         b-icon(v-else icon="toggle-off" class="text-muted")
+    .menu__header.h-25
+      //- Header: Mi día
+      .item_button__container
+        b-button(block variant="light" class="d-flex row-v-center rounded-0")
+          b-icon(icon="brightness-high" variant="danger" class="h5 mb-0 mr-3 p-0")
+          div(class="w-100 text-left")
+            span.text-small Mi día
+      //- Header: Importante
+      .item_button__container
+        b-button(block variant="light" class="d-flex row-v-center rounded-0")
+          b-icon(icon="star" variant="warning" class="h5 mb-0 mr-3 p-0")
+          div(class="w-100 text-left")
+            span.text-small Importante
+      //- Header: Tareas
+      .item_button__container
+        b-button(block variant="light" class="d-flex row-v-center rounded-0")
+          b-icon(icon="list-task" variant="primary" class="h5 mb-0 mr-3 p-0")
+          div(class="w-100 text-left")
+            span.text-small Tareas
 
-    //- Content
-    div.w-100.h-100
-      //- Content: Header links
-      .menu__header.h-25
-        //- Header: Mi día
-        .item_button__container
-          b-button(block variant="light" class="d-flex row-v-center rounded-0")
-            b-icon(icon="brightness-high" variant="danger" class="h5 mb-0 mr-3 p-0")
-            div(class="w-100 text-left")
-              span.text-small Mi día
-        //- Header: Importante
-        .item_button__container
-          b-button(block variant="light" class="d-flex row-v-center rounded-0")
-            b-icon(icon="star" variant="warning" class="h5 mb-0 mr-3 p-0")
-            div(class="w-100 text-left")
-              span.text-small Importante
-        //- Header: Tareas
-        .item_button__container
-          b-button(block variant="light" class="d-flex row-v-center rounded-0")
-            b-icon(icon="list-task" variant="primary" class="h5 mb-0 mr-3 p-0")
-            div(class="w-100 text-left")
-              span.text-small Tareas
-
-      //- Content: Collections
-      .menu__content
-        to-do-collections
+    //- Content: Collections
+    .menu__content.h-75
+      to-do-collections
 
     //- Footer
     .menu__footer
@@ -73,7 +69,7 @@ export default {
     return {
       //
       // Check if the sidebar is fixed
-      isFixed: true,
+      isFixed: false,
       //
       // Data for the new collection
       collection: {
@@ -93,7 +89,6 @@ export default {
     ...mapActions('todo', ['createNewToDoCollection']),
 
     saveToDoCollection () {
-      console.log(this.collection.name)
       this.createNewToDoCollection({ name: this.collection.name, userId: 'testuser' })
       this.clearToDoCollectionInput()
     },
@@ -111,14 +106,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-//
-// Variables
-@import "@/assets/scss/partials/variables.scss";
-
 .wrapper {
   min-width: $toDoMenu_min_width;
   max-width: $toDoMenu_max_width;
   width: $toDoMenu_min_width;
+
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   overflow: hidden;
 
   transition: all 0.5s;
@@ -149,8 +145,7 @@ export default {
 }
 
 .menu__content {
-  overflow: auto;
-  height: 45%;
+  overflow: hidden;
 }
 
 .item_button__container {

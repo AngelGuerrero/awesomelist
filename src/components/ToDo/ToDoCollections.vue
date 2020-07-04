@@ -1,30 +1,35 @@
 <template lang="pug">
-  div.h-100.dev
+  .collections__wrapper
+    //- pre.pre-dev {{ $data }}
     .no_collections(v-if="collections.length <= 0")
       b-spinner(label="Cargando..." small class="mr-2")
       | Cargando...
 
     .collections(v-else)
       .collections__header
-        p Colecciones
+        .header__title Colecciones
+        .header__options
+          b-icon.icon__button(icon="arrows-collapse" @click="collapseAllRegisterItems")
+          b-icon.icon__button(icon="arrows-expand" @click="expandAll")
 
-      .items__wrapper(v-for="(collection, index) in collections" :key="collection.id")
-        .item(v-b-toggle="'collapse-' + index" @click="downloadListsFromCollection(collection)")
-          b-icon(icon="files" class="icon--left")
-          .item__text {{ collection.name }}
-          b-icon(icon="arrow-right-short" class="icon--right")
+      .collections__content
+        .collection__wrapper.border-bottom(v-for="(collection, index) in collections" :key="collection.id")
+          .collection__item(v-b-toggle="'collapse-' + index" @click="downloadListsFromCollection(collection); registerCollapsedItems('collapse-', index);")
+            b-icon.icon--left(icon="files")
+            .item__text.flex-grow-1 {{ collection.name }}
+            b-icon.icon--right(icon="arrow-right-short")
 
-        //- If have lists
-        b-collapse(:id="`collapse-${index}`")
-          .no_lists(v-if="!collection.lists")
-            b-spinner(label="Cargando listas..." small class="mr-2")
-            span Cargando...
-          div(v-else)
-            .no_lists(v-if="collection.lists.length <= 0")
-              span No hay listas actualmente
-            .list__item(v-else v-for="list in collection.lists" :key="list.id")
-              b-icon.icon--left(icon="list")
-              .item__text.w-75 {{ list.name }}
+          //- Lists from current collection
+          b-collapse(:id="`collapse-${index}`")
+            .no_lists(v-if="!collection.lists")
+              b-spinner(label="Cargando listas..." small class="mr-2")
+              span Cargando...
+            div(v-else)
+              .no_lists(v-if="collection.lists.length <= 0")
+                span Colección vacía
+              .list__item(v-else v-for="list in collection.lists" :key="list.id")
+                b-icon.icon--left(icon="list")
+                .item__text.w-75 {{ list.name }}
 </template>
 
 <script>
@@ -36,7 +41,7 @@ import {
 export default {
   data () {
     return {
-      selectedCollectionId: null
+      collapsedCollections: []
     }
   },
 
@@ -55,9 +60,8 @@ export default {
   methods: {
     ...mapActions('todo', ['getCollections', 'getListsFromCollection']),
 
-    async downloadListsFromCollection (collection) {
-      const getval = await this.getListsFromCollection(collection.id)
-      console.log(`Message: ${getval.message}`)
+    downloadListsFromCollection (collection) {
+      this.getListsFromCollection(collection.id)
     },
 
     noPropertyOrEmptyLists (collection) {
@@ -81,16 +85,73 @@ export default {
       }
 
       return retval
+    },
+
+    registerCollapsedItems (attr, id) {
+      const composedId = attr + id
+
+      const addItem = (param) => this.collapsedCollections.push(param)
+
+      try {
+        const found = this.collapsedCollections.find(element => element === composedId)
+        if (found) return setTimeout(_ => this.removeFromItemsCollapsed(composedId))
+
+        setTimeout(_ => addItem(attr + id))
+      } catch (error) {
+        console.log('error :>> ', error.message)
+      }
+    },
+
+    removeFromItemsCollapsed (identifier) {
+      this.collapsedCollections = this.collapsedCollections.filter(element => element !== identifier)
+    },
+
+    collapseAllRegisterItems () {
+      const removeAll = () => { this.collapsedCollections = [] }
+
+      const collapseAll = () =>
+        this.collapsedCollections
+          .map(element => this.$root.$emit('bv::toggle::collapse', element))
+
+      setTimeout(_ => {
+        collapseAll()
+        removeAll()
+      })
+    },
+
+    toggleCollapseAll () {
+      this.collections.forEach(element => this.$root.$emit('bv::toggle::collapse', element))
+    },
+
+    expandAll () {
+      const collectionsToExpand = this.collections.reduce((acc, curr, index, arr) => {
+        const composedId = 'collapse-' + index
+
+        const found = this.collapsedCollections.find(element => element === composedId)
+
+        if (!found) acc.push({ composedId, data: curr, index })
+
+        return acc
+      }, [])
+
+      //
+      // NOTE: Fix, improve this feature
+      // I'm doing raw code, and i don't like it...
+      //
+      const expandItems = () =>
+        collectionsToExpand.forEach(el => {
+          this.$root.$emit('bv::toggle::collapse', el.composedId)
+          this.downloadListsFromCollection(el.data)
+        })
+
+      setTimeout(_ => expandItems())
+      collectionsToExpand.forEach(el => this.registerCollapsedItems('collapse-', el.index))
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-//
-// Variables
-@import "@/assets/scss/partials/variables.scss";
-
 .no_collections {
   width: 100%;
   height: 100%;
@@ -99,16 +160,24 @@ export default {
   align-items: center;
 }
 
+.collections__wrapper {
+  width: $toDoMenu_max_width;
+  height: 100%;
+  overflow: hidden;
+}
+
 .collections {
-  overflow: auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .collections__header {
-  width: $toDoMenu_max_width;
-  overflow: hidden;
   padding: 5px;
   background-color: $sidebar_contrast_dark;
-  p {
+  display: flex;
+  justify-content: space-between;
+  .header__title {
     margin: 0;
     text-transform: uppercase;
     font-size: 0.8rem;
@@ -118,8 +187,9 @@ export default {
   }
 }
 
-.items__wrapper {
-  width: $toDoMenu_max_width;
+.collections__content {
+  flex-grow: 1;
+  overflow: auto;
   background-color: $sidebar_contrast_light;
 }
 
@@ -130,11 +200,12 @@ export default {
   text-align: center;
 }
 
-.item {
+.collection__item {
   width: 100%;
   padding: 5px 0;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   background-color: $sidebar_bg_light;
   &:hover {
     background-color: $header_bg_light;
@@ -147,7 +218,7 @@ export default {
 }
 
 .list__item {
-  @extend .item;
+  @extend .collection__item;
   padding-left: 0.6rem;
   background-color: white;
   &:hover {
@@ -159,9 +230,13 @@ export default {
 
 .icon {
   font-size: 1.1rem;
-  width: 20%;
+  min-width: 20%;
   padding: 0;
-  display: flex !important;
+}
+
+.icon__button {
+  @extend .icon;
+  cursor: pointer;
 }
 
 .icon--left {

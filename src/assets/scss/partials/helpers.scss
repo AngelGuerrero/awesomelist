@@ -1,4 +1,39 @@
-// Flex system
+// 
+// Media query to include into classes
+// 
+@mixin media-screen-xsm {
+  @media screen and (min-width: 320px) {
+    @content;
+  }
+}
+
+@mixin media-screen-sm {
+  @media screen and (min-width: 480px) {
+    @content;
+  }
+}
+
+@mixin media-screen-md {
+  @media screen and (min-width: 768px) {
+    @content;
+  }
+}
+
+@mixin media-screen-lg {
+  @media screen and (min-width: 992px) {
+    @content;
+  }
+}
+
+@mixin media-screen-xlg {
+  @media screen and (min-width: 1200px) {
+    @content;
+  }
+}
+
+// 
+// Custom flex helpers
+// 
 %flex-container {
   display: flex;
 }
@@ -49,6 +84,26 @@
   justify-content: flex-end;
 }
 
+.a-items-start {
+  align-items: flex-start;
+}
+
+.a-items-stretch {
+  align-items: stretch;
+}
+
+.a-items-end {
+  align-items: flex-end;
+}
+
+.a-items-center {
+  align-items: center;
+}
+
+.a-items-baseline {
+  align-items: baseline;
+}
+
 .no-wrapp {
   flex-wrap: nowrap;
 }
@@ -75,4 +130,8 @@
 }
 .dev-light {
   border: 1px dashed lightblue;
+}
+
+.dev-purple {
+  border: 1px dashed purple;
 }

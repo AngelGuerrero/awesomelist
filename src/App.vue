@@ -23,9 +23,6 @@ export default {
 </script>
 
 <style lang="scss">
-// Global styles
-@import '@/assets/scss/main.scss';
-
 #app {
   height: 100vh;
 }

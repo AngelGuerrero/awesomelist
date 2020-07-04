@@ -351,9 +351,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-//
-// Variables
-@import '@/assets/scss/partials/variables.scss';
 $sidebar-footer-hight: 40px;
 
 .list-group-item {

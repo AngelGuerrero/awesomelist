@@ -112,8 +112,10 @@ export default {
 <style lang="scss" scoped>
 .content {
   overflow: auto;
-  @media screen and (max-width: 648px) {
-    margin-left: 40px;
+  margin-left: 40px;
+
+  @include media-screen-md {
+    margin-left: 0;
   }
 }
 
