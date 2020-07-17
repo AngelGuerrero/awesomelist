@@ -17,7 +17,10 @@
             span.text-small Mi día
       //- Header: Importante
       .item_button__container
-        b-button(block variant="light" class="d-flex row-v-center rounded-0")
+        b-button(block
+                variant="light"
+                @click="showImportantList"
+                class="d-flex row-v-center rounded-0")
           b-icon(icon="star" variant="warning" class="h5 mb-0 mr-3 p-0")
           div(class="w-100 text-left")
             span.text-small Importante
@@ -63,9 +66,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapMutations, mapActions } from 'vuex'
 import ToDoCollections from '@/components/ToDo/ToDoCollections'
-import List from '@/data/ListClass'
 
 export default {
   components: {
@@ -93,6 +95,8 @@ export default {
   },
 
   methods: {
+    ...mapMutations('todo', ['setCurrentList']),
+
     ...mapActions('todo', ['createNewToDoCollection']),
 
     saveToDoCollection () {
@@ -110,14 +114,15 @@ export default {
     },
 
     showMyDayList () {
-      const list = new List('Mi día', 'Tareas para el día de hoy', 'isOnMyDay')
-      list.setAccentColor('#e36572')
-      this.$store.commit('todo/setCurrentList', list)
+      this.setCurrentList(this.$store.state.todo.categories.MYDAY)
+    },
+
+    showImportantList () {
+      this.setCurrentList(this.$store.state.todo.categories.IMPORTANT)
     },
 
     showDefaultList () {
-      const list = new List('Tareas', 'Todas las tareas', 'default')
-      this.$store.commit('todo/setCurrentList', list)
+      this.setCurrentList(this.$store.state.todo.categories.DEFAULT)
     }
   }
 }

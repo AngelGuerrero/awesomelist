@@ -4,25 +4,16 @@
  * to do's
  */
 export default class List {
-  constructor (title, description, category) {
-    this.name = title
+  constructor (name, title, filter, description, accentColor) {
+    this.name = name
     this.title = title
+    this.filter = filter
     this.description = description
-    this.category = category
+    this.accentColor = accentColor
+
     this.orderBy = []
     this.filterBy = []
     this.icon = null
     this.wallpaper = null
-    this.accentColor = null
-    this.createdAt = new Date()
-    this.updatedAt = new Date()
-  }
-
-  setAccentColor (color) {
-    this.accentColor = color
-  }
-
-  getAccentColor () {
-    return this.accentColor || '#0078d7'
   }
 };

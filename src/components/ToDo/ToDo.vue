@@ -3,7 +3,7 @@
     .menu
       to-do-menu
     .content(class="flex-grow-1 h-100 p-3")
-      h1(class="h3" :style="getStyle") {{ getCurrentListTitle }}
+      h1(class="h3" :style="getStyle") {{ getCurrentList.title }}
       to-do-create
       to-do-list(:todolist="getUncompletedToDos"
                 @selectToDo="selectToDo"
@@ -57,7 +57,7 @@ export default {
     ...mapGetters('todo', [
       'getUncompletedToDos',
       'getCompletedToDos',
-      'getCurrentListTitle',
+      'getCurrentList',
       'getCurrentListAccentColor'
     ]),
 
@@ -75,7 +75,7 @@ export default {
 
     getStyle () {
       const style = {
-        color: this.getCurrentListAccentColor
+        color: this.getCurrentList.accentColor
       }
       return style
     }
