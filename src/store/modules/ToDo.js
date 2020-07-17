@@ -5,23 +5,46 @@ export default {
   namespaced: true,
 
   state: {
+    //
+    // All collection of To Do's
     todos: [],
-
+    //
+    // Gruped To Do's lists
     collections: [],
-
-    lists: []
+    //
+    // Grup of To Do's
+    lists: [],
+    //
+    // The list is showed currently,
+    // this object contains the options
+    // of filtered To Do's
+    currentList: null
   },
 
   getters: {
-    getUncompletedToDos: (state) =>
-      state.todos
+    getUncompletedToDos: (state) => {
+      const todos = state.todos
         .filter(el => !el.done)
-        .sort((a, b) => b.created - a.created),
+        .sort((a, b) => b.created - a.created)
 
-    getCompletedToDos: (state) =>
-      state.todos
+      if (state.currentList.category === 'default') return todos
+
+      const filtered = todos.filter(el => el[state.currentList.category])
+
+      return filtered
+    },
+
+    getCompletedToDos: (state) => {
+      const todos = state.todos
         .filter(el => el.done)
-        .sort((a, b) => a.created - b.created),
+        .sort((a, b) => a.created - b.created)
+
+      if (state.currentList.category === 'default') return todos
+
+      const filtered = todos.filter(el => el[state.currentList.category])
+
+      return filtered
+    },
 
     getListsOfCollection: (state) => (collectionId) =>
       state.lists
@@ -34,7 +57,11 @@ export default {
       const collection = state.collections.find(el => el.id === collectionId)
 
       return ('lists' in collection)
-    }
+    },
+
+    getCurrentListTitle: (state) => state.currentList.title,
+
+    getCurrentListAccentColor: (state) => state.currentList.getAccentColor()
   },
 
   mutations: {
@@ -53,6 +80,14 @@ export default {
 
     setLists (state, payload) {
       state.lists = payload
+    },
+
+    setCurrentList (state, payload) {
+      state.currentList = payload
+    },
+
+    addCurrentListFilter (state, payload) {
+      state.currentList.filterBy.push(payload)
     }
   },
 

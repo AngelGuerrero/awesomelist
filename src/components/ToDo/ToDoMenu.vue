@@ -8,7 +8,10 @@
     .menu__header.h-25
       //- Header: Mi día
       .item_button__container
-        b-button(block variant="light" class="d-flex row-v-center rounded-0")
+        b-button(block
+                variant="light"
+                @click="showMyDayList"
+                class="d-flex row-v-center rounded-0")
           b-icon(icon="brightness-high" variant="danger" class="h5 mb-0 mr-3 p-0")
           div(class="w-100 text-left")
             span.text-small Mi día
@@ -20,7 +23,10 @@
             span.text-small Importante
       //- Header: Tareas
       .item_button__container
-        b-button(block variant="light" class="d-flex row-v-center rounded-0")
+        b-button(block
+                variant="light"
+                @click="showDefaultList"
+                class="d-flex row-v-center rounded-0")
           b-icon(icon="list-task" variant="primary" class="h5 mb-0 mr-3 p-0")
           div(class="w-100 text-left")
             span.text-small Tareas
@@ -59,6 +65,7 @@
 <script>
 import { mapActions } from 'vuex'
 import ToDoCollections from '@/components/ToDo/ToDoCollections'
+import List from '@/data/ListClass'
 
 export default {
   components: {
@@ -100,6 +107,17 @@ export default {
 
     toggleCollectionForm () {
       this.collection.visible = !this.collection.visible
+    },
+
+    showMyDayList () {
+      const list = new List('Mi día', 'Tareas para el día de hoy', 'isOnMyDay')
+      list.setAccentColor('#e36572')
+      this.$store.commit('todo/setCurrentList', list)
+    },
+
+    showDefaultList () {
+      const list = new List('Tareas', 'Todas las tareas', 'default')
+      this.$store.commit('todo/setCurrentList', list)
     }
   }
 }
