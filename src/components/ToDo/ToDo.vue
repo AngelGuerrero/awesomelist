@@ -3,7 +3,7 @@
     .menu
       to-do-menu
     .content(class="flex-grow-1 h-100 p-3")
-      h1(class="h3") Tareas
+      h1(class="h3" :style="getStyle") {{ getCurrentListTitle }}
       to-do-create
       to-do-list(:todolist="getUncompletedToDos"
                 @selectToDo="selectToDo"
@@ -46,7 +46,7 @@ export default {
   data: () => ({
     showMenu: false,
 
-    showCompletedToDos: true,
+    showCompletedToDos: false,
 
     currentId: null
   }),
@@ -54,7 +54,12 @@ export default {
   computed: {
     ...mapState('todo', ['todos']),
 
-    ...mapGetters('todo', ['getUncompletedToDos', 'getCompletedToDos']),
+    ...mapGetters('todo', [
+      'getUncompletedToDos',
+      'getCompletedToDos',
+      'getCurrentListTitle',
+      'getCurrentListAccentColor'
+    ]),
 
     thereAreCompletedToDos () {
       return this.getCompletedToDos.length > 0
@@ -66,6 +71,13 @@ export default {
 
     showToDoDetail () {
       return this.currentId !== null
+    },
+
+    getStyle () {
+      const style = {
+        color: this.getCurrentListAccentColor
+      }
+      return style
     }
   },
 
@@ -110,11 +122,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.toDo__title {
+  color: rgb(207, 23, 23);
+}
+
 .content {
   overflow: auto;
   margin-left: 40px;
 
-  @include media-screen-md {
+  @media screen and (min-width: 650px) {
     margin-left: 0;
   }
 }

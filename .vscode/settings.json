@@ -3,5 +3,6 @@
   "git.ignoreLimitWarning": true,
   "editor.acceptSuggestionOnEnter": "smart",
   "editor.snippetSuggestions": "top",
-  "editor.autoClosingOvertype": "always"
+  "editor.autoClosingOvertype": "always",
+  "editor.fontSize": 12
 }

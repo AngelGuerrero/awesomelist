@@ -12,12 +12,24 @@ import Navbar from './components/Layout/Navbar'
 import Sidebar from './components/Layout/Sidebar'
 
 import ToDo from './components/ToDo/ToDo'
+import List from '@/data/ListClass'
 
 export default {
   components: {
     Navbar,
     Sidebar,
     ToDo
+  },
+
+  created () {
+    this.setInitialList()
+  },
+
+  methods: {
+    setInitialList () {
+      const list = new List('Tareas', 'Todas las tareas', 'default')
+      this.$store.commit('todo/setCurrentList', list)
+    }
   }
 }
 </script>
