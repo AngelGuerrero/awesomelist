@@ -12,7 +12,6 @@ import Navbar from './components/Layout/Navbar'
 import Sidebar from './components/Layout/Sidebar'
 
 import ToDo from './components/ToDo/ToDo'
-import List from '@/data/ListClass'
 
 export default {
   components: {
@@ -27,7 +26,7 @@ export default {
 
   methods: {
     setInitialList () {
-      const list = new List('Tareas', 'Todas las tareas', 'default')
+      const list = this.$store.state.todo.categories.DEFAULT
       this.$store.commit('todo/setCurrentList', list)
     }
   }

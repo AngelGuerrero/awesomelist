@@ -1,34 +1,44 @@
 <template lang="pug">
   div
-    b-input(placeholder="Nueva tarea" v-model="todo" @change="createToDo")
+    b-input(placeholder="Nueva tarea" v-model="inputText" @change="createToDo")
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
 
   data: () => ({
-    todo: null
+    inputText: null
   }),
+
+  computed: mapGetters('todo', ['getCurrentList']),
 
   methods: {
     ...mapActions('todo', [ 'saveToDo' ]),
 
     createToDo () {
-      this.saveToDo({
-        title: this.todo,
+      const todo = {
+        title: this.inputText,
         done: false,
         created: new Date(),
         lastUpdated: null,
         createdBy: 'User test'
-      })
+      }
 
+      //
+      // Add the filter for category of the current list
+      if (this.getCurrentList.name !== 'default') {
+        const filter = this.getCurrentList.filter
+        todo[filter] = true
+      }
+
+      this.saveToDo(todo)
       this.clearInput()
     },
 
     clearInput () {
-      this.todo = null
+      this.inputText = null
     }
   }
 }

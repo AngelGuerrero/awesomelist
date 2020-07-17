@@ -1,5 +1,6 @@
 import { db } from '@/data/FirebaseConfig'
 import { firestoreAction } from 'vuexfire'
+import List from '../../data/ListClass'
 
 export default {
   namespaced: true,
@@ -15,6 +16,13 @@ export default {
     // Grup of To Do's
     lists: [],
     //
+    // Instances of list for categories
+    categories: {
+      DEFAULT: new List('default', 'Tareas', 'default', 'Todas las tareas', '#0078d7'),
+      MYDAY: new List('myday', 'Mi día', 'isOnMyDay', 'Mis tareas para hoy', '#e36572'),
+      IMPORTANT: new List('important', 'Importante', 'isImportant', 'Tareas importantes', '#c99a0e')
+    },
+    //
     // The list is showed currently,
     // this object contains the options
     // of filtered To Do's
@@ -27,9 +35,9 @@ export default {
         .filter(el => !el.done)
         .sort((a, b) => b.created - a.created)
 
-      if (state.currentList.category === 'default') return todos
+      if (state.currentList.filter === 'default') return todos
 
-      const filtered = todos.filter(el => el[state.currentList.category])
+      const filtered = todos.filter(el => el[state.currentList.filter])
 
       return filtered
     },
@@ -39,9 +47,9 @@ export default {
         .filter(el => el.done)
         .sort((a, b) => a.created - b.created)
 
-      if (state.currentList.category === 'default') return todos
+      if (state.currentList.filter === 'default') return todos
 
-      const filtered = todos.filter(el => el[state.currentList.category])
+      const filtered = todos.filter(el => el[state.currentList.filter])
 
       return filtered
     },
@@ -59,9 +67,7 @@ export default {
       return ('lists' in collection)
     },
 
-    getCurrentListTitle: (state) => state.currentList.title,
-
-    getCurrentListAccentColor: (state) => state.currentList.getAccentColor()
+    getCurrentList: state => state.currentList
   },
 
   mutations: {
