@@ -48,3 +48,22 @@ body {
   background-color: black;
   color: rgb(51, 255, 0) !important;
 }
+
+// 
+// Animations
+// 
+.fade-in-right-enter-active {
+  animation: fadeInRight 0.3s;
+}
+
+.fade-in-right-leave-active {
+  animation: bounceOutRight 0.5s;
+}
+
+.fade-in-enter-active {
+  animation: fadeIn 0.5s ease-in-out;
+  animation-fill-mode: forwards;
+}
+.fade-in-leave-active {
+  animation: fadeOut 0.5s ease-in-out;
+}

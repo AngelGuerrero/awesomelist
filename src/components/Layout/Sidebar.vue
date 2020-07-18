@@ -1,8 +1,8 @@
 <template lang="pug">
-  aside(:class="getSidebarClasses")
+  aside(id="sidebar" :class="getSidebarClasses")
     .backdrop(v-if="mobile" @click="close()")
 
-    div(:class="getSlotClasses")
+    div(:class="getSlotClasses" class="animate__animated animate__fadeInRight")
       slot
 
 </template>
@@ -57,12 +57,13 @@ export default {
 .mobile {
   width: 100%;
   position: absolute;
-  z-index: 99;
+  z-index: 9999 !important;
   top: 0;
   right: 0;
   overflow: hidden;
   height: 100%;
-  @include media-screen-md {
+  background:#ffffff;
+  @media screen and (min-width: 548px) {
     width: 350px;
   }
 }
@@ -76,12 +77,14 @@ export default {
 
 .backdrop {
   position: absolute;
-  z-index: 1;
+  z-index: 99 !important;
   top: 0;
   right: 0;
   width: 100%;
   height: 100%;
-  background:rgba(255, 255, 255, 0.400);
+  background:rgba(255, 255, 255, 0.164);
   backdrop-filter: blur(1px);
+  animation: fadeIn;
+  animation-duration: 3s;
 }
 </style>

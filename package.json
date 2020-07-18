@@ -12,6 +12,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.4",
     "@fortawesome/free-solid-svg-icons": "^5.3.1",
     "@fortawesome/vue-fontawesome": "^0.1.1",
+    "animate.css": "^4.1.0",
     "bootstrap": "^4.5.0",
     "bootstrap-vue": "^2.15.0",
     "element-ui": "^2.4.8",
