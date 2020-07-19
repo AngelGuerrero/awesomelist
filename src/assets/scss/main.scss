@@ -5,16 +5,15 @@
   outline: none !important;
 }
 
-
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
   font-size: 13px !important;
   scroll-behavior: smooth;
 }
 
-// 
+//
 // Transitions
 ::-webkit-scrollbar {
   width: 8px;
@@ -30,13 +29,6 @@ body {
   background-color: darken($color: $header_bg_color, $amount: 10);
 }
 
-@for $i from 1 to 6 {
-  h#{$i} {
-    color: $header-color;
-  }
-}
-
-
 .pre-dev {
   position: fixed;
   z-index: 1000 !important;
@@ -49,21 +41,34 @@ body {
   color: rgb(51, 255, 0) !important;
 }
 
-// 
+.vs-notification-parent {
+  @media screen and (min-width: 648px) {
+    margin-left: 30px;
+  }
+}
+
+//
 // Animations
-// 
+//
+// FadeInRight
 .fade-in-right-enter-active {
   animation: fadeInRight 0.3s;
 }
-
 .fade-in-right-leave-active {
   animation: bounceOutRight 0.5s;
 }
-
+// FadeIn
 .fade-in-enter-active {
   animation: fadeIn 0.5s ease-in-out;
   animation-fill-mode: forwards;
 }
 .fade-in-leave-active {
   animation: fadeOut 0.5s ease-in-out;
+}
+// FideInUp
+.fade-in-up-enter-active {
+  animation: fadeInUp 0.3s;
+}
+.fade-in-up-leave-active {
+  animation: fadeOutUp 0.3s;
 }

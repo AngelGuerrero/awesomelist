@@ -8,6 +8,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Navbar from './components/Layout/Navbar'
 import Sidebar from './components/Layout/Sidebar'
 
@@ -18,6 +19,14 @@ export default {
     Navbar,
     Sidebar,
     ToDo
+  },
+
+  computed: mapState('ui', ['notification']),
+
+  watch: {
+    notification (val) {
+      if (val.show) this.$vs.notification(val)
+    }
   },
 
   created () {

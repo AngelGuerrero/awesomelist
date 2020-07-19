@@ -35,9 +35,15 @@
           div
             //- Related to 'Add to my day'
             b-list-group.my-2
-              b-list-group-item(button @click="onToggleToDoToMyDay" :variant="getToDoToMyDayVariant")
+              b-list-group-item(button @click="toMyDay()" :variant="getToDoToMyDayVariant")
                 b-icon(icon="brightness-high" :variant="getToDoToMyDayVariant" class="h5 mb-0 mr-4")
                 span {{ getToDoToMyDayInformation }}
+
+            //- Related to 'Mark as important'
+            b-list-group.my-2
+              b-list-group-item(button @click="markAsImportant()" :variant="getToDoImportantVariant")
+                b-icon(icon="star" :variant="getToDoImportantVariant" class="h5 mb-0 mr-4")
+                span {{ getToDoImportantInformation }}
 
             //- Related to 'Due Date'
             b-list-group.my-2
@@ -172,6 +178,14 @@ export default {
       return this.todo.isOnMyDay ? 'primary' : 'default'
     },
 
+    getToDoImportantInformation () {
+      return this.todo.isImportant ? 'Tarea importante' : 'Marcar tarea como importante'
+    },
+
+    getToDoImportantVariant () {
+      return this.todo.isImportant ? 'primary' : 'default'
+    },
+
     getInformationDueDate () {
       const today = moment().format('YYYY-MM-DD')
 
@@ -240,7 +254,12 @@ export default {
   },
 
   methods: {
-    ...mapActions('todo', ['deleteToDoById', 'updateToDoById']),
+    ...mapActions('todo', [
+      'deleteToDoById',
+      'updateToDoById',
+      'onToggleAddToMyDay',
+      'onToggleMarkAsImportant'
+    ]),
 
     onEditToDoTitle (ev) {
       const txt = ev.target.innerText.trim()
@@ -255,10 +274,16 @@ export default {
       this.$el.querySelector('.todotitle__editable').blur()
     },
 
-    onToggleToDoToMyDay () {
-      if (!this.todo.isOnMyDay) return this.todoToMyDay(true)
+    toMyDay () {
+      if (this.todo.isOnMyDay === undefined) return this.onToggleAddToMyDay({ todo: this.todo, value: true })
 
-      this.todoToMyDay(!this.todo.isOnMyDay)
+      this.onToggleAddToMyDay({ todo: this.todo, value: !this.todo.isOnMyDay })
+    },
+
+    markAsImportant () {
+      if (this.todo.isImportant === undefined) return this.onToggleMarkAsImportant({ todo: this.todo, value: true })
+
+      this.onToggleMarkAsImportant({ todo: this.todo, value: !this.todo.isImportant })
     },
 
     onFocusToDoNote () {

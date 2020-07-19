@@ -178,12 +178,26 @@ export default {
         })
     },
 
-    updateToDoById: async ({ context }, todo) => {
-      db.collection('todos')
+    updateToDoById: async ({ commit }, todo) => {
+      const retval = { error: false, message: '' }
+
+      await db.collection('todos')
         .doc(todo.id)
         .update(todo)
-        .then((_) => console.log('ToDo updated successfully'))
-        .catch((error) => console.log(`Something went wrong: ${error}`))
+        .then(_ => { retval.message = `To Do '${todo.title}' updated successfully` })
+        .catch(error => {
+          retval.error = true
+          retval.message = error.message
+          commit('ui/showNotification', {
+            show: true,
+            color: 'danger',
+            title: 'Algo salió mal',
+            text: retval.message,
+            position: 'top-center'
+          }, { root: true })
+        })
+
+      return retval
     },
 
     deleteToDoById: async ({ context }, id) => {
@@ -192,6 +206,41 @@ export default {
         .delete()
         .then(() => console.log('ToDo deleted successfully'))
         .catch((error) => console.error(`Something went wrong: ${error}`))
+    },
+
+    //
+    // EVENTS
+    //
+    onToggleAddToMyDay: async ({ dispatch, commit }, { todo, value }) => {
+      todo.isOnMyDay = value
+
+      const getval = await dispatch('updateToDoById', todo)
+
+      commit('ui/showNotification', {
+        show: true,
+        progress: 'auto',
+        border: 'success',
+        title: value ? 'Tarea agregada a tu día' : 'Tarea removida de tu día',
+        text: todo.title
+      }, { root: true })
+
+      return getval
+    },
+
+    onToggleMarkAsImportant: async ({ dispatch, commit }, { todo, value }) => {
+      todo.isImportant = value
+
+      const getval = await dispatch('updateToDoById', todo)
+
+      commit('ui/showNotification', {
+        show: true,
+        progress: 'auto',
+        border: 'success',
+        title: value ? 'Tarea marcada como importante' : 'Tarea desmarcada como importante',
+        text: todo.title
+      }, { root: true })
+
+      return getval
     }
   }
 }
