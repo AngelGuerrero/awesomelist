@@ -7,6 +7,11 @@ export default {
       title: '',
       text: '',
       position: 'top-left'
+    },
+
+    // TODO: Add a queue to play all sound from completed tasks
+    doneTaskSound: {
+      play: false
     }
   },
 
@@ -15,13 +20,17 @@ export default {
 
   mutations: {
     showNotification (state, payload) {
-      //
-      // Default settings
-      //
+      // !
+      // ! Default settings
+      // !
       payload.square = true
       payload.position = 'bottom-left'
 
       state.notification = payload
+    },
+
+    playDoneTaskSound (state, value) {
+      state.doneTaskSound.play = value
     }
   },
 
