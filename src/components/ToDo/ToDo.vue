@@ -4,7 +4,9 @@
       to-do-menu
     .content(class="flex-grow-1 h-100 p-3")
       h1(class="h3" :style="getStyle") {{ getCurrentList.title }}
+
       to-do-create
+
       to-do-list(:todolist="getUncompletedToDos"
                 @selectToDo="selectToDo"
                 @checkToDo="completeToDo")
@@ -22,8 +24,8 @@
                 @checkToDo="uncompleteToDo"
                 :class="{ 'completed': thereAreCompletedToDos }")
 
-    .detail(class="ml-2")
-      transition(name="fade-in-right")
+    transition(name="fade-right")
+      .detail(class="ml-2")
         to-do-detail(v-if="showToDoDetail" :id="currentId" @close="currentId = null")
 
 </template>
