@@ -23,7 +23,8 @@
                 :class="{ 'completed': thereAreCompletedToDos }")
 
     .detail(class="ml-2")
-      to-do-detail(v-if="showToDoDetail" :id="currentId" @close="currentId = null")
+      transition(name="fade-in-right")
+        to-do-detail(v-if="showToDoDetail" :id="currentId" @close="currentId = null")
 
 </template>
 

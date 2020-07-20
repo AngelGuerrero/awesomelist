@@ -119,19 +119,13 @@
   }
 }
 
-.dev {
-  border: 1px dashed tomato;
-}
-.dev-blue {
-  border: 1px dashed blue;
-}
-.dev-dark {
-  border: 1px dashed black;
-}
-.dev-light {
-  border: 1px dashed lightblue;
-}
+// 
+// Borders
+// 
+$colors: tomato, blue, black, purple, lightblue;
 
-.dev-purple {
-  border: 1px dashed purple;
+@each $color in $colors {
+  .dev--#{$color} {
+    border: 1px dashed $color;
+  }
 }
