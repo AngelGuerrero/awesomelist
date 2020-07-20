@@ -10,9 +10,9 @@ export default {
     },
 
     // TODO: Add a queue to play all sound from completed tasks
-    doneTaskSound: {
-      play: false
-    }
+    doneTaskSound: false,
+    addTaskSound: false
+
   },
 
   getters: {
@@ -30,10 +30,17 @@ export default {
     },
 
     playDoneTaskSound (state, value) {
-      state.doneTaskSound.play = value
+      state.doneTaskSound = value
     }
   },
 
   actions: {
+    playAddTaskSound: ({ state }, value) => {
+      state.addTaskSound = value
+
+      const restore = () => { state.addTaskSound = false }
+
+      setTimeout(_ => restore(), 100)
+    }
   }
 }

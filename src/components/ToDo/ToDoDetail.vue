@@ -25,7 +25,7 @@
             b-list-group
               //- Tarea
               b-list-group-item(button class="list-item mb-0")
-                vs-checkbox(v-model="todo.done" @change="toggleToDoCompleted" class="mr-3")
+                vs-checkbox(v-model="todo.done" @change="toggleToDoCompleted()" class="mr-3")
                 .todotitle__editable(contenteditable
                                     v-text="todo.title"
                                     @blur="onEditToDoTitle"
@@ -257,6 +257,7 @@ export default {
     ...mapActions('todo', [
       'deleteToDoById',
       'updateToDoById',
+      'onToggleToDo',
       'onToggleAddToMyDay',
       'onToggleMarkAsImportant'
     ]),
@@ -331,12 +332,8 @@ export default {
     },
 
     toggleToDoCompleted () {
-      this.updateToDoById(this.todo)
-
-      if (this.todo.done) {
-        this.$store.commit('ui/playDoneTaskSound', true)
-        this.close()
-      }
+      this.onToggleToDo(this.todo)
+      this.close()
     },
 
     toggleDueDate () {

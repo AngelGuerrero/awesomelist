@@ -3,8 +3,11 @@
     //- === Sounds ===
     //-
     //- Done Task Sound
-    audio(id="elDoneTaskSound" hidden)
+    audio(id="elDoneTaskSound")
       source(src="@/assets/sounds/doneTask.mp3" type="audio/mp3")
+
+    audio(id="elAddTaskSound")
+      source(src="@/assets/sounds/addedTask.mp3" type="audio/mp3")
 
     navbar
     #main
@@ -28,7 +31,7 @@ export default {
   },
 
   computed: {
-    ...mapState('ui', ['notification', 'doneTaskSound'])
+    ...mapState('ui', ['notification', 'doneTaskSound', 'addTaskSound'])
   },
 
   watch: {
@@ -36,16 +39,16 @@ export default {
       if (val.show) this.$vs.notification(val)
     },
 
-    doneTaskSound: {
-      deep: true,
-      immediate: true,
-      handler (sound) {
-        if (sound.play) {
-          this.$el.querySelector('#elDoneTaskSound').play()
-          this.playDoneTaskSound(false)
-        }
+    doneTaskSound (val) {
+      if (val) {
+        this.$el.querySelector('#elDoneTaskSound').play()
       }
+    },
+
+    addTaskSound (val) {
+      this.$el.querySelector('#elAddTaskSound').play()
     }
+
   },
 
   created () {
@@ -54,11 +57,11 @@ export default {
 
   mounted () {
     const doneTaskSound = this.$el.querySelector('#elDoneTaskSound')
-
     doneTaskSound.addEventListener('timeupdate', _ => {
       if (Math.floor(doneTaskSound.currentTime) === 1) {
         doneTaskSound.pause()
         doneTaskSound.currentTime = 0
+        this.playDoneTaskSound(false)
       }
     })
   },
