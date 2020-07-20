@@ -109,6 +109,7 @@ export default {
       todo.done = true
       todo.lastUpdated = new Date()
       this.updateToDoById(todo)
+      this.currentId = null
     },
 
     uncompleteToDo (todo) {
