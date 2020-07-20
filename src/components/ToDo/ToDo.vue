@@ -21,7 +21,7 @@
                 v-show="showCompletedToDos"
                 :todolist="getCompletedToDos"
                 @selectToDo="selectToDo"
-                @checkToDo="uncompleteToDo"
+                @checkToDo="onToggleToDo"
                 :class="{ 'completed': thereAreCompletedToDos }")
 
     transition(name="fade-right")
@@ -104,20 +104,11 @@ export default {
   methods: {
     ...mapMutations('ui', ['playDoneTaskSound']),
 
-    ...mapActions('todo', ['getToDos', 'updateToDoById']),
+    ...mapActions('todo', ['getToDos', 'onToggleToDo']),
 
     completeToDo (todo) {
-      todo.done = true
-      todo.lastUpdated = new Date()
-      this.updateToDoById(todo)
-      this.playDoneTaskSound(true)
+      this.onToggleToDo(todo)
       this.currentId = null
-    },
-
-    uncompleteToDo (todo) {
-      todo.done = false
-      todo.lastUpdated = new Date()
-      this.updateToDoById(todo)
     },
 
     selectToDo (todo) {

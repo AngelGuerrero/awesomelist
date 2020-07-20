@@ -154,11 +154,12 @@ export default {
         })
     },
 
-    saveToDo: async ({ context }, payload) => {
+    saveToDo: async ({ dispatch }, payload) => {
       db.collection('todos')
         .add(payload)
         .then((response) => {
           console.log(`ToDo created successfully with id: ${response.id}`)
+          dispatch('ui/playAddTaskSound', true, { root: true })
         })
         .catch((error) => {
           console.log(`Something went wront ${error}`)
@@ -211,6 +212,24 @@ export default {
     //
     // EVENTS
     //
+    onToggleToDo: async ({ dispatch, commit }, todo) => {
+      todo.lastUpdated = new Date()
+
+      const getval = await dispatch('updateToDoById', todo)
+
+      commit('ui/showNotification', {
+        show: true,
+        progress: 'auto',
+        border: 'success',
+        title: todo.done ? 'Tarea completada' : 'Tarea desmarcada',
+        text: todo.title
+      }, { root: true })
+
+      commit('ui/playDoneTaskSound', true, { root: true })
+
+      return getval
+    },
+
     onToggleAddToMyDay: async ({ dispatch, commit }, { todo, value }) => {
       todo.isOnMyDay = value
 
