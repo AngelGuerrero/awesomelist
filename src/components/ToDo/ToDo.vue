@@ -31,12 +31,12 @@
 </template>
 
 <script>
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+
 import ToDoMenu from '@/components/ToDo/ToDoMenu'
 import ToDoList from '@/components/ToDo/ToDoList'
 import ToDoCreate from '@/components/ToDo/ToDoCreate'
 import ToDoDetail from '@/components/ToDo/ToDoDetail'
-
-import { mapState, mapGetters, mapActions } from 'vuex'
 
 export default {
   components: {
@@ -84,8 +84,7 @@ export default {
     }
   },
 
-  //
-  // NOTE: FIX WATCH PROPERTY
+  // TODO: FIX WATCH PROPERTY
   watch: {
     getUncompletedToDos: {
       deep: true,
@@ -103,12 +102,15 @@ export default {
   },
 
   methods: {
+    ...mapMutations('ui', ['playDoneTaskSound']),
+
     ...mapActions('todo', ['getToDos', 'updateToDoById']),
 
     completeToDo (todo) {
       todo.done = true
       todo.lastUpdated = new Date()
       this.updateToDoById(todo)
+      this.playDoneTaskSound(true)
       this.currentId = null
     },
 

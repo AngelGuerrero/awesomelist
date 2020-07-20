@@ -333,7 +333,10 @@ export default {
     toggleToDoCompleted () {
       this.updateToDoById(this.todo)
 
-      if (this.todo.done) this.close()
+      if (this.todo.done) {
+        this.$store.commit('ui/playDoneTaskSound', true)
+        this.close()
+      }
     },
 
     toggleDueDate () {
