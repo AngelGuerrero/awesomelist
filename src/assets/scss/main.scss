@@ -52,17 +52,16 @@ body {
 //
 // FadeInRight
 .fade-right-enter-active {
-  animation: fadeInRight 0.3s;
+  animation: fadeInRight 1s;
 }
 .fade-right-leave-active {
-  animation: bounceOutRight 0.5s;
+  animation: bounceOutRight 1s;
 }
-// FadeIn
-.fade-in-enter-active {
+// Fade
+.fade-enter-active {
   animation: fadeIn 0.5s ease-in-out;
-  animation-fill-mode: forwards;
 }
-.fade-in-leave-active {
+.fade-leave-active {
   animation: fadeOut 0.5s ease-in-out;
 }
 // FideInUp
@@ -72,7 +71,7 @@ body {
 .fade-up-leave-active {
   animation: fadeOutUp 0.3s;
 }
-// FadeInDown
+// LightSpeed
 .light-speed-enter-active {
   animation: lightSpeedInRight 1s;
 }

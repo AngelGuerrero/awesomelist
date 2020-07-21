@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import Navbar from './components/Layout/Navbar'
 import Sidebar from './components/Layout/Sidebar'
 
@@ -31,7 +31,11 @@ export default {
   },
 
   computed: {
-    ...mapState('ui', ['notification', 'doneTaskSound', 'addTaskSound'])
+    ...mapState('ui', [
+      'notification',
+      'doneTaskSound',
+      'addTaskSound'
+    ])
   },
 
   watch: {
@@ -52,6 +56,7 @@ export default {
   },
 
   created () {
+    this.listenWindowResize()
     this.setInitialList()
   },
 
@@ -67,7 +72,11 @@ export default {
   },
 
   methods: {
-    ...mapMutations('ui', ['playDoneTaskSound']),
+    ...mapMutations('ui', [
+      'playDoneTaskSound'
+    ]),
+
+    ...mapActions('ui', ['listenWindowResize']),
 
     setInitialList () {
       const list = this.$store.state.todo.categories.DEFAULT

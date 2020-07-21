@@ -1,132 +1,131 @@
 <template lang="pug">
-  sidebar(@close="close")
-    transition(name="fade-in")
-      .wrapper(:key="1" v-if="!todo" class="container row-v-center row-h-center")
-        b-spinner.mr-3
-        | Cargando...
-      //- Main todo detail content
-      .wrapper(:key="2" v-else)
-        //- Modal
-        vs-dialog(overflow-hidden blur prevent-close v-model="modal.active")
-          template(#header)
-            h6(class="font-weight-bolder text-danger") Eliminar tarea
+  sidebar(id="todo__detail" @close="close")
+    .wrapper(v-if="!todo" class="container row-v-center row-h-center")
+      b-spinner.mr-3
+      | Cargando...
+    //- Main todo detail content
+    .wrapper(v-else)
+      //- Modal
+      vs-dialog(overflow-hidden blur prevent-close v-model="modal.active")
+        template(#header)
+          h6(class="font-weight-bolder text-danger") Eliminar tarea
 
-          div(class="w-100 h-100 d-flex flex-column justify-content-center align-items-center")
-            p ¿Desea eliminar la tarea '{{ todo.title }}' ?
+        div(class="w-100 h-100 d-flex flex-column justify-content-center align-items-center")
+          p ¿Desea eliminar la tarea '{{ todo.title }}' ?
 
-          template(#footer)
-            div(class="d-flex justify-content-between")
-              vs-button(primary transparent @click="modal.active = false") Cancelar
-              vs-button(danger transparent @click="deleteToDo") Confirmar
+        template(#footer)
+          div(class="d-flex justify-content-between")
+            vs-button(primary transparent @click="modal.active = false") Cancelar
+            vs-button(danger transparent @click="deleteToDo") Confirmar
 
-        //- Content
-        .sidebar__content.container
-          .content__header
-            b-list-group
-              //- Tarea
-              b-list-group-item(button class="list-item mb-0")
-                vs-checkbox(v-model="todo.done" @change="toggleToDoCompleted()" class="mr-3")
-                .todotitle__editable(contenteditable
-                                    v-text="todo.title"
-                                    @blur="onEditToDoTitle"
-                                    @keyup.enter="endEditToDoTitle"
-                                    class="py-1 radius w-100 font-weight-bolder")
+      //- Content
+      .sidebar__content.container
+        .content__header
+          b-list-group
+            //- Tarea
+            b-list-group-item(button class="list-item mb-0")
+              vs-checkbox(v-model="todo.done" @change="toggleToDoCompleted()" class="mr-3")
+              .todotitle__editable(contenteditable
+                                  v-text="todo.title"
+                                  @blur="onEditToDoTitle"
+                                  @keyup.enter="endEditToDoTitle"
+                                  class="py-1 radius w-100 font-weight-bolder")
 
-          div
-            //- Related to 'Add to my day'
-            b-list-group.my-2
-              b-list-group-item(button @click="toMyDay()" :variant="getToDoToMyDayVariant")
-                b-icon(icon="brightness-high" :variant="getToDoToMyDayVariant" class="h5 mb-0 mr-4")
-                span {{ getToDoToMyDayInformation }}
+        div
+          //- Related to 'Add to my day'
+          b-list-group.my-2
+            b-list-group-item(button @click="toMyDay()" :variant="getToDoToMyDayVariant")
+              b-icon(icon="brightness-high" :variant="getToDoToMyDayVariant" class="h5 mb-0 mr-4")
+              span {{ getToDoToMyDayInformation }}
 
-            //- Related to 'Mark as important'
-            b-list-group.my-2
-              b-list-group-item(button @click="markAsImportant()" :variant="getToDoImportantVariant")
-                b-icon(icon="star" :variant="getToDoImportantVariant" class="h5 mb-0 mr-4")
-                span {{ getToDoImportantInformation }}
+          //- Related to 'Mark as important'
+          b-list-group.my-2
+            b-list-group-item(button @click="markAsImportant()" :variant="getToDoImportantVariant")
+              b-icon(icon="star" :variant="getToDoImportantVariant" class="h5 mb-0 mr-4")
+              span {{ getToDoImportantInformation }}
 
-            //- Related to 'Due Date'
-            b-list-group.my-2
-              //- DueDate: Remind me
-              b-list-group-item(button class="text-muted")
-                b-icon(icon="bell" class="text-muted h5 mb-0 mr-4")
-                span Recordarme
+          //- Related to 'Due Date'
+          b-list-group.my-2
+            //- DueDate: Remind me
+            b-list-group-item(button class="text-muted")
+              b-icon(icon="bell" class="text-muted h5 mb-0 mr-4")
+              span Recordarme
 
-              //- DueDate: Due Time Widget
-              b-list-group(class="duedate__container rounded-0" :class="{ 'enfasis-border': duedate.visible }")
-                b-list-group-item(v-if="!duedate.visible"
-                                  button
-                                  @click="toggleDueDate"
-                                  class="text-muted border-top-0 border-bottom-0 rounded-0")
-                  b-icon(icon="calendar-date" :class="getDueDateStatusClass" class="h5 mb-0 mr-4")
-                  span(:class="getDueDateStatusClass") {{ getInformationDueDate }}
+            //- DueDate: Due Time Widget
+            b-list-group(class="duedate__container rounded-0" :class="{ 'enfasis-border': duedate.visible }")
+              b-list-group-item(v-if="!duedate.visible"
+                                button
+                                @click="toggleDueDate"
+                                class="text-muted border-top-0 border-bottom-0 rounded-0")
+                b-icon(icon="calendar-date" :class="getDueDateStatusClass" class="h5 mb-0 mr-4")
+                span(:class="getDueDateStatusClass") {{ getInformationDueDate }}
 
-                .duedate__calendar(v-else
-                                  class="column-v-center column-h-center p-2")
-                  div(class="w-100 row-v-center")
-                    b-button(variant="danger"
-                            size="sm"
-                            @click="toggleDueDate"
-                            class="my-2 mx-2 w-100") Cancelar
-                    b-button(v-if="duedate.value"
-                            variant="success"
-                            size="sm"
-                            @click="addDueTime"
-                            class="my-2 mx-2 w-100") Aceptar
-
-                  b-calendar(v-model="duedate.value"
-                            @context="onContext"
-                            locale="es-MX"
-                            class="w-100 column-v-center column-h-center")
-              //- DueDate: Repeat
-              b-list-group-item(button class="text-muted ")
-                b-icon(icon="arrow-repeat" class="text-muted h5 mb-0 mr-4")
-                span Repetir
-
-            //- Related to 'Category'
-            b-list-group.my-2
-              b-list-group-item(button class="text-muted")
-                b-icon(icon="tag" class="text-muted h5 mb-0 mr-4")
-                span Agregar una categoría
-
-            //- Related to 'Adjunt file'
-            b-list-group.my-2
-              b-list-group-item(button class="text-muted")
-                b-icon(icon="paperclip" class="text-muted h5 mb-0 mr-4")
-                span Agregar archivo
-
-            //- Related to 'Notes'
-            b-list-group.my-2
-              b-list-group-item(button class="bg-white my-1 h-100 rounded p-2")
-                div(v-if="editing.note" class="w-100 mb-3")
-                  b-button(variant="default"
+              .duedate__calendar(v-else
+                                class="column-v-center column-h-center p-2")
+                div(class="w-100 row-v-center")
+                  b-button(variant="danger"
                           size="sm"
-                          class="text-dark w-50"
-                          @click="onCancelEditToDoNote") Cancelar
-                  b-button(variant="default"
+                          @click="toggleDueDate"
+                          class="my-2 mx-2 w-100") Cancelar
+                  b-button(v-if="duedate.value"
+                          variant="success"
                           size="sm"
-                          class="text-success w-50"
-                          @click="onEditToDoNote") Guardar
-                .todonote__editable(contenteditable
-                                    v-html="todo.note || 'Agregar una nota'"
-                                    @focus="onFocusToDoNote"
-                                    @keyup.enter="endEditToDoNote"
-                                    class="w-100 h-100")
-                div.my-3
-                    p.text-muted {{ getUpdatedDifference }}
+                          @click="addDueTime"
+                          class="my-2 mx-2 w-100") Aceptar
 
-        //- Footer
-        .sidebar__footer.row-v-center.jc-between
-          //- Close component
-          b-button(size="sm" variant="light" @click="close")
-            b-icon(icon="arrow-bar-right")
+                b-calendar(v-model="duedate.value"
+                          @context="onContext"
+                          locale="es-MX"
+                          class="w-100 column-v-center column-h-center")
+            //- DueDate: Repeat
+            b-list-group-item(button class="text-muted ")
+              b-icon(icon="arrow-repeat" class="text-muted h5 mb-0 mr-4")
+              span Repetir
 
-          //- Information about todo
-          p.mb-0 {{ getCreationToDoInformation }}
+          //- Related to 'Category'
+          b-list-group.my-2
+            b-list-group-item(button class="text-muted")
+              b-icon(icon="tag" class="text-muted h5 mb-0 mr-4")
+              span Agregar una categoría
 
-          //- Delete todo
-          b-button(size="sm" variant="light" @click="modal.active = true")
-            b-icon(icon="trash" variant="danger")
+          //- Related to 'Adjunt file'
+          b-list-group.my-2
+            b-list-group-item(button class="text-muted")
+              b-icon(icon="paperclip" class="text-muted h5 mb-0 mr-4")
+              span Agregar archivo
+
+          //- Related to 'Notes'
+          b-list-group.my-2
+            b-list-group-item(button class="bg-white my-1 h-100 rounded p-2")
+              div(v-if="editing.note" class="w-100 mb-3")
+                b-button(variant="default"
+                        size="sm"
+                        class="text-dark w-50"
+                        @click="onCancelEditToDoNote") Cancelar
+                b-button(variant="default"
+                        size="sm"
+                        class="text-success w-50"
+                        @click="onEditToDoNote") Guardar
+              .todonote__editable(contenteditable
+                                  v-html="todo.note || 'Agregar una nota'"
+                                  @focus="onFocusToDoNote"
+                                  @keyup.enter="endEditToDoNote"
+                                  class="w-100 h-100")
+              div.my-3
+                  p.text-muted {{ getUpdatedDifference }}
+
+      //- Footer
+      .sidebar__footer.row-v-center.jc-between
+        //- Close component
+        b-button(size="sm" variant="light" @click="close")
+          b-icon(icon="arrow-bar-right")
+
+        //- Information about todo
+        p.mb-0 {{ getCreationToDoInformation }}
+
+        //- Delete todo
+        b-button(size="sm" variant="light" @click="modal.active = true")
+          b-icon(icon="trash" variant="danger")
 
 </template>
 
@@ -368,8 +367,17 @@ export default {
       this.close()
     },
 
+    addAnimation () {
+      const toDoDetail = this.$el.querySelector('.wrapper')
+      toDoDetail.classList.add('animate__animated')
+      toDoDetail.classList.add('animate__bounceOutRight')
+    },
+
     close () {
-      this.$emit('close')
+      this.addAnimation()
+      //
+      // Wait until the animation done
+      setTimeout(_ => this.$emit('close'), 500)
     }
   }
 }
@@ -379,7 +387,7 @@ export default {
 $sidebar-footer-hight: 40px;
 
 .list-group-item {
-  transition: all 2s;
+  transition: all 1s;
 }
 
 .enfasis-border {

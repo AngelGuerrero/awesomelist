@@ -1,9 +1,11 @@
 <template lang="pug">
-  .wrapper(class="border shadow" :class="{ 'wrapper--fixed': isFixed }")
+  .wrapper(class="border shadow" :class="{ 'wrapper--fixed': toDoMenu.isFixed }")
     //- Toggle button set aside
     .item_button__container
-      b-button(variant="light" class="rounded-0" @click="isFixed = !isFixed")
-        b-icon(v-if="isFixed" icon="toggle-on" variant="primary")
+      b-button(variant="light"
+              class="rounded-0"
+              @click="toggleToDoMenuFixed(!toDoMenu.isFixed)")
+        b-icon(v-if="toDoMenu.isFixed" icon="toggle-on" variant="primary")
         b-icon(v-else icon="toggle-off" class="text-muted")
     .menu__header.h-25
       //- Header: Mi día
@@ -66,7 +68,7 @@
 </template>
 
 <script>
-import { mapMutations, mapActions } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import ToDoCollections from '@/components/ToDo/ToDoCollections'
 
 export default {
@@ -74,18 +76,20 @@ export default {
     ToDoCollections
   },
 
-  data () {
-    return {
-      //
-      // Check if the sidebar is fixed
-      isFixed: false,
-      //
-      // Data for the new collection
-      collection: {
-        visible: false,
-        name: ''
-      }
+  data: () => ({
+    //
+    // Check if the sidebar is fixed
+    isFixed: false,
+    //
+    // Data for the new collection
+    collection: {
+      visible: false,
+      name: ''
     }
+  }),
+
+  computed: {
+    ...mapState('ui', ['toDoMenu'])
   },
 
   watch: {
@@ -96,8 +100,9 @@ export default {
 
   methods: {
     ...mapMutations('todo', ['setCurrentList']),
-
     ...mapActions('todo', ['createNewToDoCollection']),
+
+    ...mapMutations('ui', ['toggleToDoMenuFixed']),
 
     saveToDoCollection () {
       this.createNewToDoCollection({ name: this.collection.name, userId: 'testuser' })

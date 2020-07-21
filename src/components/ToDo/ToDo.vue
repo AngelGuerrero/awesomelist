@@ -24,9 +24,10 @@
                 @checkToDo="onToggleToDo"
                 :class="{ 'completed': thereAreCompletedToDos }")
 
-    transition(name="fade-right")
-      .detail(class="ml-2")
-        to-do-detail(v-if="showToDoDetail" :id="currentId" @close="currentId = null")
+    .detail
+      to-do-detail(v-if="showToDoDetail"
+                  :id="currentId"
+                  @close="currentId = null")
 
 </template>
 
@@ -90,9 +91,9 @@ export default {
       deep: true,
       immediate: false,
       handler (todos) {
-        // if (todos.length <= 0) return
-        // const uncompleteToDo = todos[0]
-        // this.currentId = uncompleteToDo.id
+        if (todos.length <= 0) return
+        const uncompleteToDo = todos[0]
+        this.currentId = uncompleteToDo.id
       }
     }
   },
