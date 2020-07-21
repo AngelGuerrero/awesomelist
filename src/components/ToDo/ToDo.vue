@@ -5,7 +5,7 @@
     .content(class="flex-grow-1 h-100 p-3")
       h1(class="h3" :style="getStyle") {{ getCurrentList.title }}
 
-      to-do-create
+      to-do-create(@createdToDo="selectToDo")
 
       to-do-list(:todolist="getUncompletedToDos"
                 @selectToDo="selectToDo"
@@ -24,9 +24,10 @@
                 @checkToDo="onToggleToDo"
                 :class="{ 'completed': thereAreCompletedToDos }")
 
-    transition(name="fade-right")
-      .detail(class="ml-2")
-        to-do-detail(v-if="showToDoDetail" :id="currentId" @close="currentId = null")
+    .detail
+      to-do-detail(v-if="showToDoDetail"
+                  :id="currentId"
+                  @close="currentId = null")
 
 </template>
 

@@ -154,16 +154,37 @@ export default {
         })
     },
 
-    saveToDo: async ({ dispatch }, payload) => {
-      db.collection('todos')
+    saveToDo: async ({ commit, dispatch }, payload) => {
+      const retval = { error: false, message: '', data: payload }
+
+      await db.collection('todos')
         .add(payload)
-        .then((response) => {
-          console.log(`ToDo created successfully with id: ${response.id}`)
+        .then(response => {
+          retval.message = 'Tarea creada correctamente'
+          retval.data.id = response.id
+
+          commit('ui/showNotification', {
+            show: true,
+            color: 'success',
+            title: retval.message,
+            text: payload.title
+          }, { root: true })
+
           dispatch('ui/playAddTaskSound', true, { root: true })
         })
-        .catch((error) => {
-          console.log(`Something went wront ${error}`)
+        .catch(error => {
+          retval.error = true
+          retval.message = `Something went wrong ${error.message}`
+
+          commit('ui/showNotification', {
+            show: true,
+            color: 'danger',
+            title: 'Algo salió mal',
+            text: retval.message
+          }, { root: true })
         })
+
+      return retval
     },
 
     getToDoById: async ({ context }, id) => {

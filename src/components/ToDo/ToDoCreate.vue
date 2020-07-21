@@ -17,12 +17,13 @@ export default {
   methods: {
     ...mapActions('todo', [ 'saveToDo' ]),
 
-    createToDo () {
+    async createToDo () {
       const todo = {
         title: this.inputText,
         done: false,
         created: new Date(),
         lastUpdated: null,
+        // TODO: change to real firebase user
         createdBy: 'User test'
       }
 
@@ -33,8 +34,11 @@ export default {
         todo[filter] = true
       }
 
-      this.saveToDo(todo)
+      const getval = await this.saveToDo(todo)
+      if (getval.error) return
+
       this.clearInput()
+      this.$emit('createdToDo', getval.data)
     },
 
     clearInput () {

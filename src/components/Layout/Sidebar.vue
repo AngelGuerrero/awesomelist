@@ -1,48 +1,45 @@
 <template lang="pug">
   aside(id="sidebar" :class="getSidebarClasses")
-    .backdrop(v-if="mobile" @click="close()")
+    .backdrop(v-if="sidebar.mobile" @click="close()")
 
-    div(:class="getSlotClasses" class="animate__animated animate__fadeInRight")
+    div(id="sidebar__content"
+        :class="getSlotClasses"
+        class="animate__animated animate__slideInRight animate__faster")
       slot
 
 </template>
 
 <script>
-export default {
-  data () {
-    return {
-      mobile: false
-    }
-  },
+import { mapState } from 'vuex'
 
+export default {
   computed: {
+    ...mapState('ui', ['sidebar']),
+
     getSidebarClasses () {
-      const clazzes = this.mobile ? 'aside-full' : 'desktop'
-      return [
-        clazzes
-      ]
+      const classes = this.sidebar.mobile ? 'aside-full' : 'desktop'
+      return [ classes ]
     },
 
     getSlotClasses () {
-      const clazzes = this.mobile ? 'mobile border shadow' : 'desktop shadow'
-      return [
-        clazzes
-      ]
+      const classes = this.sidebar.mobile ? 'mobile border shadow' : 'desktop shadow'
+      return [ classes ]
     }
-  },
-
-  created () {
-    this.resize()
-    window.addEventListener('resize', this.resize)
   },
 
   methods: {
     close () {
-      this.$emit('close')
+      this.addAnimation()
+      //
+      // Wait until the animation done
+      setTimeout(_ => this.$emit('close'), 500)
     },
 
-    resize () {
-      this.mobile = window.innerWidth < 800
+    addAnimation () {
+      const sidebarContent = this.$el.querySelector('#sidebar__content')
+      sidebarContent.classList.remove('animate__slideInRight')
+      sidebarContent.classList.remove('animate__faster')
+      sidebarContent.classList.add('animate__bounceOutRight')
     }
   }
 }
@@ -84,7 +81,6 @@ export default {
   height: 100%;
   background:rgba(255, 255, 255, 0.164);
   backdrop-filter: blur(1px);
-  animation: fadeIn;
-  animation-duration: 3s;
+  animation: fade 3s;
 }
 </style>

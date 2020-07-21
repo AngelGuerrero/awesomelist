@@ -2,6 +2,31 @@ export default {
   namespaced: true,
 
   state: {
+    /**
+     * Last registered window width
+     */
+    window: {
+      lastWidhtSize: 0
+    },
+
+    /**
+     * To Do Menu Component's settings
+     */
+    toDoMenu: {
+      isFixed: false
+    },
+
+    /**
+     * Sidebar Component' settings
+     */
+    sidebar: {
+      mobile: false
+    },
+
+    /**
+    * Object that is watched and
+    * send user notification
+    */
     notification: {
       show: false,
       title: '',
@@ -12,13 +37,37 @@ export default {
     // TODO: Add a queue to play all sound from completed tasks
     doneTaskSound: false,
     addTaskSound: false
-
   },
 
   getters: {
+    isWindowGrowing: (state) => state.window.lastWidhtSize < window.innerWidth
   },
 
   mutations: {
+    computeSizeComponents (state) {
+      //
+      // Sidebar
+      state.sidebar.mobile = window.innerWidth <= 900
+      //
+      // Save size of window
+      state.window.lastWidhtSize = window.innerWidth
+    },
+
+    checkToDoMenuSize (state, { getters }) {
+      const breakpoint = 850
+
+      if (getters.isWindowGrowing && !state.toDoMenu.isFixed) {
+        state.toDoMenu.isFixed = window.innerWidth > breakpoint
+      } else {
+        if (!state.toDoMenu.isFixed) return
+        state.toDoMenu.isFixed = window.innerWidth > breakpoint
+      }
+    },
+
+    toggleToDoMenuFixed (state, value) {
+      state.toDoMenu.isFixed = value
+    },
+
     showNotification (state, payload) {
       // !
       // ! Default settings
@@ -35,6 +84,15 @@ export default {
   },
 
   actions: {
+    listenWindowResize: ({ state, getters, commit }) => {
+      commit('computeSizeComponents', { getters })
+
+      window.addEventListener('resize', () => {
+        commit('checkToDoMenuSize', { getters })
+        commit('computeSizeComponents')
+      })
+    },
+
     playAddTaskSound: ({ state }, value) => {
       state.addTaskSound = value
 
