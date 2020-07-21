@@ -78,9 +78,6 @@ export default {
 
   data: () => ({
     //
-    // Check if the sidebar is fixed
-    isFixed: false,
-    //
     // Data for the new collection
     collection: {
       visible: false,

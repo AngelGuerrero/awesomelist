@@ -6,7 +6,7 @@ export default {
      * Last registered window width
      */
     window: {
-      lastWidhtSize: null
+      lastWidhtSize: 0
     },
 
     /**
@@ -40,18 +40,28 @@ export default {
   },
 
   getters: {
-    isResizeToRight: (state) => state.window.lastWidhtSize < window.innerWidth
+    isWindowGrowing: (state) => state.window.lastWidhtSize < window.innerWidth
   },
 
   mutations: {
     computeSizeComponents (state) {
-      // Menu
-      if (state.toDoMenu.isFixed) {
-        state.toDoMenu.isFixed = window.innerWidth > 850
-      }
-
+      //
       // Sidebar
-      state.sidebar.mobile = window.innerWidth < 900
+      state.sidebar.mobile = window.innerWidth <= 900
+      //
+      // Save size of window
+      state.window.lastWidhtSize = window.innerWidth
+    },
+
+    checkToDoMenuSize (state, { getters }) {
+      const breakpoint = 850
+
+      if (getters.isWindowGrowing && !state.toDoMenu.isFixed) {
+        state.toDoMenu.isFixed = window.innerWidth > breakpoint
+      } else {
+        if (!state.toDoMenu.isFixed) return
+        state.toDoMenu.isFixed = window.innerWidth > breakpoint
+      }
     },
 
     toggleToDoMenuFixed (state, value) {
@@ -75,18 +85,11 @@ export default {
 
   actions: {
     listenWindowResize: ({ state, getters, commit }) => {
-      state.window.lastWidhtSize = window.innerWidth
-
-      commit('computeSizeComponents')
+      commit('computeSizeComponents', { getters })
 
       window.addEventListener('resize', () => {
+        commit('checkToDoMenuSize', { getters })
         commit('computeSizeComponents')
-
-        if (getters('isResizeToRight')) {
-          console.log('Se está moviendo hacia la derecha')
-        } else {
-          console.log('Se está moviendo hacia la izquierda')
-        }
       })
     },
 

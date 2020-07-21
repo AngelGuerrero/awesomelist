@@ -5,7 +5,7 @@
     .content(class="flex-grow-1 h-100 p-3")
       h1(class="h3" :style="getStyle") {{ getCurrentList.title }}
 
-      to-do-create
+      to-do-create(@createdToDo="selectToDo")
 
       to-do-list(:todolist="getUncompletedToDos"
                 @selectToDo="selectToDo"
@@ -91,9 +91,9 @@ export default {
       deep: true,
       immediate: false,
       handler (todos) {
-        if (todos.length <= 0) return
-        const uncompleteToDo = todos[0]
-        this.currentId = uncompleteToDo.id
+        // if (todos.length <= 0) return
+        // const uncompleteToDo = todos[0]
+        // this.currentId = uncompleteToDo.id
       }
     }
   },
