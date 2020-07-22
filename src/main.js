@@ -1,6 +1,13 @@
 import Vue from 'vue'
 import App from './App.vue'
 import { store } from './store'
+import router from './router'
+
+import VueFormulate from '@braid/vue-formulate'
+
+//
+// Firebase
+import { firebase } from '@/data/FirebaseConfig'
 import { firestorePlugin } from 'vuefire'
 
 //
@@ -8,6 +15,7 @@ import { firestorePlugin } from 'vuefire'
 import {
   IconsPlugin,
   FormInputPlugin,
+  FormPlugin,
   ListGroupPlugin,
   LayoutPlugin,
   ButtonPlugin,
@@ -41,6 +49,7 @@ Vue.use(DropdownItem)
 // Bootstrap
 Vue.use(ListGroupPlugin)
 Vue.use(FormInputPlugin)
+Vue.use(FormPlugin)
 Vue.use(IconsPlugin)
 Vue.use(ListGroupPlugin)
 Vue.use(LayoutPlugin)
@@ -57,7 +66,21 @@ Vue.use(Vuesax)
 // Firestore
 Vue.use(firestorePlugin)
 
-new Vue({
-  store,
-  render: h => h(App)
-}).$mount('#app')
+//
+// Vue formulate
+Vue.use(VueFormulate)
+
+//
+// Listen firebase authentication change
+let app
+
+firebase.auth().onAuthStateChanged(user => {
+  if (!app) {
+    app = new Vue({
+      devtool: 'source-map',
+      router,
+      store,
+      render: h => h(App)
+    }).$mount('#app')
+  }
+})
