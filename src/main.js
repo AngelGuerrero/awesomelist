@@ -68,7 +68,12 @@ Vue.use(firestorePlugin)
 
 //
 // Vue formulate
-Vue.use(VueFormulate)
+Vue.use(VueFormulate, {
+  classes: {
+    input: 'form-control form-control-sm mb-3',
+    label: 'text-muted'
+  }
+})
 
 //
 // Listen firebase authentication change

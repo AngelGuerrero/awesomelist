@@ -8,58 +8,67 @@
         h1.app__title(class="h3") awesomelist
 
       .form__wrapper(class="shadow")
-        h4(class="app__title mb-4 text-dark") Ingresar
-        formulate-form
-          formulate-input(type="text"
-                          id="form__username"
-                          name="username"
-                          label="Nombre de usuario o email"
-                          label-class="text-muted"
-                          input-class="form-control form-control-sm"
-                          placeholder="micorreo@email.com"
-                          )
-          formulate-input(type="password"
-                          name="password"
-                          label="Contraseña"
-                          label-class="text-muted"
-                          placeholder="*******"
-                          input-class="form-control form-control-sm"
-                          outer-class="mt-3"
-                          )
-          formulate-input(type="submit"
-                          id="btn--submit"
-                          label="Ingresar"
-                          input-class="btn btn-primary btn-block btn-sm mt-3"
-                          )
-        p(class="text-center mt-4") ¿Aún no tienes una cuenta?
+        h4(class="app__title mb-4 text-primary") {{ getPageTitle }}
+        component(:is="component")
+        p(class="text-center mt-4") {{ getFooter.text }}
           |
-          a(href="#")  Registrate
+          router-link(:to="getFooter.link" class="ml-2") {{ getFooter.btnText }}
 
       .credits(class="h-25 d-flex align-items-end")
         .credits__content(class="w-100 p-1 d-flex justify-content-center align-items-center")
           h6.credits__title(class="mb-0 mr-2") By Ángel Guerrero
           span.emoji ⚡
-
-    //- formulate-form(class="needs-validation")
-      //- formulate-input(type="text"
-                      name="username"
-                      label="Nombre de usuario"
-                      label-class="text-primary"
-                      help="Text help"
-                      help-class="text-muted"
-                      validation="required"
-                      :validation-messages="getFormMessages"
-                      outer-class="border mb-3"
-                      input-class="w-100 rounded"
-                      error-class="text-danger")
-
-      //- formulate-input(type="submit"
-                      input-class="btn btn-dark"
-                      label="enviar")
 </template>
 
 <script>
+import login from './Login'
+import signup from './Signup'
 export default {
+  components: {
+    login,
+    signup
+  },
+
+  props: {
+    view: {
+      type: String,
+      required: true
+    }
+  },
+
+  data () {
+    return {
+      components: ['login', 'signup'],
+
+      component: null
+    }
+  },
+
+  computed: {
+    getPageTitle () {
+      return this.view === 'login' ? 'Ingresar' : 'Registrarse'
+    },
+
+    getFooter () {
+      const retval = {
+        text: '¿Aún no tienes una cuenta?',
+        btnText: 'Registrate',
+        link: 'signup'
+      }
+
+      if (this.view === 'login') return retval
+
+      retval.text = '¿Ya tienes una cuenta?'
+      retval.btnText = 'Inicia sesión'
+      retval.link = 'login'
+
+      return retval
+    }
+  },
+
+  created () {
+    this.component = this.view === 'login' ? this.components[0] : this.components[1]
+  }
 }
 </script>
 
@@ -73,10 +82,10 @@ export default {
 .access___wrapper {
   height: 100vh;
   background-position: center;
-  background: linear-gradient(to top, rgba(0, 0, 255, 0.040),
-                                        rgba(0, 128, 0, 0.040),
-                                        rgba(255, 255, 0, 0.040),
-                                        rgba(128, 0, 128, 0.040),
+  background: linear-gradient(to top, rgba(0, 0, 255, 0.070),
+                                        rgba(0, 128, 0, 0.070),
+                                        rgba(255, 255, 0, 0.070),
+                                        rgba(128, 0, 128, 0.070),
                                         );
 }
 
@@ -104,8 +113,8 @@ export default {
 }
 
 .app__title {
-  color: $header_bg_color;
-  color: rgb(25, 125, 219);
+  // color: rgb(25, 125, 219);
+  color: #818181;
   font-family: 'Poppins', sans-serif;
 }
 

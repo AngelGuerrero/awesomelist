@@ -18,6 +18,12 @@ const routes = [
     component: Access,
     props: { view: 'login' }
   },
+  {
+    path: '/signup',
+    name: 'signup',
+    component: Access,
+    props: { view: 'signup' }
+  },
   //
   // Dashboard
   {
