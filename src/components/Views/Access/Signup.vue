@@ -1,24 +1,33 @@
 <template lang="pug">
   div
-    h3 signup
     formulate-form
+      //- Full name
       formulate-input(type="text"
-                      name="username"
-                      label="Nombre de usuario o email"
-                      placeholder="micorreo@email.com"
+                      label="Nombre completo"
+                      placeholder="Santiago Guerrero"
                       )
-      formulate-input(type="password"
-                      name="password"
-                      label="Contraseña"
-                      placeholder="*******"
-                      )
-      formulate-input(type="password"
-                      name="password"
-                      label="Confirmar contraseña"
-                      placeholder="*******"
-                      )
+      //- Username
+      username-form
+      //- Email
+      email-form
+      //- Password with confirmation
+      password-form
       formulate-input(type="submit"
-                      :label="getPageTitle"
+                      label="Enviar"
                       input-class="btn btn-primary btn-block btn-sm mt-3"
                       )
 </template>
+
+<script>
+import EmailForm from './Shared/EmailForm'
+import UsernameForm from './Shared/UsernameForm'
+import PasswordForm from './Shared/PasswordForm'
+
+export default {
+  components: {
+    EmailForm,
+    UsernameForm,
+    PasswordForm
+  }
+}
+</script>
