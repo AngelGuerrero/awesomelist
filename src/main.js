@@ -70,8 +70,12 @@ Vue.use(firestorePlugin)
 // Vue formulate
 Vue.use(VueFormulate, {
   classes: {
-    input: 'form-control form-control-sm mb-2',
-    label: 'text-muted'
+    input: [
+      'form-control',
+      'form-control-sm',
+      'mb-1 p-1'
+    ],
+    label: 'mt-3'
   }
 })
 

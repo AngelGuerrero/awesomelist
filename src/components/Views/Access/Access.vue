@@ -91,7 +91,6 @@ export default {
 
   methods: {
     load (e) {
-      console.log('Image was loaded')
       const asideImg = this.$el.querySelector('.aside__img')
       asideImg.classList.remove('d-none')
       asideImg.classList.remove('animate__fadeOut')
@@ -147,6 +146,7 @@ export default {
 
 .content {
   width: 100% !important;
+  overflow: auto;
   @include media-screen-md {
     width: 50% !important;
   }
