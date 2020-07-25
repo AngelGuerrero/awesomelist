@@ -1,6 +1,6 @@
 <template lang="pug">
   .access___wrapper(class="min-vh-100 d-flex")
-    .app__aside(class="w-50 h-100 d-md-inline")
+    .app__aside(class="w-50 h-100 d-none d-sm-none d-lg-inline")
       img.aside__img(v-if="background"
                     :src="require('@/assets/images/' + background)"
                     @load="load"
@@ -147,7 +147,7 @@ export default {
 .content {
   width: 100% !important;
   overflow: auto;
-  @include media-screen-md {
+  @include media-screen-lg {
     width: 50% !important;
   }
 }
