@@ -187,13 +187,12 @@ export default {
       return retval
     },
 
-    getToDoById: async ({ context }, id) => {
+    getToDoById: async ({ commit }, id) => {
       db.collection('todos')
         .doc(id)
         .get()
         .then((response) => {
-          console.log(response)
-          // commit('setToDo', response)
+          commit('setToDo', response)
         })
         .catch((error) => {
           console.log(`Error getting todo: ${error}`)

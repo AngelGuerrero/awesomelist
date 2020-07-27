@@ -13,17 +13,29 @@
 import { mapState } from 'vuex'
 
 export default {
+  props: {
+    mode: {
+      type: String,
+      // modes:
+      // - default
+      // - mobile
+      // - desktop
+      default: 'default',
+      required: false
+    }
+  },
+
   computed: {
     ...mapState('ui', ['sidebar']),
 
     getSidebarClasses () {
       const classes = this.sidebar.mobile ? 'aside-full' : 'desktop'
-      return [ classes ]
+      return [classes]
     },
 
     getSlotClasses () {
       const classes = this.sidebar.mobile ? 'mobile border shadow' : 'desktop shadow'
-      return [ classes ]
+      return [classes]
     }
   },
 
@@ -54,7 +66,7 @@ export default {
 .mobile {
   width: 100%;
   position: absolute;
-  z-index: 9999 !important;
+  z-index: 9 !important;
   top: 0;
   right: 0;
   overflow: hidden;
@@ -74,7 +86,7 @@ export default {
 
 .backdrop {
   position: absolute;
-  z-index: 99 !important;
+  z-index: 8 !important;
   top: 0;
   right: 0;
   width: 100%;

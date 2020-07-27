@@ -1,6 +1,6 @@
-// 
+//
 // Media query to include into classes
-// 
+//
 @mixin media-screen-xsm {
   @media screen and (min-width: 320px) {
     @content;
@@ -31,9 +31,9 @@
   }
 }
 
-// 
+//
 // Custom flex helpers
-// 
+//
 %flex-container {
   display: flex;
 }
@@ -115,14 +115,14 @@
 // Flex grow from 1 to 12, children
 @for $v from 1 to 12 {
   .grow-#{$v} {
-    flex-grow: #{$v}
+    flex-grow: #{$v};
   }
 }
 
-// 
+//
 // Borders
-// 
-$colors: tomato, blue, black, purple, lightblue;
+//
+$colors: tomato, green, blue, black, purple, lightblue;
 
 @each $color in $colors {
   .dev--#{$color} {

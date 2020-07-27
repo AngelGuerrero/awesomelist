@@ -4,22 +4,40 @@ $text-color: #707070;
 
 // Navbar
 $header_bg_color: #0078d7;
-$header_bg_light: lighten($color: $header_bg_color, $amount: 50);
+$header_bg_light: lighten(
+  $color: $header_bg_color,
+  $amount: 50,
+);
 
 $header_front_color: #ffffff;
-$header-color: darken($color: $header_bg_color, $amount: 10);
+$header-color: darken(
+  $color: $header_bg_color,
+  $amount: 10,
+);
 
 $navbar-height: 50px;
 // ==================================
 
 // Sidebar
 $sidebar_bg_light: #f8f9fa;
-$sidebar_bg_light_10: lighten($color: $sidebar_bg_light, $amount: 10);
-$sidebar_bg_dark_4: darken($color: $sidebar_bg_light, $amount: 4);
+$sidebar_bg_light_10: lighten(
+  $color: $sidebar_bg_light,
+  $amount: 10,
+);
+$sidebar_bg_dark_4: darken(
+  $color: $sidebar_bg_light,
+  $amount: 4,
+);
 
 $sidebar_bg_contrast: #f7fdff;
-$sidebar_contrast_light: lighten($color: $sidebar_bg_contrast, $amount: 10);
-$sidebar_contrast_dark: darken($color: $sidebar_bg_contrast, $amount: 4);
+$sidebar_contrast_light: lighten(
+  $color: $sidebar_bg_contrast,
+  $amount: 10,
+);
+$sidebar_contrast_dark: darken(
+  $color: $sidebar_bg_contrast,
+  $amount: 4,
+);
 // ==================================
 
 // ToDo Menu

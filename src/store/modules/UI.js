@@ -24,6 +24,13 @@ export default {
     },
 
     /**
+     * TODO: FIX BEHAVIOR BETWEEN COMPONENTS
+     * Show the user profile menu
+     * that contains links to other sections
+     */
+    showUserProfileMenu: false,
+
+    /**
     * Object that is watched and
     * send user notification
     */
@@ -44,6 +51,8 @@ export default {
   },
 
   mutations: {
+    toggleUserProfileMenu: (state) => { state.showUserProfileMenu = !state.showUserProfileMenu },
+
     computeSizeComponents (state) {
       //
       // Sidebar
