@@ -28,14 +28,13 @@ const routes = [
   // Dashboard
   {
     path: '/dashboard',
-    name: 'dashboard',
+    name: 'Dashboard',
     component: Dashboard,
     meta: { requiresAuth: true }
   }
 ]
 
 const router = new VueRouter({
-  mode: 'history',
   routes
 })
 

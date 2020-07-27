@@ -5,17 +5,14 @@
       type="text"
       name="username"
       id="input__username"
-
       label="Nombre de usuario"
 
       :input-class="(context, classes) => customClasses.input.concat(classes)"
 
+      @validation="performValidation($event)"
       validation="bail|required|min:5|max:10|userExists"
       :validation-rules="getValidationRules"
       :validation-messages="getValidationMessages"
-      @validation="performValidation($event)"
-
-      :errors-class="['errors-class']"
       error-behavior="live"
     )
 </template>

@@ -1,5 +1,5 @@
 <template lang="pug">
-  div
+  #dashboard
     //- === Sounds ===
     //-
     //- Done Task Sound
@@ -11,7 +11,8 @@
     //- =============
 
     navbar
-    to-do
+    .dashboard__content
+      to-do
 </template>
 
 <script>
@@ -81,3 +82,14 @@ export default {
 
 }
 </script>
+
+<style lang="scss" scoped>
+#dashboard {
+  height: 100%;
+  overflow: hidden;
+}
+.dashboard__content {
+  height: calc(100vh - #{$navbar-height});
+  position: relative;
+}
+</style>

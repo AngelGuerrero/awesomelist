@@ -7,7 +7,8 @@
 
 <style lang="scss">
 #app {
-  // height: 100vh;
+  height: 100vh;
+  // border: 4px solid salmon;
 }
 
 #main {
@@ -21,12 +22,5 @@
   // height: 100%;
   // overflow: hidden;
   // position: relative;
-}
-
-#footer {
-  padding: $footer-padding 0px;
-  text-align: center;
-  color: #ffffff;
-  background-color: $header_bg_color;
 }
 </style>

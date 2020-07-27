@@ -2,31 +2,27 @@
 
   nav(class="row-v-center between")
     div(class="control__aside row-v-center")
+      //- icon
       b-button(variant="default" size="sm" class="mx-1")
         b-icon(icon="grid-fill" variant="light")
+      //- App title
       h3.nav__title Awesomelist
-    .nav__user(class="row-v-center between " @click="changeAsideRight()")
-      .user__image
-        img(src="@/assets/images/wendy.jpg")
+
+    //- User links
+    .nav__user(class="row-v-center between")
+      .nav__link(@click="toggleUserProfileMenu()")
+        img(src="@/assets/images/user.png")
 
 </template>
 
 <script>
-import EventBus from '@/EventBus'
+import { mapMutations } from 'vuex'
 
 export default {
   name: 'Navbar',
 
   methods: {
-    // Emit events for change the components visibility, through EventBus
-    changeAsideLeft () {
-      EventBus.$emit('change-aside-left-state')
-    },
-
-    changeAsideRight () {
-      console.log('Emitiendo evento...')
-      EventBus.$emit('change-aside-right-state')
-    }
+    ...mapMutations('ui', ['toggleUserProfileMenu'])
   }
 }
 </script>
@@ -66,7 +62,7 @@ nav {
   display: flex;
   height: $navbar-height;
 
-  .user__image {
+  .nav__link {
     max-width: $navbar-height;
     height: $navbar-height;
     padding: 8px;

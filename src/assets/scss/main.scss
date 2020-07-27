@@ -47,6 +47,13 @@ body {
   }
 }
 
+$error-color: rgb(255, 71, 71);
+.errors-class {
+  padding: 0;
+  list-style-type: none;
+  color: $error-color;
+}
+
 //
 // Animations
 //

@@ -1,5 +1,5 @@
 <template lang="pug">
-  div(class="w-100 h-100 d-flex")
+  #todo(class="w-100 h-100 d-flex")
     .menu
       to-do-menu
     .content(class="flex-grow-1 h-100 p-3")
@@ -28,7 +28,7 @@
       to-do-detail(v-if="showToDoDetail"
                   :id="currentId"
                   @close="currentId = null")
-
+      user-profile(v-if="showUserProfileMenu")
 </template>
 
 <script>
@@ -38,25 +38,31 @@ import ToDoMenu from '@/components/ToDo/ToDoMenu'
 import ToDoList from '@/components/ToDo/ToDoList'
 import ToDoCreate from '@/components/ToDo/ToDoCreate'
 import ToDoDetail from '@/components/ToDo/ToDoDetail'
+import UserProfile from '@/components/User/UserProfile'
 
 export default {
   components: {
     ToDoMenu,
     ToDoList,
     ToDoCreate,
-    ToDoDetail
+    ToDoDetail,
+    UserProfile
   },
 
   data: () => ({
-    showMenu: false,
-
     showCompletedToDos: false,
 
     currentId: null
   }),
 
   computed: {
-    ...mapState('todo', ['todos']),
+    ...mapState('todo', [
+      'todos'
+    ]),
+
+    ...mapState('ui', [
+      'showUserProfileMenu'
+    ]),
 
     ...mapGetters('todo', [
       'getUncompletedToDos',
@@ -120,6 +126,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#todo {
+  height: 100%;
+}
+
 .toDo__title {
   color: rgb(207, 23, 23);
 }
@@ -127,6 +137,7 @@ export default {
 .content {
   overflow: auto;
   margin-left: 40px;
+  position: relative;
 
   @media screen and (min-width: 650px) {
     margin-left: 0;

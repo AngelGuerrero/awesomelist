@@ -28,7 +28,7 @@ export default {
       return { error: false, message: 'User loaded successfully' }
     },
 
-    fetchUserProfile: async ({ commit, dispatch }, uid) => {
+    fetchUserProfile: async ({ commit }, uid) => {
       const retval = { error: false, message: '', event: 'fetching user profile', data: null }
 
       return new Promise((resolve, reject) => {
@@ -43,7 +43,7 @@ export default {
             retval.error = true
             retval.message = error.message
             retval.errorFatal = true
-            dispatch('pushAsyncLog', retval, { root: true })
+            // dispatch('pushAsyncLog', retval, { root: true })
             reject(retval)
           }
           )
@@ -193,8 +193,17 @@ export default {
       return retval
     },
 
+    /**
+     * Get a user by email
+     *
+     * @retval contains the next information
+     *
+     * @error is true if something went wrong or user doesn't exist
+     * @message contains information about error
+     * @data contains the user object, is null if user doesn't exist
+     */
     getUserByEmail: async ({ dispatch }, email) => {
-      const retval = { error: false, message: '', data: null }
+      const retval = { error: false, message: 'ok', data: null }
 
       const query = await usersCollection.where('email', '==', email)
 

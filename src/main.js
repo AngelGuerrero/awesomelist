@@ -75,7 +75,10 @@ Vue.use(VueFormulate, {
       'form-control-sm',
       'mb-1 p-1'
     ],
-    label: 'mt-3'
+    label: 'mt-2',
+    errors: [
+      'errors-class'
+    ]
   }
 })
 
