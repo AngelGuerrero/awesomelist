@@ -4,7 +4,7 @@
   "editor.acceptSuggestionOnEnter": "smart",
   "editor.snippetSuggestions": "top",
   "editor.autoClosingOvertype": "always",
-  "editor.fontSize": 11,
+  "editor.fontSize": 12,
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
   "editor.formatOnType": true,

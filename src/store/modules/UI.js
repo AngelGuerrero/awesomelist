@@ -24,6 +24,15 @@ export default {
     },
 
     /**
+     * Contains the information of selected component
+     * selected from the user navigation menu
+     */
+    selectedComponent: {
+      name: null,
+      props: {}
+    },
+
+    /**
      * TODO: FIX BEHAVIOR BETWEEN COMPONENTS
      * Show the user profile menu
      * that contains links to other sections
@@ -89,6 +98,11 @@ export default {
 
     playDoneTaskSound (state, value) {
       state.doneTaskSound = value
+    },
+
+    setSelectedComponent (state, { name, props }) {
+      state.selectedComponent.name = name
+      state.selectedComponent.props = props
     }
   },
 
