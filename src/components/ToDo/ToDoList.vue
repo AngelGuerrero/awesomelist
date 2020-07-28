@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 
 export default {
   props: {
@@ -68,10 +68,23 @@ export default {
   },
 
   methods: {
-    ...mapActions('todo', ['onToggleAddToMyDay', 'onToggleMarkAsImportant']),
+    ...mapActions('todo', [
+      'onToggleAddToMyDay',
+      'onToggleMarkAsImportant'
+    ]),
+
+    ...mapMutations('ui', [
+      'setSelectedComponent'
+    ]),
 
     emitSelect (todo) {
-      this.$emit('selectToDo', todo)
+      // this.$emit('selectToDo', todo)
+      this.setSelectedComponent({
+        name: 'ToDoDetail',
+        props: {
+          id: todo.id
+        }
+      })
     },
 
     emitCheck (todo) {

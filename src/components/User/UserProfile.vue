@@ -1,5 +1,5 @@
 <template lang="pug">
-  sidebar(id="profile__sidebar" mode="mobile" @close="close")
+  sidebar(id="profile__sidebar" ref="container")
     //- TODO: Add another div if some data
     //- doesn't load correctly
     .wrapper(class="bg-light w-100 h-100")
@@ -43,10 +43,12 @@ export default {
   computed: mapState('user', ['currentProfile']),
 
   methods: {
-    ...mapMutations('ui', ['toggleUserProfileMenu']),
+    ...mapMutations('ui', [
+      'setSelectedComponent'
+    ]),
 
     close () {
-      this.toggleUserProfileMenu()
+      this.$refs.container.close()
     },
 
     async signOut () {
