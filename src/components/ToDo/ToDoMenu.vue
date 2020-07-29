@@ -86,7 +86,12 @@ export default {
   }),
 
   computed: {
-    ...mapState('ui', ['toDoMenu'])
+    ...mapState('ui', [
+      'toDoMenu'
+    ]),
+    ...mapState('user', [
+      'currentUser'
+    ])
   },
 
   watch: {
@@ -96,13 +101,19 @@ export default {
   },
 
   methods: {
-    ...mapMutations('todo', ['setCurrentList']),
-    ...mapActions('todo', ['createNewToDoCollection']),
+    ...mapMutations('todo', [
+      'setCurrentList'
+    ]),
+    ...mapActions('todo', [
+      'createNewToDoCollection'
+    ]),
 
-    ...mapMutations('ui', ['toggleToDoMenuFixed']),
+    ...mapMutations('ui', [
+      'toggleToDoMenuFixed'
+    ]),
 
     saveToDoCollection () {
-      this.createNewToDoCollection({ name: this.collection.name, userId: 'testuser' })
+      this.createNewToDoCollection({ name: this.collection.name, userId: this.currentUser.uid })
       this.clearToDoCollectionInput()
     },
 
@@ -153,7 +164,7 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 10;
+    z-index: 8;
   }
 }
 

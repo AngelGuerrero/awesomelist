@@ -100,22 +100,22 @@ export default {
       deep: true,
       immediate: false,
       handler (todos) {
-        if (todos.length <= 0) return
+        // if (todos.length <= 0) return
 
-        const uncompleteToDo = todos[0]
-        this.currentId = uncompleteToDo.id
-        this.setSelectedComponent({
-          name: 'ToDoDetail',
-          props: {
-            id: this.currentId
-          }
-        })
+        // const uncompleteToDo = todos[0]
+        // this.currentId = uncompleteToDo.id
+        // this.setSelectedComponent({
+        //   name: 'ToDoDetail',
+        //   props: {
+        //     id: this.currentId
+        //   }
+        // })
       }
     }
   },
 
-  created () {
-    this.getToDos()
+  mounted () {
+    this.getToDos(this.$store.state.user.currentUser.uid)
   },
 
   methods: {
