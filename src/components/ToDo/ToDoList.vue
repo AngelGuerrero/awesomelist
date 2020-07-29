@@ -2,7 +2,7 @@
   .todolist__component
     div(v-if="todolist.length <= 0" class="p-5 column-v-center column-h-center")
       b-icon(icon="archive" class="h1")
-      h5 No hay tareas para mostrar
+      h5.text-center No hay tareas para mostrar
     //- Wrapper of all To Do's
     b-list-group(v-else class="my-3 animate__fadeInUp")
       //- To Do Item

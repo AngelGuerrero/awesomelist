@@ -7,7 +7,7 @@
         .section__close
           b-icon(icon="X"
                 @click="close"
-                class="close-icon bg-dark text-white rounded h2 float-right mt-3 mr-3")
+                class="close-icon bg-light text-dark rounded h2 float-right mt-3 mr-3")
 
         .section__profile
           .profile__image

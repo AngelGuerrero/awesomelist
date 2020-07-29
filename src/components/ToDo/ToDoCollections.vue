@@ -2,8 +2,8 @@
   .collections__wrapper
     //- pre.pre-dev {{ $data }}
     .no_collections(v-if="collections.length <= 0")
-      b-spinner(label="Cargando..." small class="mr-2")
-      | Cargando...
+      //- b-spinner(label="Cargando..." small class="mr-2")
+      | No hay colecciones.
 
     .collections(v-else)
       .collections__header
@@ -14,7 +14,8 @@
 
       .collections__content
         .collection__wrapper.border-bottom(v-for="(collection, index) in collections" :key="collection.id")
-          .collection__item(v-b-toggle="'collapse-' + index" @click="downloadListsFromCollection(collection); registerCollapsedItems('collapse-', index);")
+          .collection__item(v-b-toggle="'collapse-' + index"
+                            @click="downloadListsFromCollection(collection); registerCollapsedItems('collapse-', index);")
             b-icon.icon--left(icon="files")
             .item__text.flex-grow-1 {{ collection.name }}
             b-icon.icon--right(icon="arrow-right-short")
@@ -53,8 +54,8 @@ export default {
     // ])
   },
 
-  created () {
-    this.getCollections()
+  mounted () {
+    this.getCollections(this.$store.state.user.currentUser.uid)
   },
 
   methods: {
@@ -134,10 +135,6 @@ export default {
         return acc
       }, [])
 
-      //
-      // NOTE: Fix, improve this feature
-      // I'm doing raw code, and i don't like it...
-      //
       const expandItems = () =>
         collectionsToExpand.forEach(el => {
           this.$root.$emit('bv::toggle::collapse', el.composedId)
