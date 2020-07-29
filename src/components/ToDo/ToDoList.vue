@@ -99,6 +99,9 @@ export default {
   transition: all 1s;
 }
 .item__text {
+  text-overflow: ellipsis;
+  white-space: pre-wrap;
+  overflow: hidden;
   cursor: pointer;
 }
 </style>

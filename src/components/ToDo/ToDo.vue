@@ -56,17 +56,19 @@ export default {
   }),
 
   computed: {
+    //
+    // 'todo' module
     ...mapState('todo', [
       'todos'
     ]),
-
     ...mapGetters('todo', [
       'getUncompletedToDos',
       'getCompletedToDos',
       'getCurrentList',
       'getCurrentListAccentColor'
     ]),
-
+    //
+    // 'ui' module
     ...mapState('ui', [
       'showUserProfileMenu',
       'selectedComponent'
@@ -98,16 +100,16 @@ export default {
       deep: true,
       immediate: false,
       handler (todos) {
-        // if (todos.length <= 0) return
+        if (todos.length <= 0) return
 
-        // const uncompleteToDo = todos[0]
-        // this.currentId = uncompleteToDo.id
-        // this.setSelectedComponent({
-        //   name: 'ToDoDetail',
-        //   props: {
-        //     id: this.currentId
-        //   }
-        // })
+        const uncompleteToDo = todos[0]
+        this.currentId = uncompleteToDo.id
+        this.setSelectedComponent({
+          name: 'ToDoDetail',
+          props: {
+            id: this.currentId
+          }
+        })
       }
     }
   },
@@ -136,6 +138,8 @@ export default {
 
     selectToDo (todo) {
       this.currentId = todo.id
+
+      this.setSelectedComponent({ name: 'ToDoDetail', props: { id: this.currentId } })
     }
   }
 }
