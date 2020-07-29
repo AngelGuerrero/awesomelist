@@ -421,7 +421,9 @@ $sidebar-footer-hight: 40px;
 }
 
 .todotitle__editable {
-  border: 1px solid transparent;
+  text-overflow: ellipsis;
+  white-space: pre-wrap;
+  overflow: hidden;
 
   &:hover {
     background-color: #f5f5f5;
