@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import EventBus from '@/EventBus'
 import EmailForm from './Shared/EmailForm'
 import PasswordForm from './Shared/PasswordForm'
 
@@ -103,7 +104,11 @@ export default {
       })
 
       if (getval.error) {
-        console.log(getval.message)
+        EventBus.$emit('on-response', {
+          show: true,
+          message: getval.message,
+          error: true
+        })
       }
 
       this.$router.replace('/dashboard').catch(_ => {})
