@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import EventBus from '@/EventBus'
 import FullnameForm from './Shared/FullNameForm'
 import EmailForm from './Shared/EmailForm'
 import UsernameForm from './Shared/UsernameForm'
@@ -69,7 +70,13 @@ export default {
 
       const getval = await this.$store.dispatch('user/createUserAccount', this.user)
 
-      console.log(getval.message)
+      if (getval.error) {
+        EventBus.$emit('on-response', {
+          show: true,
+          message: getval.message,
+          error: getval.error
+        })
+      }
 
       this.$router.replace('dashboard')
     }

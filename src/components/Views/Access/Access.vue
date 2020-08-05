@@ -12,6 +12,7 @@
         h1.app__title(class="h3") awesomelist
 
       .form__wrapper(class="shadow")
+        b-alert(v-if="response.show" show variant="danger") {{ response.message }}
         h4(class="app__title mb-4 text-primary") {{ getData.title }}
         component(:is="component")
         p(class="text-center mt-4") {{ getData.text }}
@@ -25,6 +26,7 @@
 </template>
 
 <script>
+import EventBus from '@/EventBus'
 import login from './Login'
 import signup from './Signup'
 
@@ -43,11 +45,22 @@ export default {
 
   data () {
     return {
+      //
+      // Change the component based in props
       component: null,
-
+      //
+      // Verify if the background is loaded
       background: null,
-
-      images: ['blue.jpg', 'paint.jpg', 'colors-pattern.jpg', 'rocks.jpg']
+      //
+      // Background images
+      images: ['blue.jpg', 'paint.jpg', 'colors-pattern.jpg', 'rocks.jpg'],
+      //
+      // Error messages data
+      response: {
+        show: false,
+        message: null,
+        error: false
+      }
     }
   },
 
@@ -87,6 +100,10 @@ export default {
 
   created () {
     this.changeImageBackground()
+
+    // Listen responses from child components
+    //
+    EventBus.$on('on-response', response => { this.response = response })
   },
 
   methods: {
