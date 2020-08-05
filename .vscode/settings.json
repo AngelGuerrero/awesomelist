@@ -4,10 +4,9 @@
   "editor.acceptSuggestionOnEnter": "smart",
   "editor.snippetSuggestions": "top",
   "editor.autoClosingOvertype": "always",
-  "editor.fontSize": 11,
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
   "editor.formatOnType": true,
-  "editor.fontFamily": "Fira code",
-  "editor.fontLigatures": true
+  "editor.fontLigatures": true,
+  "editor.fontFamily": "'Fira Code'"
 }
