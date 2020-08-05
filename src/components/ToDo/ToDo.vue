@@ -25,10 +25,7 @@
                 :class="{ 'completed': thereAreCompletedToDos }")
 
     .detail
-      to-do-detail(v-if="showToDoDetail"
-                  :id="currentId"
-                  @close="currentId = null")
-      user-profile(v-if="showUserProfileMenu")
+      component(v-if="selectedComponent.name" :is="selectedComponent.name" v-bind="selectedComponent.props")
 </template>
 
 <script>
@@ -45,30 +42,36 @@ export default {
     ToDoMenu,
     ToDoList,
     ToDoCreate,
+    //
+    // Dynamic components
     ToDoDetail,
     UserProfile
   },
 
   data: () => ({
     showCompletedToDos: false,
-
+    //
+    // This is only the string To Do id
     currentId: null
   }),
 
   computed: {
+    //
+    // 'todo' module
     ...mapState('todo', [
       'todos'
     ]),
-
-    ...mapState('ui', [
-      'showUserProfileMenu'
-    ]),
-
     ...mapGetters('todo', [
       'getUncompletedToDos',
       'getCompletedToDos',
       'getCurrentList',
       'getCurrentListAccentColor'
+    ]),
+    //
+    // 'ui' module
+    ...mapState('ui', [
+      'showUserProfileMenu',
+      'selectedComponent'
     ]),
 
     thereAreCompletedToDos () {
@@ -98,20 +101,35 @@ export default {
       immediate: false,
       handler (todos) {
         // if (todos.length <= 0) return
+
         // const uncompleteToDo = todos[0]
         // this.currentId = uncompleteToDo.id
+        // this.setSelectedComponent({
+        //   name: 'ToDoDetail',
+        //   props: {
+        //     id: this.currentId
+        //   }
+        // })
       }
     }
   },
 
-  created () {
-    this.getToDos()
+  mounted () {
+    this.getToDos(this.$store.state.user.currentUser.uid)
   },
 
   methods: {
-    ...mapMutations('ui', ['playDoneTaskSound']),
+    ...mapMutations('ui',
+      [
+        'playDoneTaskSound',
+        'setSelectedComponent'
+      ]),
 
-    ...mapActions('todo', ['getToDos', 'onToggleToDo']),
+    ...mapActions('todo',
+      [
+        'getToDos',
+        'onToggleToDo'
+      ]),
 
     completeToDo (todo) {
       this.onToggleToDo(todo)
@@ -120,6 +138,8 @@ export default {
 
     selectToDo (todo) {
       this.currentId = todo.id
+
+      this.setSelectedComponent({ name: 'ToDoDetail', props: { id: this.currentId } })
     }
   }
 }

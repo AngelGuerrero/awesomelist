@@ -1,5 +1,5 @@
 <template lang="pug">
-  sidebar(id="todo__detail" @close="close")
+  sidebar(id="todo__detail" ref="container")
     .wrapper(v-if="!todo" class="container row-v-center row-h-center")
       b-spinner.mr-3
       | Cargando...
@@ -132,7 +132,7 @@
 <script>
 import moment from 'moment'
 import Sidebar from '@/components/Layout/Sidebar'
-import { mapActions } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 import { db } from '@/data/FirebaseConfig'
 
 export default {
@@ -261,6 +261,10 @@ export default {
       'onToggleMarkAsImportant'
     ]),
 
+    ...mapMutations('ui', [
+      'setSelectedComponent'
+    ]),
+
     onEditToDoTitle (ev) {
       const txt = ev.target.innerText.trim()
 
@@ -367,17 +371,8 @@ export default {
       this.close()
     },
 
-    addAnimation () {
-      const toDoDetail = this.$el.querySelector('.wrapper')
-      toDoDetail.classList.add('animate__animated')
-      toDoDetail.classList.add('animate__bounceOutRight')
-    },
-
     close () {
-      this.addAnimation()
-      //
-      // Wait until the animation done
-      setTimeout(_ => this.$emit('close'), 500)
+      this.$refs.container.close()
     }
   }
 }
@@ -426,7 +421,9 @@ $sidebar-footer-hight: 40px;
 }
 
 .todotitle__editable {
-  border: 1px solid transparent;
+  text-overflow: ellipsis;
+  white-space: pre-wrap;
+  overflow: hidden;
 
   &:hover {
     background-color: #f5f5f5;

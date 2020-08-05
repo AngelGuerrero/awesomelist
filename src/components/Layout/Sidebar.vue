@@ -10,23 +10,13 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
-  props: {
-    mode: {
-      type: String,
-      // modes:
-      // - default
-      // - mobile
-      // - desktop
-      default: 'default',
-      required: false
-    }
-  },
-
   computed: {
-    ...mapState('ui', ['sidebar']),
+    ...mapState('ui', [
+      'sidebar'
+    ]),
 
     getSidebarClasses () {
       const classes = this.sidebar.mobile ? 'aside-full' : 'desktop'
@@ -34,17 +24,21 @@ export default {
     },
 
     getSlotClasses () {
-      const classes = this.sidebar.mobile ? 'mobile border shadow' : 'desktop shadow'
+      const classes = this.sidebar.mobile ? 'mobile shadow' : 'desktop shadow'
       return [classes]
     }
   },
 
   methods: {
+    ...mapMutations('ui', [
+      'setSelectedComponent'
+    ]),
+
     close () {
       this.addAnimation()
       //
       // Wait until the animation done
-      setTimeout(_ => this.$emit('close'), 500)
+      setTimeout(_ => this.setSelectedComponent({ name: null }), 500)
     },
 
     addAnimation () {
@@ -71,7 +65,7 @@ export default {
   right: 0;
   overflow: hidden;
   height: 100%;
-  background:#ffffff;
+  // background:#ffffff;
   @media screen and (min-width: 548px) {
     width: 350px;
   }

@@ -10,7 +10,7 @@
 
     //- User links
     .nav__user(class="row-v-center between")
-      .nav__link(@click="toggleUserProfileMenu()")
+      .nav__link(@click="showUserProfileMenu()")
         img(src="@/assets/images/user.png")
 
 </template>
@@ -22,7 +22,14 @@ export default {
   name: 'Navbar',
 
   methods: {
-    ...mapMutations('ui', ['toggleUserProfileMenu'])
+    ...mapMutations('ui', [
+      'toggleUserProfileMenu',
+      'setSelectedComponent'
+    ]),
+
+    showUserProfileMenu () {
+      this.setSelectedComponent({ name: 'UserProfile', props: {} })
+    }
   }
 }
 </script>
@@ -61,6 +68,9 @@ nav {
   // Display none for mobile
   display: flex;
   height: $navbar-height;
+  // TODO: Set the same color of the sidebar right
+  // when the link is selected
+  // background-color: $sidebar_bg_light;
 
   .nav__link {
     max-width: $navbar-height;

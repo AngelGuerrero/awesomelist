@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapState } from 'vuex'
 
 export default {
 
@@ -12,7 +12,15 @@ export default {
     inputText: null
   }),
 
-  computed: mapGetters('todo', ['getCurrentList']),
+  computed: {
+    ...mapGetters('todo', [
+      'getCurrentList'
+    ]),
+
+    ...mapState('user', [
+      'currentUser'
+    ])
+  },
 
   methods: {
     ...mapActions('todo', [ 'saveToDo' ]),
@@ -23,8 +31,7 @@ export default {
         done: false,
         created: new Date(),
         lastUpdated: null,
-        // TODO: change to real firebase user
-        createdBy: 'User test'
+        createdBy: this.currentUser.uid
       }
 
       //

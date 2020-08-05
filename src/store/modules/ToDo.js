@@ -98,12 +98,12 @@ export default {
   },
 
   actions: {
-    getToDos: firestoreAction(({ bindFirestoreRef }) => {
-      return bindFirestoreRef('todos', db.collection('todos'))
+    getToDos: firestoreAction(({ bindFirestoreRef }, uid) => {
+      return bindFirestoreRef('todos', db.collection('todos').where('createdBy', '==', uid))
     }),
 
-    getCollections: firestoreAction(({ bindFirestoreRef }) => {
-      return bindFirestoreRef('collections', db.collection('collections'))
+    getCollections: firestoreAction(({ bindFirestoreRef }, uid) => {
+      return bindFirestoreRef('collections', db.collection('collections').where('userId', '==', uid))
     }),
 
     getListsFromCollection: async ({ state, commit }, collectionId) => {
@@ -147,7 +147,7 @@ export default {
         .add(collection)
         .then(_ => {
           console.log('Colección creada correctamente!')
-          dispatch('getCollections')
+          dispatch('getCollections', userId)
         })
         .catch(error => {
           console.log(`Ocurrió un error al crear la colección: ${error}`)
@@ -227,6 +227,29 @@ export default {
         .delete()
         .then(() => console.log('ToDo deleted successfully'))
         .catch((error) => console.error(`Something went wrong: ${error}`))
+    },
+
+    updateCollectionById: async ({ commit }, collection) => {
+      console.log(collection)
+      const retval = { error: false, message: '' }
+
+      await db.collection('collections')
+        .doc(collection.id)
+        .update(collection)
+        .then(_ => { retval.message = `Collection '${collection.name}' updated successfully` })
+        .catch(error => {
+          retval.error = true
+          retval.message = error.message
+          commit('ui/showNotification', {
+            show: true,
+            color: 'danger',
+            title: 'Algo salió mal',
+            text: retval.message,
+            position: 'top-center'
+          }, { root: true })
+        })
+
+      return retval
     },
 
     //

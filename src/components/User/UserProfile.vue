@@ -1,5 +1,5 @@
 <template lang="pug">
-  sidebar(id="profile__sidebar" mode="mobile" @close="close")
+  sidebar(id="profile__sidebar" ref="container")
     //- TODO: Add another div if some data
     //- doesn't load correctly
     .wrapper(class="bg-light w-100 h-100")
@@ -7,7 +7,7 @@
         .section__close
           b-icon(icon="X"
                 @click="close"
-                class="close-icon bg-dark text-white rounded h2 float-right mt-3 mr-3")
+                class="close-icon bg-light text-dark rounded h2 float-right mt-3 mr-3")
 
         .section__profile
           .profile__image
@@ -43,10 +43,12 @@ export default {
   computed: mapState('user', ['currentProfile']),
 
   methods: {
-    ...mapMutations('ui', ['toggleUserProfileMenu']),
+    ...mapMutations('ui', [
+      'setSelectedComponent'
+    ]),
 
     close () {
-      this.toggleUserProfileMenu()
+      this.$refs.container.close()
     },
 
     async signOut () {

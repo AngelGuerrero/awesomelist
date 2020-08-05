@@ -2,7 +2,7 @@
   .todolist__component
     div(v-if="todolist.length <= 0" class="p-5 column-v-center column-h-center")
       b-icon(icon="archive" class="h1")
-      h5 No hay tareas para mostrar
+      h5.text-center No hay tareas para mostrar
     //- Wrapper of all To Do's
     b-list-group(v-else class="my-3 animate__fadeInUp")
       //- To Do Item
@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 
 export default {
   props: {
@@ -68,10 +68,23 @@ export default {
   },
 
   methods: {
-    ...mapActions('todo', ['onToggleAddToMyDay', 'onToggleMarkAsImportant']),
+    ...mapActions('todo', [
+      'onToggleAddToMyDay',
+      'onToggleMarkAsImportant'
+    ]),
+
+    ...mapMutations('ui', [
+      'setSelectedComponent'
+    ]),
 
     emitSelect (todo) {
-      this.$emit('selectToDo', todo)
+      // this.$emit('selectToDo', todo)
+      this.setSelectedComponent({
+        name: 'ToDoDetail',
+        props: {
+          id: todo.id
+        }
+      })
     },
 
     emitCheck (todo) {
@@ -86,6 +99,9 @@ export default {
   transition: all 1s;
 }
 .item__text {
+  text-overflow: ellipsis;
+  white-space: pre-wrap;
+  overflow: hidden;
   cursor: pointer;
 }
 </style>
