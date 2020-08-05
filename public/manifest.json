@@ -1,0 +1,16 @@
+{
+  "name": "Awesomelist",
+  "short_name": "Awesomelist",
+  "lang": "es-419",
+  "start_url": "/",
+  "display": "fullscreen",
+  "background-color": "#eee",
+  "theme_color": "#0078d7",
+  "icons": [
+    {
+      "src": "checkmark.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
