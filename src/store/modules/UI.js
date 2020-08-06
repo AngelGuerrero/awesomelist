@@ -50,6 +50,13 @@ export default {
       position: 'top-left'
     },
 
+    /**
+     * State of modal for creating new list
+     */
+    modalCreateNewList: {
+      show: false
+    },
+
     // TODO: Add a queue to play all sound from completed tasks
     doneTaskSound: false,
     addTaskSound: false
@@ -103,6 +110,10 @@ export default {
     setSelectedComponent (state, { name, props }) {
       state.selectedComponent.name = name
       state.selectedComponent.props = props
+    },
+
+    setModalCreateNewList (state, payload) {
+      state.modalCreateNewList.show = payload
     }
   },
 

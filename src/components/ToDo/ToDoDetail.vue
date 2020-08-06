@@ -117,15 +117,15 @@
       //- Footer
       .sidebar__footer.row-v-center.jc-between
         //- Close component
-        b-button(size="sm" variant="light" @click="close")
-          b-icon(icon="arrow-bar-right")
+        b-button(variant="light" @click="close")
+          b-icon(icon="arrow-right")
 
         //- Information about todo
         p.mb-0 {{ getCreationToDoInformation }}
 
         //- Delete todo
-        b-button(size="sm" variant="light" @click="modal.active = true")
-          b-icon(icon="trash" variant="danger")
+        b-button(variant="light" @click="modal.active = true")
+          b-icon(icon="trash" variant="danger" class="h3 mb-0")
 
 </template>
 
@@ -379,7 +379,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$sidebar-footer-hight: 40px;
+$sidebar-footer-hight: 55px;
 
 .list-group-item {
   transition: all 1s;
@@ -456,6 +456,7 @@ $sidebar-footer-hight: 40px;
   bottom: 0;
   padding: 0 15px;
   border-top: 1px solid #e9e9e9;
+  background-color: #f5f5f5;
 }
 
 .duedate__container {

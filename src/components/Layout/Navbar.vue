@@ -10,6 +10,9 @@
 
     //- User links
     .nav__user(class="row-v-center between")
+      .nav__link(@click="setModalCreateNewList(true)" class="d-flex row-v-center")
+        b-icon(icon="file-plus" class="h4 mb-0")
+
       .nav__link(@click="showUserProfileMenu()")
         img(src="@/assets/images/user.png")
 
@@ -24,7 +27,8 @@ export default {
   methods: {
     ...mapMutations('ui', [
       'toggleUserProfileMenu',
-      'setSelectedComponent'
+      'setSelectedComponent',
+      'setModalCreateNewList'
     ]),
 
     showUserProfileMenu () {

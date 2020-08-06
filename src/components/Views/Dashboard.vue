@@ -6,6 +6,7 @@
     audio(id="elDoneTaskSound" hidden)
       source(src="@/assets/sounds/doneTask.mp3" type="audio/mp3")
 
+    //- Created task sound
     audio(id="elAddTaskSound" hidden)
       source(src="@/assets/sounds/addedTask.mp3" type="audio/mp3")
     //- =============

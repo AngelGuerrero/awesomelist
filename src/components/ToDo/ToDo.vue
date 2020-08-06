@@ -1,5 +1,6 @@
 <template lang="pug">
   #todo(class="w-100 h-100 d-flex")
+    to-do-list-create
     .menu
       to-do-menu
     .content(class="flex-grow-1 h-100 p-3")
@@ -33,6 +34,7 @@ import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 
 import ToDoMenu from '@/components/ToDo/ToDoMenu'
 import ToDoList from '@/components/ToDo/ToDoList'
+import ToDoListCreate from '@/components/ToDo/ToDoListCreate'
 import ToDoCreate from '@/components/ToDo/ToDoCreate'
 import ToDoDetail from '@/components/ToDo/ToDoDetail'
 import UserProfile from '@/components/User/UserProfile'
@@ -42,6 +44,7 @@ export default {
     ToDoMenu,
     ToDoList,
     ToDoCreate,
+    ToDoListCreate,
     //
     // Dynamic components
     ToDoDetail,
