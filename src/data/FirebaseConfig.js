@@ -19,5 +19,11 @@ firebase.initializeApp(config)
 // Firebase utils
 const db = firebase.firestore()
 const usersCollection = db.collection('users')
+const listCollections = db.collection('lists')
 
-export { firebase, db, usersCollection }
+export {
+  firebase,
+  db,
+  listCollections,
+  usersCollection
+}

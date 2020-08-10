@@ -13,7 +13,7 @@
                         id="listname"
                         name="listname"
                         v-model="listname"
-                        placeholder="Mi asombrosa lista"
+                        placeholder="Escribe el nombre de la lista"
 
                         @validation="validations = $event"
                         validation="bail|required|max:20"
@@ -21,19 +21,19 @@
         )
 
     template(#footer)
-      div
-        b-button(variant="dark"
-                size="sm"
-                @click="setModalCreateNewList(false)") Cancelar
-        b-button(v-if="!validations.hasErrors"
-                size="sm"
-                variant="primary"
-                @click="createNewList"
-                class="float-right") Crear lista
+      div(class="d-flex row-v-center justify-content-between")
+        vs-button(dark
+                  transparent
+                  @click="setModalCreateNewList(false)") Cancelar
+
+        vs-button(primary
+                  transparent
+                  :disabled="validations.hasErrors"
+                  @click="createNewList") Crear lista
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 export default {
   data () {
     return {
@@ -46,6 +46,10 @@ export default {
   computed: {
     ...mapState('ui', [
       'modalCreateNewList'
+    ]),
+
+    ...mapState('user', [
+      'currentUser'
     ]),
 
     getCustomValidationMessages () {
@@ -61,9 +65,26 @@ export default {
       'setModalCreateNewList'
     ]),
 
-    createNewList () {
-      console.log('creating new list')
-      console.log(`'${this.listname.trimRight()}'`)
+    ...mapActions('todo', [
+      'saveNewList'
+    ]),
+
+    async createNewList () {
+      console.log(`'${this.listname.trim()}'`)
+
+      const list = {
+        title: this.listname.trim(),
+        created: new Date(),
+        lastUpdated: new Date(),
+        userId: this.currentUser.uid
+      }
+
+      const getval = await this.saveNewList(list)
+
+      if (getval.error) return
+
+      this.listname = ''
+      this.setModalCreateNewList(false)
     }
   }
 }

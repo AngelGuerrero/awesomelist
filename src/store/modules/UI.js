@@ -54,7 +54,7 @@ export default {
      * State of modal for creating new list
      */
     modalCreateNewList: {
-      show: false
+      show: true
     },
 
     // TODO: Add a queue to play all sound from completed tasks

@@ -1,4 +1,4 @@
-import { db } from '@/data/FirebaseConfig'
+import { db, listCollections } from '@/data/FirebaseConfig'
 import { firestoreAction } from 'vuexfire'
 import List from '../../data/ListClass'
 
@@ -175,6 +175,36 @@ export default {
         .catch(error => {
           retval.error = true
           retval.message = `Something went wrong ${error.message}`
+
+          commit('ui/showNotification', {
+            show: true,
+            color: 'danger',
+            title: 'Algo salió mal',
+            text: retval.message
+          }, { root: true })
+        })
+
+      return retval
+    },
+
+    saveNewList: async ({ commit }, payload) => {
+      const retval = { error: false, message: '', data: payload }
+
+      await db.collection('lists')
+        .add(payload)
+        .then(response => {
+          retval.message = 'Lista creada correctamente'
+          retval.data.id = response.id
+
+          commit('ui/showNotification', {
+            show: true,
+            color: 'success',
+            title: retval.message,
+            text: payload.title
+          }, { root: true })
+        }).catch(error => {
+          retval.error = true
+          retval.message = `${error.message}`
 
           commit('ui/showNotification', {
             show: true,
