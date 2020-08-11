@@ -13,7 +13,7 @@ export default {
      * To Do Menu Component's settings
      */
     toDoMenu: {
-      isFixed: false
+      isFixed: true
     },
 
     /**
@@ -33,13 +33,6 @@ export default {
     },
 
     /**
-     * TODO: FIX BEHAVIOR BETWEEN COMPONENTS
-     * Show the user profile menu
-     * that contains links to other sections
-     */
-    showUserProfileMenu: false,
-
-    /**
     * Object that is watched and
     * send user notification
     */
@@ -54,7 +47,7 @@ export default {
      * State of modal for creating new list
      */
     modalCreateNewList: {
-      show: true
+      show: false
     },
 
     // TODO: Add a queue to play all sound from completed tasks
