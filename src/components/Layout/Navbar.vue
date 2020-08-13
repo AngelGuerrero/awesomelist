@@ -3,15 +3,19 @@
   nav(class="row-v-center between")
     div(class="control__aside row-v-center")
       //- icon
-      b-button(variant="default" size="sm" class="mx-1")
-        b-icon(icon="grid-fill" variant="light")
+      .nav__link#gridButton(class="d-flex row-v-center")
+        b-icon(icon="grid-fill" class="h5 mb-0")
+
       //- App title
       h3.nav__title Awesomelist
 
     //- User links
     .nav__user(class="row-v-center between")
+      .nav__link(class="d-flex row-v-center")
+        b-icon(icon="search" class="h5 mb-0")
+
       .nav__link(@click="setModalCreateNewList(true)" class="d-flex row-v-center")
-        b-icon(icon="file-plus" class="h4 mb-0")
+        b-icon(icon="file-plus" class="h5 mb-0")
 
       .nav__link(@click="showUserProfileMenu()")
         img(src="@/assets/images/user.png")
@@ -39,6 +43,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#gridButton {
+  background-color: white;
+  color: $header_bg_color;
+  padding: 0px 15px;
+}
+
 nav {
   height: $navbar-height;
   background-color: $header_bg_color;
@@ -72,23 +82,24 @@ nav {
   // Display none for mobile
   display: flex;
   height: $navbar-height;
-  // TODO: Set the same color of the sidebar right
-  // when the link is selected
-  // background-color: $sidebar_bg_light;
 
-  .nav__link {
-    max-width: $navbar-height;
-    height: $navbar-height;
-    padding: 8px;
-    &:hover {
-      cursor: pointer;
-      background-color: darken($header_bg_color, 10%);
-    }
-    img {
-      border-radius: 50%;
-      width: 100%;
-      height: auto;
-    }
+}
+
+// TODO: Set the same color of the sidebar right
+// when the link is selected
+// background-color: $sidebar_bg_light;
+.nav__link {
+  max-width: $navbar-height;
+  height: $navbar-height;
+  padding: 8px;
+  &:hover {
+    cursor: pointer;
+    background-color: darken($header_bg_color, 10%);
+  }
+  img {
+    border-radius: 50%;
+    width: 100%;
+    height: auto;
   }
 }
 

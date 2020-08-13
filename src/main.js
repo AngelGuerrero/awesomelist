@@ -18,6 +18,9 @@ import {
   FormPlugin,
   ListGroupPlugin,
   LayoutPlugin,
+  ButtonGroupPlugin,
+  VBTooltipPlugin,
+  FormSelectPlugin,
   ButtonPlugin,
   SpinnerPlugin,
   CalendarPlugin,
@@ -55,6 +58,9 @@ Vue.use(IconsPlugin)
 Vue.use(ListGroupPlugin)
 Vue.use(LayoutPlugin)
 Vue.use(ButtonPlugin)
+Vue.use(ButtonGroupPlugin)
+Vue.use(VBTooltipPlugin)
+Vue.use(FormSelectPlugin)
 Vue.use(SpinnerPlugin)
 Vue.use(CalendarPlugin)
 Vue.use(CollapsePlugin)

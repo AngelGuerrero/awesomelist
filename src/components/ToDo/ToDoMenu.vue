@@ -1,5 +1,5 @@
 <template lang="pug">
-  .wrapper(class="border shadow" :class="{ 'wrapper--fixed': toDoMenu.isFixed }")
+  .wrapper(class="shadow" :class="{ 'wrapper--fixed': toDoMenu.isFixed }")
     //- Toggle button set aside
     .item_button__container
       b-button(variant="light"

@@ -2,23 +2,23 @@
   .collections__wrapper
     //- pre.pre-dev {{ $data }}
     .no_collections(v-if="collections.length <= 0")
-      //- b-spinner(label="Cargando..." small class="mr-2")
       | No hay colecciones.
 
     .collections(v-else)
       .collections__header
-        .header__title Colecciones
+        .header__title
         .header__options
           b-icon.icon__button(icon="arrows-collapse" @click="collapseAllRegisterItems")
           b-icon.icon__button(icon="arrows-expand" @click="expandAll")
 
-      .collections__content
-        .collection__wrapper.border-bottom(v-for="(collection, index) in collections" :key="collection.id")
+      .collections__content.border
+        .collection__wrapper.border-bottom.border-danger(v-for="(collection, index) in collections" :key="collection.id")
           .collection__item(v-b-toggle="'collapse-' + index"
                             @click="downloadListsFromCollection(collection); registerCollapsedItems('collapse-', index);")
             b-icon.icon--left(icon="files")
             .item__text.flex-grow-1 {{ collection.name }}
-            b-icon.icon--right(icon="arrow-right-short")
+            //- Todo: Click create new list with collection id
+            b-icon.icon--right(icon="plus")
 
           //- Lists from current collection
           b-collapse(:id="`collapse-${index}`")
@@ -47,11 +47,10 @@ export default {
   },
 
   computed: {
-    ...mapState('todo', ['collections', 'lists'])
-
-    // ...mapGetters('todo', [
-    //   'thereAreLists'
-    // ])
+    ...mapState('todo', [
+      'collections',
+      'lists'
+    ])
   },
 
   mounted () {
@@ -59,7 +58,10 @@ export default {
   },
 
   methods: {
-    ...mapActions('todo', ['getCollections', 'getListsFromCollection']),
+    ...mapActions('todo', [
+      'getCollections',
+      'getListsFromCollection'
+    ]),
 
     downloadListsFromCollection (collection) {
       this.getListsFromCollection(collection.id)
