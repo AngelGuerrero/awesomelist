@@ -1,18 +1,18 @@
 <template lang="pug">
-  //- To Do: Mostrar únicamente si se está en el modo de seleccionar las tareas
   #selectListControl
-    .close
+    .close.border(@click="toggleMoveToDoListActive")
       .close__icon
         b-icon(icon="x")
-    .content(class="mt-2")
+    .content
       b-form(inline class="justify-content-between")
         label(class="mr-sm-2" for="inline-form-custom-select-pref") Mover a
         b-form-select(class="w-50" :options="options")
         b-button(variant="primary" size="sm") Aplicar
-
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex'
+
 export default {
   data () {
     return {
@@ -20,6 +20,18 @@ export default {
         { value: null, text: 'Selecciona una lista' }
       ]
     }
+  },
+
+  computed: {
+    ...mapState('ui', [
+      'moveToDoToList'
+    ])
+  },
+
+  methods: {
+    ...mapMutations('ui', [
+      'toggleMoveToDoListActive'
+    ])
   }
 }
 </script>
@@ -27,8 +39,13 @@ export default {
 <style lang="scss" scoped>
 #selectListControl {
   width: 100%;
+  height: $selectListControlHeight;
   border-top: 1px solid lightgray;
   background-color: white;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   position: fixed;
   z-index: 8;
@@ -36,19 +53,26 @@ export default {
   left: 0;
 
   .content {
+    width: 50%;
     max-width: 600px;
-    padding: 15px;
-    margin: auto;
   }
 }
 
+.close {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+}
+
 .close__icon {
+  cursor: pointer;
   width: 25px;
   height: 25px;
   border-radius: 50%;
-  margin: 6px;
+  // margin: 6px;
   background-color: black;
   color: white;
+
   display: flex;
   justify-content: center;
   align-items: center;

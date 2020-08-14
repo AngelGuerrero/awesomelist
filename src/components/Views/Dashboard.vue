@@ -12,26 +12,30 @@
     //- =============
 
     navbar
-    .dashboard__content
+    .dashboard__content(:class="[ moveToDoToList.active ? 'listControlActive' : '' ]")
       to-do
+    to-do-select-list-control(v-if="moveToDoToList.active")
 </template>
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 import Navbar from '@/components/Layout/Navbar'
 import ToDo from '@/components/ToDo/ToDo'
+import ToDoSelectListControl from '@/components/ToDo/ToDoSelectListControl'
 
 export default {
   components: {
     ToDo,
-    Navbar
+    Navbar,
+    ToDoSelectListControl
   },
 
   computed: {
     ...mapState('ui', [
       'notification',
       'doneTaskSound',
-      'addTaskSound'
+      'addTaskSound',
+      'moveToDoToList'
     ])
   },
 
@@ -89,8 +93,13 @@ export default {
   height: 100%;
   overflow: hidden;
 }
+
 .dashboard__content {
   height: calc(100vh - #{$navbar-height});
   position: relative;
+}
+
+.listControlActive {
+  padding-bottom: $selectListControlHeight;
 }
 </style>

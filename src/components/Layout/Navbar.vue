@@ -1,9 +1,9 @@
 <template lang="pug">
-
   nav(class="row-v-center between")
     div(class="control__aside row-v-center")
-      //- icon
-      .nav__link#gridButton(class="d-flex row-v-center")
+      //- Menu tools
+      .nav__link(id="gridButton"
+                class="d-flex row-v-center")
         b-icon(icon="grid-fill" class="h5 mb-0")
 
       //- App title
@@ -32,7 +32,8 @@ export default {
     ...mapMutations('ui', [
       'toggleUserProfileMenu',
       'setSelectedComponent',
-      'setModalCreateNewList'
+      'setModalCreateNewList',
+      'toggleMoveToDoListActive'
     ]),
 
     showUserProfileMenu () {
@@ -44,9 +45,16 @@ export default {
 
 <style lang="scss" scoped>
 #gridButton {
+  padding: 0px 15px;
+}
+
+.selected_item {
   background-color: white;
   color: $header_bg_color;
-  padding: 0px 15px;
+  &:hover {
+    background-color: white !important;
+    color: black;
+  }
 }
 
 nav {

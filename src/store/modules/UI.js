@@ -50,6 +50,18 @@ export default {
       show: false
     },
 
+    /**
+     * Move ToDo's to list
+     *
+     * State for show or not
+     * the select form control,
+     * and show the several available lists.
+     */
+    moveToDoToList: {
+      active: false,
+      selectedToDos: []
+    },
+
     // TODO: Add a queue to play all sound from completed tasks
     doneTaskSound: false,
     addTaskSound: false
@@ -107,6 +119,15 @@ export default {
 
     setModalCreateNewList (state, payload) {
       state.modalCreateNewList.show = payload
+    },
+
+    toggleMoveToDoListActive (state, payload) {
+      state.moveToDoToList.active = !state.moveToDoToList.active
+    },
+
+    addItemToBeMoved (state, todo) {
+      state.moveToDoToList.selectedToDos.push(todo)
+      console.log(state.moveToDoToList.selectedToDos)
     }
   },
 

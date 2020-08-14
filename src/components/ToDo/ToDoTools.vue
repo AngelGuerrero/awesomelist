@@ -1,21 +1,39 @@
 <template lang="pug">
-  #toDoToolsWrapper(class="box-shadow")
+  #toDoToolsWrapper
     #tools
       //- Select items
-      .section.selection-active
-        b-icon(icon="card-checklist" class="h3")
+      .section(:class="{ 'option-active': moveToDoToList.active }"
+              @click="toggleMoveToDoListActive")
+        b-icon(icon="card-checklist" class="section__icon h3")
         p Modo seleccionar
 
       //- Filter
-      .section.selection-active
-        b-icon(icon="filter" class="h3")
+      .section.option-active
+        b-icon(icon="filter" class="section__icon h3")
         p Filtrar
 
       //- Search
       .section
-        b-icon(icon="search" class="h3")
+        b-icon(icon="search" class="section__icon h3")
         p Buscar
 </template>
+
+<script>
+import { mapState, mapMutations } from 'vuex'
+export default {
+  computed: {
+    ...mapState('ui', [
+      'moveToDoToList'
+    ])
+  },
+
+  methods: {
+    ...mapMutations('ui', [
+      'toggleMoveToDoListActive'
+    ])
+  }
+}
+</script>
 
 <style lang="scss" scoped>
 #toDoToolsWrapper {
@@ -36,7 +54,12 @@
     height: auto;
     border: 1px solid rgba(241, 241, 241, 0.753);
     border-top: none;
-    box-shadow: 3px 3px 3px 3px rgba(241, 241, 241, 0.753);
+    box-shadow:   0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+  0 6.7px 5.3px rgba(0, 0, 0, 0.048),
+  0 12.5px 10px rgba(0, 0, 0, 0.06),
+  0 22.3px 17.9px rgba(0, 0, 0, 0.072),
+  0 41.8px 33.4px rgba(0, 0, 0, 0.086),
+  0 100px 80px rgba(0, 0, 0, 0.12);
   }
 
   // LG
@@ -63,13 +86,25 @@
     padding: 0;
     margin-bottom: 5px;
     // 12x2
-    grid-template-columns: repeat(12, 1fr);
+    // grid-template-columns: repeat(12, 1fr);
+    grid-template-columns: none;
     grid-template-rows: none;
     gap: 0px;
+
+    display: flex;
+    :first-of-type {
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+    }
+    :last-of-type {
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+    }
   }
 
   .section {
     padding-top: 10px;
+    cursor: pointer;
 
     display: flex;
     flex-direction: column;
@@ -79,9 +114,19 @@
 
     // LG
     @include media-screen-lg {
-      margin: 3px;
-      &:nth-child(n) {
-        border-radius: 10px;
+      display: block;
+      padding: 5px;
+      background-color: rgb(126, 126, 126);
+      color: white;
+
+      &:hover {
+        background-color: rgb(107, 106, 106);
+      }
+
+      .section__icon {
+        margin: 0;
+        padding: 0;
+        font-size: 19px;
       }
       p {
         display: none;
@@ -90,8 +135,12 @@
   }
 }
 
-.selection-active {
-  background-color: $header_bg_color;
+.option-active {
+  background-color: $header_bg_color !important;
   color: $header_front_color;
+
+  @include media-screen-lg {
+    background-color: rgb(53, 53, 53) !important;
+  }
 }
 </style>

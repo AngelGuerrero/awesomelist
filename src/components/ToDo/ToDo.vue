@@ -26,9 +26,6 @@
                 @selectToDo="selectToDo"
                 @checkToDo="onToggleToDo"
                 :class="{ 'completed': thereAreCompletedToDos }")
-
-      to-do-select-list-control
-
     .detail
       component(v-if="selectedComponent.name" :is="selectedComponent.name" v-bind="selectedComponent.props")
 </template>
@@ -40,7 +37,6 @@ import ToDoMenu from '@/components/ToDo/ToDoMenu'
 import ToDoList from '@/components/ToDo/ToDoList'
 import ToDoListCreate from '@/components/ToDo/ToDoListCreate'
 import ToDoTools from '@/components/ToDo/ToDoTools'
-import ToDoSelectListControl from '@/components/ToDo/ToDoSelectListControl'
 import ToDoCreate from '@/components/ToDo/ToDoCreate'
 import ToDoDetail from '@/components/ToDo/ToDoDetail'
 import UserProfile from '@/components/User/UserProfile'
@@ -50,7 +46,6 @@ export default {
     ToDoMenu,
     ToDoList,
     ToDoTools,
-    ToDoSelectListControl,
     ToDoCreate,
     ToDoListCreate,
     //
@@ -159,6 +154,10 @@ export default {
 <style lang="scss" scoped>
 #todo {
   height: 100%;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .toDo__title {

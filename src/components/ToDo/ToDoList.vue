@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
 
 export default {
   props: {
@@ -67,18 +67,36 @@ export default {
     }
   },
 
+  computed: {
+    ...mapState('ui', [
+      'moveToDoToList'
+    ])
+  },
+
   methods: {
+    ...mapMutations('ui', [
+      'setSelectedComponent',
+      'addItemToBeMoved'
+    ]),
+
     ...mapActions('todo', [
       'onToggleAddToMyDay',
       'onToggleMarkAsImportant'
     ]),
 
-    ...mapMutations('ui', [
-      'setSelectedComponent'
-    ]),
-
     emitSelect (todo) {
-      // this.$emit('selectToDo', todo)
+      //
+      //  If the select to do list mode
+      //  is active, then, the panel details
+      //  will not be displayed instead
+      //  the task will be queued
+      //  to be moved.
+      //
+      if (this.moveToDoToList.active) {
+        this.addItemToBeMoved(todo)
+        return
+      }
+
       this.setSelectedComponent({
         name: 'ToDoDetail',
         props: {
