@@ -43,7 +43,7 @@
                       size="sm"
                       class="mr-1"
                       title="Quitar de mi día")
-                b-icon(icon="brightness-high-fill" variant="danger")
+                b-icon(icon="brightness-high-fill" variant="warning")
 
               b-button(v-else
                       :key="2"
@@ -53,29 +53,31 @@
                       class="mr-1"
                       title="Agregar tarea a mi día")
                 b-icon(icon="brightness-high" variant="danger")
+            //- Delete todo
+            to-do-confirm-delete(:todo="todo")
 </template>
 
 <script>
+import ToDoConfirmDelete from '@/components/ToDo/ToDoConfirmDelete'
 import { mapActions, mapMutations } from 'vuex'
 
 export default {
+  components: {
+    ToDoConfirmDelete
+  },
+
   props: {
     todolist: {
       type: Array,
       required: false,
-      default: () => ([])
+      default: () => []
     }
   },
 
   methods: {
-    ...mapActions('todo', [
-      'onToggleAddToMyDay',
-      'onToggleMarkAsImportant'
-    ]),
+    ...mapActions('todo', ['onToggleAddToMyDay', 'onToggleMarkAsImportant']),
 
-    ...mapMutations('ui', [
-      'setSelectedComponent'
-    ]),
+    ...mapMutations('ui', ['setSelectedComponent']),
 
     emitSelect (todo) {
       // this.$emit('selectToDo', todo)

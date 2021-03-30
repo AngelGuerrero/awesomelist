@@ -1,5 +1,5 @@
-import * as firebase from 'firebase/app'
-import 'firebase/auth'
+import firebase from 'firebase'
+
 import 'firebase/firestore'
 
 const config = {
@@ -20,4 +20,4 @@ firebase.initializeApp(config)
 const db = firebase.firestore()
 const usersCollection = db.collection('users')
 
-export { firebase, db, usersCollection }
+export { db, firebase, usersCollection }
