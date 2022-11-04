@@ -1,18 +1,18 @@
 <template lang="pug">
-  #dashboard
-    //- === Sounds ===
-    //-
-    //- Done Task Sound
-    audio(id="elDoneTaskSound" hidden)
-      source(src="@/assets/sounds/doneTask.mp3" type="audio/mp3")
+#dashboard
+  //- === Sounds ===
+  //-
+  //- Done Task Sound
+  audio#elDoneTaskSound(hidden)
+    source(src='@/assets/sounds/doneTask.mp3', type='audio/mp3')
 
-    audio(id="elAddTaskSound" hidden)
-      source(src="@/assets/sounds/addedTask.mp3" type="audio/mp3")
-    //- =============
+  audio#elAddTaskSound(hidden)
+    source(src='@/assets/sounds/addedTask.mp3', type='audio/mp3')
+  //- =============
 
-    navbar
-    .dashboard__content
-      to-do
+  navbar
+  .dashboard__content
+    to-do
 </template>
 
 <script>
@@ -27,11 +27,7 @@ export default {
   },
 
   computed: {
-    ...mapState('ui', [
-      'notification',
-      'doneTaskSound',
-      'addTaskSound'
-    ])
+    ...mapState('ui', ['notification', 'doneTaskSound', 'addTaskSound'])
   },
 
   watch: {
@@ -48,7 +44,6 @@ export default {
     addTaskSound (val) {
       this.$el.querySelector('#elAddTaskSound').play()
     }
-
   },
 
   created () {
@@ -68,9 +63,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations('ui', [
-      'playDoneTaskSound'
-    ]),
+    ...mapMutations('ui', ['playDoneTaskSound']),
 
     ...mapActions('ui', ['listenWindowResize']),
 
@@ -79,7 +72,6 @@ export default {
       this.$store.commit('todo/setCurrentList', list)
     }
   }
-
 }
 </script>
 

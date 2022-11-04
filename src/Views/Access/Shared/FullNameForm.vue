@@ -1,21 +1,18 @@
 <template lang="pug">
-  div
-    formulate-input(type="text"
-                    label="Nombre completo"
-                    id="input__fullname"
-                    name="fullname"
-                    v-model="value"
-                    autocomplete="off"
-                    @change="performValidation()"
-
-                    :input-class="customClasses.input"
-
-                    @validation="validations = $event"
-                    validation-name="Nombre completo"
-                    validation="bail|required|min:3|max:60"
-                    :validation-messages="getCustomValidationMessages"
-                    @error-visibility="showingErrors = $event"
-  )
+div
+  formulate-input#input__fullName(
+    type='text',
+    label='Nombre completo',
+    name='fullName',
+    v-model='value',
+    autocomplete='off',
+    @change='performValidation()',
+    :input-class='customClasses.input',
+    @validation='validations = $event',
+    validation-name='Nombre completo',
+    validation='bail|required|min:3|max:60',
+    :validation-messages='getCustomValidationMessages',
+    @error-visibility='showingErrors = $event')
 </template>
 
 <script>
@@ -34,8 +31,10 @@ export default {
     getCustomValidationMessages () {
       return {
         required: 'El campo es requerido.',
-        min: (context) => `El campo debe tener al menos ${context.args[0]} carácteres de longitud.`,
-        max: (context) => `El campo debe tener un máximo de ${context.args[0]} de carácteres de longitud.`
+        min: context =>
+          `El campo debe tener al menos ${context.args[0]} caracteres de longitud.`,
+        max: context =>
+          `El campo debe tener un máximo de ${context.args[0]} de caracteres de longitud.`
       }
     }
   },
@@ -48,7 +47,7 @@ export default {
     validations: {
       immediate: true,
       deep: true,
-      handler (val) {
+      handler () {
         if (!this.showingErrors) {
           this.customClasses.input = []
           this.customClasses.input.push('border-default')

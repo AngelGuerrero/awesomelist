@@ -107,7 +107,7 @@ export default {
     }),
 
     getListsFromCollection: async ({ state, commit }, collectionId) => {
-      const retval = { error: false, message: 'ok', data: [] }
+      const returnValue = { error: false, message: 'ok', data: [] }
 
       const query = await db
         .collection('collections')
@@ -118,21 +118,21 @@ export default {
         const response = await query.get()
 
         response.forEach((record) => {
-          retval.data.push({
+          returnValue.data.push({
             id: record.id,
             collectionId,
             ...record.data()
           })
         })
 
-        commit('setLists', retval.data)
-        commit('setListToCollection', { collectionId, lists: retval.data })
+        commit('setLists', returnValue.data)
+        commit('setListToCollection', { collectionId, lists: returnValue.data })
       } catch (error) {
-        retval.error = true
-        retval.message = error.message
+        returnValue.error = true
+        returnValue.message = error.message
       }
 
-      return retval
+      return returnValue
     },
 
     createNewToDoCollection: async ({ dispatch }, { name, userId }) => {
@@ -155,36 +155,36 @@ export default {
     },
 
     saveToDo: async ({ commit, dispatch }, payload) => {
-      const retval = { error: false, message: '', data: payload }
+      const returnValue = { error: false, message: '', data: payload }
 
       await db.collection('todos')
         .add(payload)
         .then(response => {
-          retval.message = 'Tarea creada correctamente'
-          retval.data.id = response.id
+          returnValue.message = 'Tarea creada correctamente'
+          returnValue.data.id = response.id
 
           commit('ui/showNotification', {
             show: true,
             color: 'success',
-            title: retval.message,
+            title: returnValue.message,
             text: payload.title
           }, { root: true })
 
           dispatch('ui/playAddTaskSound', true, { root: true })
         })
         .catch(error => {
-          retval.error = true
-          retval.message = `Something went wrong ${error.message}`
+          returnValue.error = true
+          returnValue.message = `Something went wrong ${error.message}`
 
           commit('ui/showNotification', {
             show: true,
             color: 'danger',
             title: 'Algo salió mal',
-            text: retval.message
+            text: returnValue.message
           }, { root: true })
         })
 
-      return retval
+      return returnValue
     },
 
     getToDoById: async ({ commit }, id) => {
@@ -200,25 +200,25 @@ export default {
     },
 
     updateToDoById: async ({ commit }, todo) => {
-      const retval = { error: false, message: '' }
+      const returnValue = { error: false, message: '' }
 
       await db.collection('todos')
         .doc(todo.id)
         .update(todo)
-        .then(_ => { retval.message = `To Do '${todo.title}' updated successfully` })
+        .then(_ => { returnValue.message = `To Do '${todo.title}' updated successfully` })
         .catch(error => {
-          retval.error = true
-          retval.message = error.message
+          returnValue.error = true
+          returnValue.message = error.message
           commit('ui/showNotification', {
             show: true,
             color: 'danger',
             title: 'Algo salió mal',
-            text: retval.message,
+            text: returnValue.message,
             position: 'top-center'
           }, { root: true })
         })
 
-      return retval
+      return returnValue
     },
 
     deleteToDoById: async ({ context }, id) => {
@@ -231,25 +231,25 @@ export default {
 
     updateCollectionById: async ({ commit }, collection) => {
       console.log(collection)
-      const retval = { error: false, message: '' }
+      const returnValue = { error: false, message: '' }
 
       await db.collection('collections')
         .doc(collection.id)
         .update(collection)
-        .then(_ => { retval.message = `Collection '${collection.name}' updated successfully` })
+        .then(_ => { returnValue.message = `Collection '${collection.name}' updated successfully` })
         .catch(error => {
-          retval.error = true
-          retval.message = error.message
+          returnValue.error = true
+          returnValue.message = error.message
           commit('ui/showNotification', {
             show: true,
             color: 'danger',
             title: 'Algo salió mal',
-            text: retval.message,
+            text: returnValue.message,
             position: 'top-center'
           }, { root: true })
         })
 
-      return retval
+      return returnValue
     },
 
     //

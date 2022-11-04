@@ -2,32 +2,21 @@
 
 Este proyecto inició como un proyecto para aprender Vue y retar mis habilidades, y le he dado mantenimiento a la actual fecha ya que lo he utilizado diariamente como una herramienta de trabajo y organización.
 
-La aplicación es ello precisamente, una lista de tareas que al momento le hace falta muchas funcionalidades que estoy agregando y bugs que estoy corrigiendo.
+La aplicación, una lista de tareas que al momento le hace falta muchas funcionalidades que estoy agregando y bugs que estoy corrigiendo.
 
-La aplicación guarda la información no sensible en firebase, específicamente firestore, y para el ingreso se utiliza el medio de autenticación de firebase de correo y contraseña, **la contraseña no se almacena en firestore**.
+## Versión requerida de Node
+`14.19.3`
 
 ## Instalación de dependencias
 
 ```
-npm install
+yarn
 ```
 
 ### Inicia el proyecto en modo desarrollo
 
 ```
-npm run serve
-```
-
-### Compila y minifica archivos para producción
-
-```
-npm run build
-```
-
-### Verifica errores en archivos
-
-```
-npm run lint
+yarn serve
 ```
 
 ## Framework UI

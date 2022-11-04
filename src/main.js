@@ -2,13 +2,9 @@ import Vue from 'vue'
 import App from './App.vue'
 import { store } from './store'
 import router from './router'
-
 import VueFormulate from '@braid/vue-formulate'
-
-//
-// Firebase
-import { firebase } from '@/data/FirebaseConfig'
 import { firestorePlugin } from 'vuefire'
+import { firebase } from '@firebase/app'
 
 //
 // Bootstrap

@@ -1,43 +1,48 @@
 <template lang="pug">
-  .collections__wrapper
-    //- pre.pre-dev {{ $data }}
-    .no_collections(v-if="collections.length <= 0")
-      //- b-spinner(label="Cargando..." small class="mr-2")
-      | No hay colecciones.
+.collections__wrapper
+  //- pre.pre-dev {{ $data }}
+  .no_collections(v-if='collections.length <= 0')
+    //- b-spinner(label="Cargando..." small class="mr-2")
+    | No hay colecciones.
 
-    .collections(v-else)
-      .collections__header
-        .header__title Colecciones
-        .header__options
-          b-icon.icon__button(icon="arrows-collapse" @click="collapseAllRegisterItems")
-          b-icon.icon__button(icon="arrows-expand" @click="expandAll")
+  .collections(v-else)
+    .collections__header
+      .header__title Colecciones
+      .header__options
+        b-icon.icon__button(
+          icon='arrows-collapse',
+          @click='collapseAllRegisterItems')
+        b-icon.icon__button(icon='arrows-expand', @click='expandAll')
 
-      .collections__content
-        .collection__wrapper.border-bottom(v-for="(collection, index) in collections" :key="collection.id")
-          .collection__item(v-b-toggle="'collapse-' + index"
-                            @click="downloadListsFromCollection(collection); registerCollapsedItems('collapse-', index);")
-            b-icon.icon--left(icon="files")
-            .item__text.flex-grow-1 {{ collection.name }}
-            b-icon.icon--right(icon="arrow-right-short")
+    .collections__content
+      .collection__wrapper.border-bottom(
+        v-for='(collection, index) in collections',
+        :key='collection.id')
+        .collection__item(
+          v-b-toggle='\'collapse-\' + index',
+          @click='downloadListsFromCollection(collection); registerCollapsedItems("collapse-", index)')
+          b-icon.icon--left(icon='files')
+          .item__text.flex-grow-1 {{ collection.name }}
+          b-icon.icon--right(icon='arrow-right-short')
 
-          //- Lists from current collection
-          b-collapse(:id="`collapse-${index}`")
-            .no_lists(v-if="!collection.lists")
-              b-spinner(label="Cargando listas..." small class="mr-2")
-              span Cargando...
-            div(v-else)
-              .no_lists(v-if="collection.lists.length <= 0")
-                span Colección vacía
-              .list__item(v-else v-for="list in collection.lists" :key="list.id")
-                b-icon.icon--left(icon="list")
-                .item__text.w-75 {{ list.name }}
+        //- Lists from current collection
+        b-collapse(:id='`collapse-${index}`')
+          .no_lists(v-if='!collection.lists')
+            b-spinner.mr-2(label='Cargando listas...', small)
+            span Cargando...
+          div(v-else)
+            .no_lists(v-if='collection.lists.length <= 0')
+              span Colección vacía
+            .list__item(
+              v-else,
+              v-for='list in collection.lists',
+              :key='list.id')
+              b-icon.icon--left(icon='list')
+              .item__text.w-75 {{ list.name }}
 </template>
 
 <script>
-import {
-  mapState,
-  mapActions
-} from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   data () {
@@ -66,36 +71,38 @@ export default {
     },
 
     noPropertyOrEmptyLists (collection) {
-      const retval = {
+      const returnValue = {
         error: false,
         warning: false,
         message: 'ok'
       }
 
       if (!collection.lists) {
-        retval.error = true
-        retval.message = 'No existe la propiedad'
-        return retval
+        returnValue.error = true
+        returnValue.message = 'No existe la propiedad'
+        return returnValue
       }
 
       if (collection.lists.length <= 0) {
-        retval.error = false
-        retval.warning = true
-        retval.message = 'No hay listas aún'
-        return retval
+        returnValue.error = false
+        returnValue.warning = true
+        returnValue.message = 'No hay listas aún'
+        return returnValue
       }
 
-      return retval
+      return returnValue
     },
 
     registerCollapsedItems (attr, id) {
       const composedId = attr + id
 
-      const addItem = (param) => this.collapsedCollections.push(param)
+      const addItem = param => this.collapsedCollections.push(param)
 
       try {
-        const found = this.collapsedCollections.find(element => element === composedId)
-        if (found) return setTimeout(_ => this.removeFromItemsCollapsed(composedId))
+        const found = this.collapsedCollections.find(
+          element => element === composedId
+        )
+        if (found) { return setTimeout(_ => this.removeFromItemsCollapsed(composedId)) }
 
         setTimeout(_ => addItem(attr + id))
       } catch (error) {
@@ -104,15 +111,20 @@ export default {
     },
 
     removeFromItemsCollapsed (identifier) {
-      this.collapsedCollections = this.collapsedCollections.filter(element => element !== identifier)
+      this.collapsedCollections = this.collapsedCollections.filter(
+        element => element !== identifier
+      )
     },
 
     collapseAllRegisterItems () {
-      const removeAll = () => { this.collapsedCollections = [] }
+      const removeAll = () => {
+        this.collapsedCollections = []
+      }
 
       const collapseAll = () =>
-        this.collapsedCollections
-          .map(element => this.$root.$emit('bv::toggle::collapse', element))
+        this.collapsedCollections.map(element =>
+          this.$root.$emit('bv::toggle::collapse', element)
+        )
 
       setTimeout(_ => {
         collapseAll()
@@ -121,19 +133,26 @@ export default {
     },
 
     toggleCollapseAll () {
-      this.collections.forEach(element => this.$root.$emit('bv::toggle::collapse', element))
+      this.collections.forEach(element =>
+        this.$root.$emit('bv::toggle::collapse', element)
+      )
     },
 
     expandAll () {
-      const collectionsToExpand = this.collections.reduce((acc, curr, index, arr) => {
-        const composedId = 'collapse-' + index
+      const collectionsToExpand = this.collections.reduce(
+        (acc, curr, index, arr) => {
+          const composedId = 'collapse-' + index
 
-        const found = this.collapsedCollections.find(element => element === composedId)
+          const found = this.collapsedCollections.find(
+            element => element === composedId
+          )
 
-        if (!found) acc.push({ composedId, data: curr, index })
+          if (!found) acc.push({ composedId, data: curr, index })
 
-        return acc
-      }, [])
+          return acc
+        },
+        []
+      )
 
       const expandItems = () =>
         collectionsToExpand.forEach(el => {
@@ -142,7 +161,9 @@ export default {
         })
 
       setTimeout(_ => expandItems())
-      collectionsToExpand.forEach(el => this.registerCollapsedItems('collapse-', el.index))
+      collectionsToExpand.forEach(el =>
+        this.registerCollapsedItems('collapse-', el.index)
+      )
     }
   }
 }

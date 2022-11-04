@@ -1,21 +1,17 @@
 <template lang="pug">
-  div
-    formulate-input(
-      type="email"
-      label="Email"
-      id="input__email"
-      placeholder="micorreo@email.com"
-      v-model="value"
-
-      :input-class="customClasses.input"
-
-      @keyup="performValidation()"
-      @validation="validations = $event"
-      validation="bail|required|max:50|email|emailExists"
-      :validation-rules="getCustomValidationsRules"
-      :validation-messages="getValidationMessages"
-      :show-errors="showErrors"
-    )
+div
+  formulate-input#input__email(
+    type='email',
+    label='Email',
+    placeholder='micorreo@email.com',
+    v-model='email',
+    :input-class='customClasses.input',
+    @keyup='performValidation()',
+    @validation='validations = $event',
+    validation='bail|required|max:50|email|emailExists',
+    :validation-rules='getCustomValidationsRules',
+    :validation-messages='getValidationMessages',
+    :show-errors='showErrors')
 </template>
 
 <script>
@@ -23,14 +19,17 @@ import { mapActions } from 'vuex'
 
 export default {
   props: {
-    validateExistance: {
+    validateExists: {
       type: Boolean,
+      required: true
+    },
+    value: {
+      type: String,
       required: true
     }
   },
 
   data: () => ({
-    value: '',
     validations: {},
     showErrors: false,
     customValidations: {
@@ -38,6 +37,7 @@ export default {
         message: ''
       }
     },
+    email: '',
 
     customClasses: {
       input: ['border-white']
@@ -55,9 +55,10 @@ export default {
       return {
         required: 'El email es requerido.',
 
-        max: (context) => `El email debe ser un máximo de ${context.args[0]} carácteres.`,
+        max: context =>
+          `El email debe ser un máximo de ${context.args[0]} caracteres.`,
 
-        email: (context) => `'${context.value}' no es un email válido.`,
+        email: context => `'${context.value}' no es un email válido.`,
 
         emailExists: this.customValidations.emailExists.message
       }
@@ -65,14 +66,14 @@ export default {
   },
 
   watch: {
-    value (val) {
-      this.$emit('model', val)
+    email (newEmail) {
+      this.$emit('input', newEmail)
     },
 
     validations: {
       immediate: true,
       deep: true,
-      handler (newval) {
+      handler () {
         this.customClasses.input = []
 
         if (!this.showErrors) {
@@ -106,10 +107,10 @@ export default {
 
       let passValidation = false
 
-      const getval = await this.getUserByEmail(value)
-      const userExists = getval.data !== null
+      const response = await this.getUserByEmail(value)
+      const userExists = response.data !== null
 
-      if (this.validateExistance) {
+      if (this.validateExists) {
         passValidation = userExists
 
         this.customValidations.emailExists.message = userExists

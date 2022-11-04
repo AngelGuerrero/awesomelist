@@ -5,10 +5,14 @@
   outline: none !important;
 }
 
+.dev {
+  border: 1px solid tomato;
+}
+
 body {
   margin: 0;
   padding: 0;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
   font-size: 13px !important;
   scroll-behavior: smooth;
 }
@@ -35,10 +39,12 @@ body {
   top: 0;
   right: 0;
   height: 100%;
-  width: 80%;
+  width: -moz-fit-content;
+  width: fit-content;
   padding: 20px;
   background-color: black;
-  color: rgb(51, 255, 0) !important;
+  color: rgb(51, 255, 0);
+  font-family: monospace;
 }
 
 .vs-notification-parent {

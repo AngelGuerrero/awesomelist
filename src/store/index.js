@@ -22,7 +22,7 @@ firebase.auth().onAuthStateChanged(async user => {
 
   //
   // Get the user profile from firebase authentication
-  store.dispatch('user/fetchUserProfile', user.uid)
+  await store.dispatch('user/fetchUserProfile', user.uid)
 
   // store.commit('addTaskToQueue', {
   //   action: 'users/setCurrentUser',
@@ -49,7 +49,7 @@ export const store = new Vuex.Store({
 
   actions: {
     getDataByQuery: async ({ context }, query) => {
-      const retval = { error: false, message: 'ok', data: null }
+      const returnValue = { error: false, message: 'ok', data: null }
 
       try {
         const list = []
@@ -59,13 +59,13 @@ export const store = new Vuex.Store({
 
         documents.forEach(snapshot => list.push(snapshot.data()))
 
-        retval.data = list
+        returnValue.data = list
       } catch (error) {
-        retval.error = true
-        retval.message = 'Error getting data'
+        returnValue.error = true
+        returnValue.message = 'Error getting data'
       }
 
-      return retval
+      return returnValue
     }
   },
 

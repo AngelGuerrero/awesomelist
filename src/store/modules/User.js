@@ -12,14 +12,35 @@ export default {
     //
     currentUser: null,
     //
+    //
+    isLoadingUser: true,
+    //
     // All database users
     users: []
   },
 
-  mutations: {
-    setCurrentUser (state, payload) { state.currentUser = payload },
+  getters: {
+    isAuthenticated (state) {
+      return !!(state.currentUser && state.currentUser !== {})
+    },
 
-    setCurrentProfile (state, payload) { state.currentProfile = payload }
+    isLoadingUser (state) {
+      return state.isLoadingUser
+    }
+  },
+
+  mutations: {
+    setCurrentUser (state, payload) {
+      state.currentUser = payload
+    },
+
+    setCurrentProfile (state, payload) {
+      state.currentProfile = payload
+    },
+
+    setIsLoadingUser (state, payload) {
+      state.isLoadingUser = payload
+    }
   },
 
   actions: {
@@ -29,7 +50,12 @@ export default {
     },
 
     fetchUserProfile: async ({ commit }, uid) => {
-      const retval = { error: false, message: '', event: 'fetching user profile', data: null }
+      const returnValue = {
+        error: false,
+        message: '',
+        event: 'fetching user profile',
+        data: null
+      }
 
       return new Promise((resolve, reject) => {
         usersCollection
@@ -37,16 +63,16 @@ export default {
           .get()
           .then(result => {
             commit('setCurrentProfile', result.data())
-            resolve(retval)
+            commit('setIsLoadingUser', false)
+            resolve(returnValue)
           })
           .catch(error => {
-            retval.error = true
-            retval.message = error.message
-            retval.errorFatal = true
-            // dispatch('pushAsyncLog', retval, { root: true })
-            reject(retval)
-          }
-          )
+            returnValue.error = true
+            returnValue.message = error.message
+            returnValue.errorFatal = true
+            // dispatch('pushAsyncLog', returnValue, { root: true })
+            reject(returnValue)
+          })
       })
     },
 
@@ -55,17 +81,17 @@ export default {
     }),
 
     createUserAccount: async ({ dispatch }, user) => {
-      const retval = { error: false, message: '', data: null }
+      const returnValue = { error: false, message: '', data: null }
 
-      const getvalUserWithEmailAndPassword = await dispatch(
+      const resUserWithEmailAndPassword = await dispatch(
         'createUserWithEmailAndPassword',
         user
       )
 
       //
       // Error creating user with email and password ?
-      if (getvalUserWithEmailAndPassword.error) {
-        return getvalUserWithEmailAndPassword
+      if (resUserWithEmailAndPassword.error) {
+        return resUserWithEmailAndPassword
       }
 
       //
@@ -74,161 +100,179 @@ export default {
       // Do not save password in database
       delete user.password
 
-      const getvalUserSavedToCollection = await dispatch(
+      const resUserSavedToCollection = await dispatch(
         'saveUserToUsersCollections',
         {
-          uid: getvalUserWithEmailAndPassword.data.user.uid,
+          uid: resUserWithEmailAndPassword.data.user.uid,
           user
         }
       )
 
       //
       // Error saving user to collection ?
-      if (getvalUserSavedToCollection.error) return getvalUserSavedToCollection
+      if (resUserSavedToCollection.error) return resUserSavedToCollection
 
-      retval.message = 'Cuenta de usuario creada correctamente'
-      retval.data = getvalUserSavedToCollection.data
+      returnValue.message = 'Cuenta de usuario creada correctamente'
+      returnValue.data = resUserSavedToCollection.data
 
-      return retval
+      return returnValue
     },
 
     createUserWithEmailAndPassword: async ({ dispatch }, user) => {
-      const retval = { error: false, message: '', data: null }
+      const returnValue = { error: false, message: '', data: null }
 
       const createdUser = await firebase
         .auth()
         .createUserWithEmailAndPassword(user.email, user.password)
         .catch(error => {
-          retval.error = true
-          retval.message = error.message
+          returnValue.error = true
+          returnValue.message = error.message
         })
 
       //
       // Error saving user with email with password
-      if (retval.error) return retval
+      if (returnValue.error) return returnValue
 
-      retval.message = 'account created'
-      retval.data = createdUser
+      returnValue.message = 'account created'
+      returnValue.data = createdUser
 
-      return retval
+      return returnValue
+    },
+
+    restorePassword: async ({ dispatch }, email) => {
+      const returnValue = {
+        error: false,
+        message: 'Se ha enviado un correo para restablecer la contraseña',
+        data: null
+      }
+
+      try {
+        await firebase.auth().sendPasswordResetEmail(email)
+      } catch (error) {
+        returnValue.error = true
+        returnValue.message = error.message
+      }
+
+      return returnValue
     },
 
     saveUserToUsersCollections: async ({ context }, { uid, user }) => {
-      const retval = { error: false, message: '', data: null }
+      const returnValue = { error: false, message: '', data: null }
 
       await usersCollection
         .doc(uid)
         .set(user)
         .catch(err => {
-          retval.error = true
-          retval.message = err.message
+          returnValue.error = true
+          returnValue.message = err.message
         })
 
       //
       // Error saving user to collections
-      if (retval.error) return retval
+      if (returnValue.error) return returnValue
 
-      retval.message = 'user saved'
-      retval.data = uid
+      returnValue.message = 'user saved'
+      returnValue.data = uid
 
-      return retval
+      return returnValue
     },
 
     signInWithEmailAndPassword: async ({ dispatch }, { email, password }) => {
-      const retval = { error: false, message: 'ok', data: null }
+      const returnValue = { error: false, message: 'ok', data: null }
 
       await firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
         .catch(error => {
-          retval.error = true
-          retval.message = error.message
+          returnValue.error = true
+          returnValue.message = error.message
         })
 
-      return retval
+      return returnValue
     },
 
-    signOut: async ({ context }) => {
-      const retval = { error: false, message: '' }
+    signOut: async ({ commit }) => {
+      const returnValue = { error: false, message: '' }
 
       await firebase
         .auth()
         .signOut()
         .catch(error => {
-          retval.error = true
-          retval.message = error
+          returnValue.error = true
+          returnValue.message = error
         })
+      commit('setCurrentUser', null)
 
-      return retval
+      return returnValue
     },
 
     // #region [ Blue ] Queries
 
     getUserByNickName: async ({ dispatch }, nickname) => {
-      const retval = { error: false, message: '', data: null }
+      const returnValue = { error: false, message: '', data: null }
 
       const query = await usersCollection.where('nickname', '==', nickname)
 
-      const getval = await dispatch('getDataByQuery', query, { root: true })
+      const response = await dispatch('getDataByQuery', query, { root: true })
 
       //
       // Error fetching data ?
-      if (getval.error) return getval
+      if (response.error) return response
 
       try {
-        const user = getval.data.find(user => user.nickname === nickname)
+        const user = response.data.find(user => user.nickname === nickname)
 
         if (user) {
-          retval.data = user
-          retval.message = 'Usuario encontrado'
+          returnValue.data = user
+          returnValue.message = 'Usuario encontrado'
         } else {
-          retval.error = true
-          retval.message = 'Usuario no encontrado'
+          returnValue.error = true
+          returnValue.message = 'Usuario no encontrado'
         }
       } catch (error) {
-        retval.error = true
-        retval.message = error.message
+        returnValue.error = true
+        returnValue.message = error.message
       }
 
-      return retval
+      return returnValue
     },
 
     /**
      * Get a user by email
      *
-     * @retval contains the next information
+     * @returnValue contains the next information
      *
      * @error is true if something went wrong or user doesn't exist
      * @message contains information about error
      * @data contains the user object, is null if user doesn't exist
      */
     getUserByEmail: async ({ dispatch }, email) => {
-      const retval = { error: false, message: 'ok', data: null }
+      const returnValue = { error: false, message: 'ok', data: null }
 
       const query = await usersCollection.where('email', '==', email)
 
-      const getval = await dispatch('getDataByQuery', query, { root: true })
+      const response = await dispatch('getDataByQuery', query, { root: true })
 
       //
       // Error fetching data ?
-      if (getval.error) return getval
+      if (response.error) return response
 
       try {
-        const user = getval.data.find(user => user.email === email)
+        const user = response.data.find(user => user.email === email)
 
         if (user) {
-          retval.data = user
-          retval.message = 'Usuario encontrado'
+          returnValue.data = user
+          returnValue.message = 'Usuario encontrado'
         } else {
-          retval.error = true
-          retval.message = 'Usuario no encontrado'
+          returnValue.error = true
+          returnValue.message = 'Usuario no encontrado'
         }
       } catch (error) {
-        retval.error = true
-        retval.message = error.message
+        returnValue.error = true
+        returnValue.message = error.message
       }
 
-      return retval
+      return returnValue
     }
 
     // #endregion

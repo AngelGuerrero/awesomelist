@@ -1,41 +1,48 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Access from './components/Views/Access/Access'
-import Dashboard from './components/Views/Dashboard'
-import { firebase } from '@/data/FirebaseConfig'
+import Router from 'vue-router'
+import { firebase } from '@firebase/app'
 
-Vue.use(VueRouter)
+import Access from '@/Views/Access/Access'
+import Dashboard from '@/Views/Dashboard'
 
-const routes = [
-  { path: '', redirect: 'login' },
-  { path: '*', redirect: 'login' },
-  { path: '/', redirect: 'login' },
-  //
-  // Access
-  {
-    path: '/login',
-    name: 'login',
-    component: Access,
-    props: { view: 'login' }
-  },
-  {
-    path: '/signup',
-    name: 'signup',
-    component: Access,
-    props: { view: 'signup' }
-  },
-  //
-  // Dashboard
-  {
-    path: '/dashboard',
-    name: 'Dashboard',
-    component: Dashboard,
-    meta: { requiresAuth: true }
-  }
-]
+Vue.use(Router)
 
-const router = new VueRouter({
-  routes
+const router = new Router({
+  mode: 'history',
+  base: process.env.BASE_URL,
+  routes: [
+    {
+      path: '/',
+      redirect: '/dashboard'
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: Dashboard,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Access,
+      meta: { requiresAuth: false },
+      props: { view: 'login' }
+    },
+    {
+      path: '/signup',
+      name: 'signup',
+      component: Access,
+      meta: { requiresAuth: false },
+      props: { view: 'signup' }
+    },
+    {
+      path: '/restore-password',
+      name: 'restorePassword',
+      component: Access,
+      meta: { requiresAuth: false },
+      props: { view: 'restorePassword' }
+    }
+  ]
 })
 
 router.beforeEach((to, from, next) => {

@@ -1,31 +1,36 @@
 <template lang="pug">
-  #todo(class="w-100 h-100 d-flex")
-    .menu
-      to-do-menu
-    .content(class="flex-grow-1 h-100 p-3")
-      h1(class="h3" :style="getStyle") {{ getCurrentList.title }}
+#todo.w-100.h-100.d-flex
+  .menu
+    to-do-menu
+  .content.flex-grow-1.h-100.p-3
+    h1.h3(:style='getStyle') {{ getCurrentList.title }}
 
-      to-do-create(@createdToDo="selectToDo")
+    to-do-create(@createdToDo='selectToDo')
 
-      to-do-list(:todolist="getUncompletedToDos"
-                @selectToDo="selectToDo"
-                @checkToDo="completeToDo")
+    to-do-list(
+      :todoList='getUncompletedToDos',
+      @selectToDo='selectToDo',
+      @checkToDo='completeToDo')
 
-      b-button(v-if="thereAreCompletedToDos"
-              variant="primary"
-              size="sm"
-              class="my-2"
-              @click="showCompletedToDos = !showCompletedToDos") {{ getBtnText }}
+    b-button.my-2.btn__bg(
+      v-if='thereAreCompletedToDos',
+      variant='',
+      size='sm btn-block',
+      @click='showCompletedToDos = !showCompletedToDos') {{ getBtnText }}
 
-      to-do-list(v-if="thereAreCompletedToDos"
-                v-show="showCompletedToDos"
-                :todolist="getCompletedToDos"
-                @selectToDo="selectToDo"
-                @checkToDo="onToggleToDo"
-                :class="{ 'completed': thereAreCompletedToDos }")
+    to-do-list(
+      v-if='thereAreCompletedToDos',
+      v-show='showCompletedToDos',
+      :todoList='getCompletedToDos',
+      @selectToDo='selectToDo',
+      @checkToDo='onToggleToDo',
+      :class='{ completed: thereAreCompletedToDos }')
 
-    .detail
-      component(v-if="selectedComponent.name" :is="selectedComponent.name" v-bind="selectedComponent.props")
+  .detail
+    component(
+      v-if='selectedComponent.name',
+      :is='selectedComponent.name',
+      v-bind='selectedComponent.props')
 </template>
 
 <script>
@@ -58,9 +63,7 @@ export default {
   computed: {
     //
     // 'todo' module
-    ...mapState('todo', [
-      'todos'
-    ]),
+    ...mapState('todo', ['todos']),
     ...mapGetters('todo', [
       'getUncompletedToDos',
       'getCompletedToDos',
@@ -69,17 +72,16 @@ export default {
     ]),
     //
     // 'ui' module
-    ...mapState('ui', [
-      'showUserProfileMenu',
-      'selectedComponent'
-    ]),
+    ...mapState('ui', ['showUserProfileMenu', 'selectedComponent']),
 
     thereAreCompletedToDos () {
       return this.getCompletedToDos.length > 0
     },
 
     getBtnText () {
-      return this.showCompletedToDos ? 'Ocultar tareas completadas' : 'Mostrar tareas completadas'
+      return this.showCompletedToDos
+        ? 'Ocultar tareas completadas'
+        : 'Mostrar tareas completadas'
     },
 
     showToDoDetail () {
@@ -101,7 +103,6 @@ export default {
       immediate: false,
       handler (todos) {
         // if (todos.length <= 0) return
-
         // const uncompleteToDo = todos[0]
         // this.currentId = uncompleteToDo.id
         // this.setSelectedComponent({
@@ -119,17 +120,9 @@ export default {
   },
 
   methods: {
-    ...mapMutations('ui',
-      [
-        'playDoneTaskSound',
-        'setSelectedComponent'
-      ]),
+    ...mapMutations('ui', ['playDoneTaskSound', 'setSelectedComponent']),
 
-    ...mapActions('todo',
-      [
-        'getToDos',
-        'onToggleToDo'
-      ]),
+    ...mapActions('todo', ['getToDos', 'onToggleToDo']),
 
     completeToDo (todo) {
       this.onToggleToDo(todo)
@@ -139,7 +132,10 @@ export default {
     selectToDo (todo) {
       this.currentId = todo.id
 
-      this.setSelectedComponent({ name: 'ToDoDetail', props: { id: this.currentId } })
+      this.setSelectedComponent({
+        name: 'ToDoDetail',
+        props: { id: this.currentId }
+      })
     }
   }
 }
@@ -168,5 +164,10 @@ export default {
   opacity: 0.6;
   text-decoration: line-through;
   font-style: italic !important;
+}
+
+.btn__bg {
+  background-color: $header_bg_color;
+  border: none;
 }
 </style>
