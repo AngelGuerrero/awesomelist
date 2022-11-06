@@ -4,7 +4,7 @@
     b-icon.h1(icon='archive')
     h5.text-center No hay tareas para mostrar
   //- Wrapper of all To Do's
-  b-list-group.my-3.animate__fadeInUp(v-else)
+  b-list-group.pb-5.my-3.animate__fadeInUp(v-else)
     //- To Do Item
     b-list-group-item.bg-light.border.rounded.d-flex.flex-column.my-1.p-0(
       v-for='todo in todoList',
@@ -17,7 +17,7 @@
           @change='emitCheck(todo)')
         //- Content
         .item__text.flex-grow-1.p-2(@click='emitSelect(todo)')
-          span {{ todo.title }}
+          span(:class='{ completed: isCompleted }') {{ todo.title }}
         //- Item options
         .d-flex
           //- Mark as important buttons
@@ -71,11 +71,19 @@ export default {
     ToDoConfirmDelete
   },
 
+  inject: ['isCompletedList'],
+
   props: {
     todoList: {
       type: Array,
       required: false,
       default: () => []
+    }
+  },
+
+  computed: {
+    isCompleted () {
+      return this.isCompletedList()
     }
   },
 
@@ -110,5 +118,11 @@ export default {
   white-space: pre-wrap;
   overflow: hidden;
   cursor: pointer;
+}
+
+.completed {
+  opacity: 0.6;
+  text-decoration: line-through;
+  font-style: italic !important;
 }
 </style>

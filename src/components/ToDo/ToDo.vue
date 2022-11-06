@@ -8,23 +8,9 @@
     to-do-create(@createdToDo='selectToDo')
 
     to-do-list(
-      :todoList='getUncompletedToDos',
+      :todoList='list',
       @selectToDo='selectToDo',
       @checkToDo='completeToDo')
-
-    b-button.my-2.btn__bg(
-      v-if='thereAreCompletedToDos',
-      variant='',
-      size='sm btn-block',
-      @click='showCompletedToDos = !showCompletedToDos') {{ getBtnText }}
-
-    to-do-list(
-      v-if='thereAreCompletedToDos',
-      v-show='showCompletedToDos',
-      :todoList='getCompletedToDos',
-      @selectToDo='selectToDo',
-      @checkToDo='onToggleToDo',
-      :class='{ completed: thereAreCompletedToDos }')
 
   .detail
     component(
@@ -53,19 +39,28 @@ export default {
     UserProfile
   },
 
-  data: () => ({
-    showCompletedToDos: false,
-    //
-    // This is only the string To Do id
-    currentId: null
-  }),
+  props: {
+    list: {
+      type: Array,
+      required: true
+    }
+  },
+
+  data () {
+    return {
+      // showCompletedToDos: false,
+      //
+      // This is only the string To Do id
+      currentId: null
+    }
+  },
 
   computed: {
     //
     // 'todo' module
     ...mapState('todo', ['todos']),
     ...mapGetters('todo', [
-      'getUncompletedToDos',
+      // 'getUncompletedToDos',
       'getCompletedToDos',
       'getCurrentList',
       'getCurrentListAccentColor'
@@ -78,12 +73,6 @@ export default {
       return this.getCompletedToDos.length > 0
     },
 
-    getBtnText () {
-      return this.showCompletedToDos
-        ? 'Ocultar tareas completadas'
-        : 'Mostrar tareas completadas'
-    },
-
     showToDoDetail () {
       return this.currentId !== null
     },
@@ -93,25 +82,6 @@ export default {
         color: this.getCurrentList.accentColor
       }
       return style
-    }
-  },
-
-  // TODO: FIX WATCH PROPERTY
-  watch: {
-    getUncompletedToDos: {
-      deep: true,
-      immediate: false,
-      handler (todos) {
-        // if (todos.length <= 0) return
-        // const uncompleteToDo = todos[0]
-        // this.currentId = uncompleteToDo.id
-        // this.setSelectedComponent({
-        //   name: 'ToDoDetail',
-        //   props: {
-        //     id: this.currentId
-        //   }
-        // })
-      }
     }
   },
 
@@ -158,12 +128,6 @@ export default {
   @media screen and (min-width: 650px) {
     margin-left: 0;
   }
-}
-
-.completed {
-  opacity: 0.6;
-  text-decoration: line-through;
-  font-style: italic !important;
 }
 
 .btn__bg {

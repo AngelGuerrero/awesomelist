@@ -11,23 +11,41 @@
   //- =============
 
   navbar
+  tool-bar(@toggleCompletedToDos='onToggleCompletedToDos')
   .dashboard__content
-    to-do
+    to-do(:list='toDoList')
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState, mapMutations, mapActions, mapGetters } from 'vuex'
 import Navbar from '@/components/Layout/Navbar'
 import ToDo from '@/components/ToDo/ToDo'
+import ToolBar from '@/components/Tools/ToolBar'
 
 export default {
   components: {
     ToDo,
-    Navbar
+    Navbar,
+    ToolBar
+  },
+
+  provide () {
+    return {
+      isCompletedList: () => this.isCompletedList
+    }
+  },
+
+  data () {
+    return {
+      toDoList: [],
+      isCompletedList: false
+    }
   },
 
   computed: {
-    ...mapState('ui', ['notification', 'doneTaskSound', 'addTaskSound'])
+    ...mapState('ui', ['notification', 'doneTaskSound', 'addTaskSound']),
+
+    ...mapGetters('todo', ['getUncompletedToDos', 'getCompletedToDos'])
   },
 
   watch: {
@@ -43,6 +61,11 @@ export default {
 
     addTaskSound (val) {
       this.$el.querySelector('#elAddTaskSound').play()
+    },
+
+    getUncompletedToDos (val) {
+      if (!val) return
+      this.toDoList = val
     }
   },
 
@@ -70,6 +93,11 @@ export default {
     setInitialList () {
       const list = this.$store.state.todo.categories.DEFAULT
       this.$store.commit('todo/setCurrentList', list)
+    },
+
+    onToggleCompletedToDos (value) {
+      this.toDoList = value ? this.getCompletedToDos : this.getUncompletedToDos
+      this.isCompletedList = value
     }
   }
 }

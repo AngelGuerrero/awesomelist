@@ -26,7 +26,7 @@ export default {
     // The list is showed currently,
     // this object contains the options
     // of filtered To Do's
-    currentList: null
+    currentList: 'default'
   },
 
   getters: {
@@ -43,6 +43,8 @@ export default {
     },
 
     getCompletedToDos: (state) => {
+      if (!state.todos || !state.todos.length) return []
+
       const todos = state.todos
         .filter(el => el.done)
         .sort((a, b) => a.created - b.created)
@@ -52,6 +54,10 @@ export default {
       const filtered = todos.filter(el => el[state.currentList.filter])
 
       return filtered
+    },
+
+    thereAreCompletedToDos: (state, getters) => {
+      return getters.getCompletedToDos.length > 0
     },
 
     getListsOfCollection: (state) => (collectionId) =>

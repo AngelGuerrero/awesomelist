@@ -1,70 +1,70 @@
 <template lang="pug">
-  .wrapper(class="border shadow" :class="{ 'wrapper--fixed': toDoMenu.isFixed }")
-    //- Toggle button set aside
+.wrapper.border.shadow(:class='{ "wrapper--fixed": toDoMenu.isFixed }')
+  //- Toggle button set aside
+  .item_button__container
+    b-button.rounded-0(
+      variant='light',
+      @click='toggleToDoMenuFixed(!toDoMenu.isFixed)')
+      b-icon(v-if='toDoMenu.isFixed', icon='toggle-on', variant='primary')
+      b-icon.text-muted(v-else, icon='toggle-off')
+  .menu__header.h-25
+    //- Header: Mi día
     .item_button__container
-      b-button(variant="light"
-              class="rounded-0"
-              @click="toggleToDoMenuFixed(!toDoMenu.isFixed)")
-        b-icon(v-if="toDoMenu.isFixed" icon="toggle-on" variant="primary")
-        b-icon(v-else icon="toggle-off" class="text-muted")
-    .menu__header.h-25
-      //- Header: Mi día
-      .item_button__container
-        b-button(block
-                variant="light"
-                @click="showMyDayList"
-                class="d-flex row-v-center rounded-0")
-          b-icon(icon="brightness-high" variant="danger" class="h5 mb-0 mr-3 p-0")
-          div(class="w-100 text-left")
-            span.text-small Mi día
-      //- Header: Importante
-      .item_button__container
-        b-button(block
-                variant="light"
-                @click="showImportantList"
-                class="d-flex row-v-center rounded-0")
-          b-icon(icon="star" variant="warning" class="h5 mb-0 mr-3 p-0")
-          div(class="w-100 text-left")
-            span.text-small Importante
-      //- Header: Tareas
-      .item_button__container
-        b-button(block
-                variant="light"
-                @click="showDefaultList"
-                class="d-flex row-v-center rounded-0")
-          b-icon(icon="list-task" variant="primary" class="h5 mb-0 mr-3 p-0")
-          div(class="w-100 text-left")
-            span.text-small Tareas
+      b-button.d-flex.row-v-center.rounded-0(
+        block,
+        variant='light',
+        @click='showMyDayList')
+        b-icon.h5.mb-0.mr-3.p-0(icon='brightness-high', variant='danger')
+        .w-100.text-left
+          span.text-small Mi día
+    //- Header: Importante
+    .item_button__container
+      b-button.d-flex.row-v-center.rounded-0(
+        block,
+        variant='light',
+        @click='showImportantList')
+        b-icon.h5.mb-0.mr-3.p-0(icon='star', variant='warning')
+        .w-100.text-left
+          span.text-small Importante
+    //- Header: Tareas
+    .item_button__container
+      b-button.d-flex.row-v-center.rounded-0(
+        block,
+        variant='light',
+        @click='showDefaultList')
+        b-icon.h5.mb-0.mr-3.p-0(icon='list-task', variant='primary')
+        .w-100.text-left
+          span.text-small Tareas
 
-    //- Content: Collections
-    .menu__content.h-75
-      to-do-collections
+  //- Content: Collections
+  .menu__content.h-75
+    to-do-collections
 
-    //- Footer
-    .menu__footer
-      //- Collection: Form
-      .item_button__container(v-if="collection.visible" class="d-flex row-v-center bg-white")
-        b-icon(icon="box" variant="dark" class="h2 mb-0 ml-2 mr-1 pl-1")
-        b-input(ref="collection__name"
-                type="text"
-                v-model="collection.name"
-                @keyup.enter="saveToDoCollection"
-                @keyup.esc="clearToDoCollectionInput"
-                @blur="clearToDoCollectionInput"
-                placeholder="Colección"
-                class="bg-white rounded-0 border-0")
-        b-button(variant="light"
-                size="sm"
-                class="rounded-0 bg-white")
-          b-icon(icon="file-plus" variant="primary")
-      //- Collection: Active button
-      .item_button__container
-        b-button(block variant="light"
-                @click="toggleCollectionForm"
-                class="d-flex row-v-center rounded-0")
-          b-icon(icon="plus" variant="primary" class="h5 mb-0 mr-3 p-0")
-          div(class="w-100 text-left")
-            span.text-small Nueva colección
+  //- Footer
+  .menu__footer
+    //- Collection: Form
+    .item_button__container.d-flex.row-v-center.bg-white(
+      v-if='collection.visible')
+      b-icon.h2.mb-0.ml-2.mr-1.pl-1(icon='box', variant='dark')
+      b-input.bg-white.rounded-0.border-0(
+        ref='collection__name',
+        type='text',
+        v-model='collection.name',
+        @keyup.enter='saveToDoCollection',
+        @keyup.esc='clearToDoCollectionInput',
+        @blur='clearToDoCollectionInput',
+        placeholder='Colección')
+      b-button.rounded-0.bg-white(variant='light', size='sm')
+        b-icon(icon='file-plus', variant='primary')
+    //- Collection: Active button
+    .item_button__container
+      b-button.d-flex.row-v-center.rounded-0(
+        block,
+        variant='light',
+        @click='toggleCollectionForm')
+        b-icon.h5.mb-0.mr-3.p-0(icon='plus', variant='primary')
+        .w-100.text-left
+          span.text-small Nueva colección
 </template>
 
 <script>
@@ -86,34 +86,29 @@ export default {
   }),
 
   computed: {
-    ...mapState('ui', [
-      'toDoMenu'
-    ]),
-    ...mapState('user', [
-      'currentUser'
-    ])
+    ...mapState('ui', ['toDoMenu']),
+    ...mapState('user', ['currentUser'])
   },
 
   watch: {
     'collection.visible' (visible) {
-      if (visible) { setTimeout(_ => this.$refs.collection__name.focus(), 200) }
+      if (visible) {
+        setTimeout(_ => this.$refs.collection__name.focus(), 200)
+      }
     }
   },
 
   methods: {
-    ...mapMutations('todo', [
-      'setCurrentList'
-    ]),
-    ...mapActions('todo', [
-      'createNewToDoCollection'
-    ]),
+    ...mapMutations('todo', ['setCurrentList']),
+    ...mapActions('todo', ['createNewToDoCollection']),
 
-    ...mapMutations('ui', [
-      'toggleToDoMenuFixed'
-    ]),
+    ...mapMutations('ui', ['toggleToDoMenuFixed']),
 
     saveToDoCollection () {
-      this.createNewToDoCollection({ name: this.collection.name, userId: this.currentUser.uid })
+      this.createNewToDoCollection({
+        name: this.collection.name,
+        userId: this.currentUser.uid
+      })
       this.clearToDoCollectionInput()
     },
 
@@ -155,6 +150,7 @@ export default {
 
   transition: all 0.5s;
   background-color: $sidebar_bg_light;
+  border-radius: 5px;
 
   &:hover {
     width: $toDoMenu_max_width;
@@ -187,7 +183,7 @@ export default {
 .item_button__container {
   overflow: hidden;
   width: $toDoMenu_max_width;
-  input[type="text"] {
+  input[type='text'] {
     outline: none !important;
     box-shadow: none !important;
     font-size: 12px;

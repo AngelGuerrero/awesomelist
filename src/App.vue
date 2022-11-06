@@ -5,17 +5,7 @@
 
 <script>
 export default {
-  name: 'App',
-
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App',
-
-      preDev: {
-        msg: 'Welcome to Your Vue.js App'
-      }
-    }
-  }
+  name: 'App'
 }
 </script>
 

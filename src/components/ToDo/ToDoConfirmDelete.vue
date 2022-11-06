@@ -1,20 +1,20 @@
 <template lang="pug">
-  transition(name="fade-up" mode="out-in")
-    b-button(v-if="!confirmationMode"
-            :key="1"
-            @click="confirmationMode = true"
-            variant="light"
-            size="sm"
-            class="mr-1"
-            title="Eliminar tarea")
-      b-icon(icon="trash" variant="danger")
-    div(v-else class="row-v-center")
-      //- Cancel
-      a(class="text-primary" class="mr-2" @click="confirmationMode = !confirmationMode")
-        | Cancelar
-      //- Confirm
-      a(class="text-danger" class="mr-2" @click="deleteToDoById(todo.id)")
-        | Confirmar
+transition(name='fade-up', mode='out-in')
+  b-button.mr-1(
+    v-if='!confirmationMode',
+    :key='1',
+    @click='confirmationMode = true',
+    variant='light',
+    size='sm',
+    title='Eliminar tarea')
+    b-icon(icon='trash', variant='danger')
+  .row-v-center(v-else)
+    //- Cancel
+    a.text-primary.mr-2(@click='confirmationMode = !confirmationMode')
+      | Cancelar
+    //- Confirm
+    a.text-danger.mr-2(@click='deleteToDoById(todo.id)')
+      | Confirmar
 </template>
 
 <script>

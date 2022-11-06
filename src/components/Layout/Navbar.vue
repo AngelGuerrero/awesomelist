@@ -1,18 +1,16 @@
 <template lang="pug">
+nav.row-v-center.between
+  .control__aside.row-v-center
+    //- icon
+    b-button.mx-1(variant='default', size='sm')
+      b-icon(icon='grid-fill', variant='light')
+    //- App title
+    h3.nav__title Awesomelist
 
-  nav(class="row-v-center between")
-    div(class="control__aside row-v-center")
-      //- icon
-      b-button(variant="default" size="sm" class="mx-1")
-        b-icon(icon="grid-fill" variant="light")
-      //- App title
-      h3.nav__title Awesomelist
-
-    //- User links
-    .nav__user(class="row-v-center between")
-      .nav__link(@click="showUserProfileMenu()")
-        img(src="@/assets/images/user.png")
-
+  //- User links
+  .nav__user.row-v-center.between
+    .nav__link(@click='showUserProfileMenu()')
+      img(src='@/assets/images/user.png')
 </template>
 
 <script>
@@ -22,10 +20,7 @@ export default {
   name: 'Navbar',
 
   methods: {
-    ...mapMutations('ui', [
-      'toggleUserProfileMenu',
-      'setSelectedComponent'
-    ]),
+    ...mapMutations('ui', ['toggleUserProfileMenu', 'setSelectedComponent']),
 
     showUserProfileMenu () {
       this.setSelectedComponent({ name: 'UserProfile', props: {} })
@@ -40,7 +35,9 @@ nav {
   background-color: $header_bg_color;
   color: white;
 
-  & p, i, li {
+  & p,
+  i,
+  li {
     color: white;
   }
 }
