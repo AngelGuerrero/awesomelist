@@ -167,8 +167,6 @@ export default {
           returnValue.message = err.message
         })
 
-      //
-      // Error saving user to collections
       if (returnValue.error) return returnValue
 
       returnValue.message = 'user saved'
@@ -206,8 +204,6 @@ export default {
       return returnValue
     },
 
-    // #region [ Blue ] Queries
-
     getUserByNickName: async ({ dispatch }, nickname) => {
       const returnValue = { error: false, message: '', data: null }
 
@@ -215,8 +211,6 @@ export default {
 
       const response = await dispatch('getDataByQuery', query, { root: true })
 
-      //
-      // Error fetching data ?
       if (response.error) return response
 
       try {
@@ -274,7 +268,5 @@ export default {
 
       return returnValue
     }
-
-    // #endregion
   }
 }

@@ -7,7 +7,7 @@
   "editor.formatOnPaste": true,
   "editor.formatOnType": true,
   "editor.fontLigatures": true,
-  "editor.fontFamily": "'Azeret Mono'",
   "editor.formatOnSave": true,
-  "cSpell.language": "en,es-ES"
+  "cSpell.language": "en,es-ES",
+  "editor.fontFamily": "'Cascadia Code'"
 }

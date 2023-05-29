@@ -10,10 +10,10 @@ export default {
     // All collection of To Do's
     todos: [],
     //
-    // Gruped To Do's lists
+    // Grouped To Do's lists
     collections: [],
     //
-    // Grup of To Do's
+    // Group of To Do's
     lists: [],
     //
     // Instances of list for categories
@@ -264,7 +264,7 @@ export default {
     onToggleToDo: async ({ dispatch, commit }, todo) => {
       todo.lastUpdated = new Date()
 
-      const getval = await dispatch('updateToDoById', todo)
+      const responseDispatch = await dispatch('updateToDoById', todo)
 
       commit('ui/showNotification', {
         show: true,
@@ -276,13 +276,13 @@ export default {
 
       commit('ui/playDoneTaskSound', true, { root: true })
 
-      return getval
+      return responseDispatch
     },
 
     onToggleAddToMyDay: async ({ dispatch, commit }, { todo, value }) => {
       todo.isOnMyDay = value
 
-      const getval = await dispatch('updateToDoById', todo)
+      const responseDispatch = await dispatch('updateToDoById', todo)
 
       commit('ui/showNotification', {
         show: true,
@@ -292,13 +292,13 @@ export default {
         text: todo.title
       }, { root: true })
 
-      return getval
+      return responseDispatch
     },
 
     onToggleMarkAsImportant: async ({ dispatch, commit }, { todo, value }) => {
       todo.isImportant = value
 
-      const getval = await dispatch('updateToDoById', todo)
+      const responseDispatch = await dispatch('updateToDoById', todo)
 
       commit('ui/showNotification', {
         show: true,
@@ -308,7 +308,7 @@ export default {
         text: todo.title
       }, { root: true })
 
-      return getval
+      return responseDispatch
     }
   }
 }

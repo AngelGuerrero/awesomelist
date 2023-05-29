@@ -6,7 +6,7 @@ export default {
      * Last registered window width
      */
     window: {
-      lastWidhtSize: 0
+      lastWidthSize: 0
     },
 
     /**
@@ -40,9 +40,9 @@ export default {
     showUserProfileMenu: false,
 
     /**
-    * Object that is watched and
-    * send user notification
-    */
+     * Object that is watched and
+     * send user notification
+     */
     notification: {
       show: false,
       title: '',
@@ -56,11 +56,13 @@ export default {
   },
 
   getters: {
-    isWindowGrowing: (state) => state.window.lastWidhtSize < window.innerWidth
+    isWindowGrowing: state => state.window.lastWidthSize < window.innerWidth
   },
 
   mutations: {
-    toggleUserProfileMenu: (state) => { state.showUserProfileMenu = !state.showUserProfileMenu },
+    toggleUserProfileMenu: state => {
+      state.showUserProfileMenu = !state.showUserProfileMenu
+    },
 
     computeSizeComponents (state) {
       //
@@ -68,7 +70,7 @@ export default {
       state.sidebar.mobile = window.innerWidth <= 900
       //
       // Save size of window
-      state.window.lastWidhtSize = window.innerWidth
+      state.window.lastWidthSize = window.innerWidth
     },
 
     checkToDoMenuSize (state, { getters }) {
@@ -119,7 +121,9 @@ export default {
     playAddTaskSound: ({ state }, value) => {
       state.addTaskSound = value
 
-      const restore = () => { state.addTaskSound = false }
+      const restore = () => {
+        state.addTaskSound = false
+      }
 
       setTimeout(_ => restore(), 100)
     }

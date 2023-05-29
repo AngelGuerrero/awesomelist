@@ -31,6 +31,7 @@
     "vuexfire": "^3.2.2"
   },
   "devDependencies": {
+    "@volar/vue-language-plugin-pug": "^1.6.5",
     "@vue/cli-plugin-babel": "^3.0.1",
     "@vue/cli-plugin-eslint": "^3.0.1",
     "@vue/cli-service": "^3.0.1",

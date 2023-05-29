@@ -1,8 +1,3 @@
-/**
- * This list is not from Firebase
- * this list is for show the current
- * to do's
- */
 export default class List {
   constructor (name, title, filter, description, accentColor) {
     this.name = name
