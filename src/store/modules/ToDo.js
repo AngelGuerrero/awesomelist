@@ -60,19 +60,6 @@ export default {
       return getters.getCompletedToDos.length > 0
     },
 
-    getListsOfCollection: (state) => (collectionId) =>
-      state.lists
-        .filter(li => li.collectionId === collectionId),
-
-    thereAreLists: (state) =>
-      state.lists.length > 0,
-
-    collectionHasLists: (state) => (collectionId) => {
-      const collection = state.collections.find(el => el.id === collectionId)
-
-      return ('lists' in collection)
-    },
-
     getCurrentList: state => state.currentList
   },
 
@@ -96,10 +83,6 @@ export default {
 
     setCurrentList (state, payload) {
       state.currentList = payload
-    },
-
-    addCurrentListFilter (state, payload) {
-      state.currentList.filterBy.push(payload)
     }
   },
 
@@ -193,24 +176,14 @@ export default {
       return returnValue
     },
 
-    getToDoById: async ({ commit }, id) => {
-      db.collection('todos')
-        .doc(id)
-        .get()
-        .then((response) => {
-          commit('setToDo', response)
-        })
-        .catch((error) => {
-          console.log(`Error getting todo: ${error}`)
-        })
-    },
-
     updateToDoById: async ({ commit }, todo) => {
       const returnValue = { error: false, message: '' }
 
+      const { id, ...data } = todo
+
       await db.collection('todos')
-        .doc(todo.id)
-        .update(todo)
+        .doc(id)
+        .update(data)
         .then(_ => { returnValue.message = `To Do '${todo.title}' updated successfully` })
         .catch(error => {
           returnValue.error = true
@@ -227,7 +200,7 @@ export default {
       return returnValue
     },
 
-    deleteToDoById: async ({ context }, id) => {
+    deleteToDoById: async (_ctx, id) => {
       db.collection('todos')
         .doc(id)
         .delete()
@@ -235,43 +208,20 @@ export default {
         .catch((error) => console.error(`Something went wrong: ${error}`))
     },
 
-    updateCollectionById: async ({ commit }, collection) => {
-      console.log(collection)
-      const returnValue = { error: false, message: '' }
-
-      await db.collection('collections')
-        .doc(collection.id)
-        .update(collection)
-        .then(_ => { returnValue.message = `Collection '${collection.name}' updated successfully` })
-        .catch(error => {
-          returnValue.error = true
-          returnValue.message = error.message
-          commit('ui/showNotification', {
-            show: true,
-            color: 'danger',
-            title: 'Algo salió mal',
-            text: returnValue.message,
-            position: 'top-center'
-          }, { root: true })
-        })
-
-      return returnValue
-    },
-
     //
     // EVENTS
     //
     onToggleToDo: async ({ dispatch, commit }, todo) => {
-      todo.lastUpdated = new Date()
+      const updated = { ...todo, id: todo.id, lastUpdated: new Date() }
 
-      const responseDispatch = await dispatch('updateToDoById', todo)
+      const responseDispatch = await dispatch('updateToDoById', updated)
 
       commit('ui/showNotification', {
         show: true,
         progress: 'auto',
         border: 'success',
-        title: todo.done ? 'Tarea completada' : 'Tarea desmarcada',
-        text: todo.title
+        title: updated.done ? 'Tarea completada' : 'Tarea desmarcada',
+        text: updated.title
       }, { root: true })
 
       commit('ui/playDoneTaskSound', true, { root: true })
@@ -280,9 +230,9 @@ export default {
     },
 
     onToggleAddToMyDay: async ({ dispatch, commit }, { todo, value }) => {
-      todo.isOnMyDay = value
+      const updated = { ...todo, id: todo.id, isOnMyDay: value }
 
-      const responseDispatch = await dispatch('updateToDoById', todo)
+      const responseDispatch = await dispatch('updateToDoById', updated)
 
       commit('ui/showNotification', {
         show: true,
@@ -296,9 +246,9 @@ export default {
     },
 
     onToggleMarkAsImportant: async ({ dispatch, commit }, { todo, value }) => {
-      todo.isImportant = value
+      const updated = { ...todo, id: todo.id, isImportant: value }
 
-      const responseDispatch = await dispatch('updateToDoById', todo)
+      const responseDispatch = await dispatch('updateToDoById', updated)
 
       commit('ui/showNotification', {
         show: true,

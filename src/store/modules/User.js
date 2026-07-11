@@ -156,7 +156,7 @@ export default {
       return returnValue
     },
 
-    saveUserToUsersCollections: async ({ context }, { uid, user }) => {
+    saveUserToUsersCollections: async (_ctx, { uid, user }) => {
       const returnValue = { error: false, message: '', data: null }
 
       await usersCollection

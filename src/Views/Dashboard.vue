@@ -37,7 +37,6 @@ export default {
 
   data () {
     return {
-      toDoList: [],
       isCompletedList: false
     }
   },
@@ -45,7 +44,11 @@ export default {
   computed: {
     ...mapState('ui', ['notification', 'doneTaskSound', 'addTaskSound']),
 
-    ...mapGetters('todo', ['getUncompletedToDos', 'getCompletedToDos'])
+    ...mapGetters('todo', ['getUncompletedToDos', 'getCompletedToDos']),
+
+    toDoList () {
+      return this.isCompletedList ? this.getCompletedToDos : this.getUncompletedToDos
+    }
   },
 
   watch: {
@@ -60,12 +63,8 @@ export default {
     },
 
     addTaskSound (val) {
-      this.$el.querySelector('#elAddTaskSound').play()
-    },
-
-    getUncompletedToDos (val) {
       if (!val) return
-      this.toDoList = val
+      this.$el.querySelector('#elAddTaskSound').play()
     }
   },
 
@@ -96,7 +95,6 @@ export default {
     },
 
     onToggleCompletedToDos (value) {
-      this.toDoList = value ? this.getCompletedToDos : this.getUncompletedToDos
       this.isCompletedList = value
     }
   }
@@ -106,10 +104,14 @@ export default {
 <style lang="scss" scoped>
 #dashboard {
   height: 100%;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 }
 .dashboard__content {
-  height: calc(100vh - #{$navbar-height});
+  flex: 1 1 auto;
+  // Allow the flex child to shrink so its inner overflow:auto works
+  min-height: 0;
   position: relative;
 }
 </style>

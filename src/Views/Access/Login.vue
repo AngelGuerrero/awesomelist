@@ -32,12 +32,10 @@ div
 <script>
 import EventBus from '@/EventBus'
 import EmailForm from './Shared/EmailForm'
-import PasswordForm from './Shared/PasswordForm'
 
 export default {
   components: {
-    EmailForm,
-    PasswordForm
+    EmailForm
   },
 
   data () {
@@ -116,6 +114,7 @@ export default {
           message: response.message,
           error: true
         })
+        return
       }
 
       this.$router.push({ name: 'dashboard' }).catch(_ => {})

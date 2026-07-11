@@ -10,13 +10,13 @@ La aplicación, una lista de tareas que al momento le hace falta muchas funciona
 ## Instalación de dependencias
 
 ```
-yarn
+pnpm install
 ```
 
 ### Inicia el proyecto en modo desarrollo
 
 ```
-yarn serve
+pnpm run serve
 ```
 
 ## Framework UI

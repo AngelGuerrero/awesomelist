@@ -18,14 +18,6 @@ sidebar#profile__sidebar(ref='container')
 
       b-list-group.section__links.mt-3
         b-list-group-item.bg-light.border-0.rounded-0.d-flex.align-items-center(
-          button)
-          b-icon.h5.mb-0.mr-3(icon='person', variant='primary')
-          | Perfil
-        b-list-group-item.bg-light.border-0.rounded-0.d-flex.align-items-center(
-          button)
-          b-icon.h5.mb-0.mr-3(icon='gear')
-          | Cuenta
-        b-list-group-item.bg-light.border-0.rounded-0.d-flex.align-items-center(
           button,
           @click='signOut()')
           b-icon.h5.mb-0.mr-3(icon='box-arrow-left', variant='danger')

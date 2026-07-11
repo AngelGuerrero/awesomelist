@@ -13,7 +13,7 @@
       .w-100.d-flex.align-items-center
         //- Checkbox
         vs-checkbox.ml-1.mr-2.p-2(
-          v-model='todo.done',
+          :value='todo.done',
           @change='emitCheck(todo)')
         //- Content
         .item__text.flex-grow-1.p-2(@click='emitSelect(todo)')

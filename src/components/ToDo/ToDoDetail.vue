@@ -24,7 +24,7 @@ sidebar(id="todo__detail" ref="container")
         b-list-group
           //- Tarea
           b-list-group-item(button class="list-item mb-0")
-            vs-checkbox(v-model="todo.done" @change="toggleToDoCompleted()" class="mr-3")
+            vs-checkbox(:value="todo.done" @change="toggleToDoCompleted()" class="mr-3")
             .todotitle__editable(contenteditable
                                 v-text="todo.title"
                                 @blur="onEditToDoTitle"
@@ -46,11 +46,6 @@ sidebar(id="todo__detail" ref="container")
 
         //- Related to 'Due Date'
         b-list-group.my-2
-          //- DueDate: Remind me
-          b-list-group-item(button class="text-muted")
-            b-icon(icon="bell" class="text-muted h5 mb-0 mr-4")
-            span Recordarme
-
           //- DueDate: Due Time Widget
           b-list-group(class="duedate__container rounded-0" :class="{ 'enfasis-border': duedate.visible }")
             b-list-group-item(v-if="!duedate.visible"
@@ -77,22 +72,6 @@ sidebar(id="todo__detail" ref="container")
                         @context="onContext"
                         locale="es-MX"
                         class="w-100 column-v-center column-h-center")
-          //- DueDate: Repeat
-          b-list-group-item(button class="text-muted ")
-            b-icon(icon="arrow-repeat" class="text-muted h5 mb-0 mr-4")
-            span Repetir
-
-        //- Related to 'Category'
-        b-list-group.my-2
-          b-list-group-item(button class="text-muted")
-            b-icon(icon="tag" class="text-muted h5 mb-0 mr-4")
-            span Agregar una categoría
-
-        //- Related to 'Adjunt file'
-        b-list-group.my-2
-          b-list-group-item(button class="text-muted")
-            b-icon(icon="paperclip" class="text-muted h5 mb-0 mr-4")
-            span Agregar archivo
 
         //- Related to 'Notes'
         b-list-group.my-2
@@ -209,9 +188,9 @@ export default {
     },
 
     getCreationToDoInformation () {
-      const created = new Date(this.todo.created)
-      const m = moment(created.seconds).format('DD MMMM YYYY')
-      return `Tarea creada el: ${m}`
+      const c = this.todo.created
+      const date = c && c.seconds ? new Date(c.seconds * 1000) : new Date(c)
+      return `Tarea creada el: ${moment(date).format('DD MMMM YYYY')}`
     },
 
     getToDoNoteInformation () {
@@ -268,10 +247,12 @@ export default {
     onEditToDoTitle (ev) {
       const txt = ev.target.innerText.trim()
 
-      this.todo.title = txt
-      this.todo.lastUpdated = new Date()
-
-      this.updateToDoById(this.todo)
+      this.updateToDoById({
+        ...this.todo,
+        id: this.todo.id,
+        title: txt,
+        lastUpdated: new Date()
+      })
     },
 
     endEditToDoTitle () {
@@ -304,13 +285,14 @@ export default {
         return this.onCancelEditToDoNote()
       }
 
-      this.todo.note = txt
-      this.todo.lastUpdated = new Date()
-
-      this.note = null
       this.editing.note = false
 
-      this.updateToDoById(this.todo)
+      this.updateToDoById({
+        ...this.todo,
+        id: this.todo.id,
+        note: txt,
+        lastUpdated: new Date()
+      })
     },
 
     endEditToDoNote (ev) {
@@ -335,7 +317,7 @@ export default {
     },
 
     toggleToDoCompleted () {
-      this.onToggleToDo(this.todo)
+      this.onToggleToDo({ ...this.todo, id: this.todo.id, done: !this.todo.done })
       this.close()
     },
 
@@ -347,21 +329,19 @@ export default {
       this.duedate.visible = !this.duedate.visible
     },
 
-    todoToMyDay (value) {
-      this.todo.isOnMyDay = value
-      this.updateToDoById(this.todo)
-    },
-
     addDueTime () {
       const duedate = {
         ymd: this.duedate.context.selectedYMD,
         date: this.duedate.context.selectedDate,
         formatted: this.duedate.context.selectedFormatted
       }
-      this.todo.duedate = duedate
-      this.todo.lastUpdated = new Date()
 
-      this.updateToDoById(this.todo)
+      this.updateToDoById({
+        ...this.todo,
+        id: this.todo.id,
+        duedate,
+        lastUpdated: new Date()
+      })
       this.toggleDueDate()
     },
 

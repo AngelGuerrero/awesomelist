@@ -1,6 +1,5 @@
 <template lang="pug">
 .collections__wrapper
-  //- pre.pre-dev {{ $data }}
   .no_collections(v-if='collections.length <= 0')
     //- b-spinner(label="Cargando..." small class="mr-2")
     | No hay colecciones.
@@ -52,15 +51,17 @@ export default {
   },
 
   computed: {
-    ...mapState('todo', ['collections', 'lists'])
-
-    // ...mapGetters('todo', [
-    //   'thereAreLists'
-    // ])
+    ...mapState('todo', ['collections', 'lists']),
+    ...mapState('user', ['currentUser'])
   },
 
-  mounted () {
-    this.getCollections(this.$store.state.user.currentUser.uid)
+  watch: {
+    currentUser: {
+      immediate: true,
+      handler (user) {
+        if (user) this.getCollections(user.uid)
+      }
+    }
   },
 
   methods: {

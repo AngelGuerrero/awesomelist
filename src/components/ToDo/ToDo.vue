@@ -59,15 +59,14 @@ export default {
     //
     // 'todo' module
     ...mapState('todo', ['todos']),
+    ...mapState('user', ['currentUser']),
     ...mapGetters('todo', [
-      // 'getUncompletedToDos',
       'getCompletedToDos',
-      'getCurrentList',
-      'getCurrentListAccentColor'
+      'getCurrentList'
     ]),
     //
     // 'ui' module
-    ...mapState('ui', ['showUserProfileMenu', 'selectedComponent']),
+    ...mapState('ui', ['selectedComponent']),
 
     thereAreCompletedToDos () {
       return this.getCompletedToDos.length > 0
@@ -85,17 +84,22 @@ export default {
     }
   },
 
-  mounted () {
-    this.getToDos(this.$store.state.user.currentUser.uid)
+  watch: {
+    currentUser: {
+      immediate: true,
+      handler (user) {
+        if (user) this.getToDos(user.uid)
+      }
+    }
   },
 
   methods: {
-    ...mapMutations('ui', ['playDoneTaskSound', 'setSelectedComponent']),
+    ...mapMutations('ui', ['setSelectedComponent']),
 
     ...mapActions('todo', ['getToDos', 'onToggleToDo']),
 
     completeToDo (todo) {
-      this.onToggleToDo(todo)
+      this.onToggleToDo({ ...todo, id: todo.id, done: !todo.done })
       this.currentId = null
     },
 

@@ -26,14 +26,12 @@ div
 import EventBus from '@/EventBus'
 import fullNameForm from './Shared/FullNameForm'
 import EmailForm from './Shared/EmailForm'
-import UsernameForm from './Shared/UsernameForm'
 import PasswordForm from './Shared/PasswordForm'
 
 export default {
   components: {
     fullNameForm,
     EmailForm,
-    UsernameForm,
     PasswordForm
   },
 
@@ -81,9 +79,10 @@ export default {
           message: response.message,
           error: response.error
         })
+        return
       }
 
-      this.$router.replace('dashboard')
+      this.$router.replace({ name: 'dashboard' }).catch(_ => {})
     }
   }
 }

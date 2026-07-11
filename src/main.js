@@ -28,19 +28,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import Vuesax from 'vuesax'
 import 'vuesax/dist/vuesax.css'
 
-import {
-  Dropdown,
-  DropdownMenu,
-  DropdownItem
-} from 'element-ui'
-
 Vue.config.productionTip = false
-
-//
-// Element UI
-Vue.use(Dropdown)
-Vue.use(DropdownMenu)
-Vue.use(DropdownItem)
 
 //
 // Bootstrap
@@ -84,7 +72,17 @@ Vue.use(VueFormulate, {
 // Listen firebase authentication change
 let app
 
-firebase.auth().onAuthStateChanged(user => {
+firebase.auth().onAuthStateChanged(async user => {
+  //
+  // Keep the store in sync with the auth state before the first render,
+  // so components that read the current user on mount never see a null user.
+  if (user) {
+    store.commit('user/setCurrentUser', user)
+    await store.dispatch('user/fetchUserProfile', user.uid)
+  } else {
+    store.commit('user/setCurrentUser', null)
+  }
+
   if (!app) {
     app = new Vue({
       devtool: 'source-map',

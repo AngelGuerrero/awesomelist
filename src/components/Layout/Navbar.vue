@@ -20,7 +20,7 @@ export default {
   name: 'Navbar',
 
   methods: {
-    ...mapMutations('ui', ['toggleUserProfileMenu', 'setSelectedComponent']),
+    ...mapMutations('ui', ['setSelectedComponent']),
 
     showUserProfileMenu () {
       this.setSelectedComponent({ name: 'UserProfile', props: {} })
