@@ -1,0 +1,21 @@
+services:
+  web:
+    build:
+      context: .
+      args:
+        NODE_VERSION: ${DOCKER_NODE_VERSION:-24.20.0}
+    init: true
+    ports:
+      - "127.0.0.1:${APP_PORT:-8080}:8080"
+    environment:
+      # Webpack 4 uses chokidar; polling sees changes in Windows bind mounts.
+      CHOKIDAR_USEPOLLING: "true"
+      CHOKIDAR_INTERVAL: "1000"
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+      - npm_cache:/home/node/.npm
+
+volumes:
+  node_modules:
+  npm_cache:

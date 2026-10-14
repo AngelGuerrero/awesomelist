@@ -10,10 +10,10 @@ transition(name='fade-up', mode='out-in')
     b-icon(icon='trash', variant='danger')
   .row-v-center(v-else)
     //- Cancel
-    a.text-primary.mr-2(@click='confirmationMode = !confirmationMode')
+    a.text-primary.mr-2(@click='cancelDelete')
       | Cancelar
     //- Confirm
-    a.text-danger.mr-2(@click='deleteToDoById(todo.id)')
+    a.text-danger.mr-2(@click='confirmDelete' :aria-disabled='isDeleting')
       | Confirmar
 </template>
 
@@ -32,12 +32,29 @@ export default {
 
   data () {
     return {
-      confirmationMode: false
+      confirmationMode: false,
+      isDeleting: false
     }
   },
 
   methods: {
-    ...mapActions('todo', ['deleteToDoById'])
+    ...mapActions('todo', ['deleteToDoById']),
+
+    cancelDelete () {
+      if (!this.isDeleting) this.confirmationMode = false
+    },
+
+    async confirmDelete () {
+      if (this.isDeleting) return
+
+      this.isDeleting = true
+      try {
+        const response = await this.deleteToDoById(this.todo.id)
+        if (!response.error) this.confirmationMode = false
+      } finally {
+        this.isDeleting = false
+      }
+    }
   }
 }
 </script>

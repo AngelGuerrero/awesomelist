@@ -50,11 +50,12 @@
         ref='collection__name',
         type='text',
         v-model='collection.name',
+        :disabled='isSavingCollection',
         @keyup.enter='saveToDoCollection',
         @keyup.esc='clearToDoCollectionInput',
         @blur='clearToDoCollectionInput',
         placeholder='Colección')
-      b-button.rounded-0.bg-white(variant='light', size='sm')
+      b-button.rounded-0.bg-white(variant='light', size='sm', :disabled='isSavingCollection', @mousedown.prevent, @click='saveToDoCollection')
         b-icon(icon='file-plus', variant='primary')
     //- Collection: Active button
     .item_button__container
@@ -82,7 +83,8 @@ export default {
     collection: {
       visible: false,
       name: ''
-    }
+    },
+    isSavingCollection: false
   }),
 
   computed: {
@@ -104,20 +106,33 @@ export default {
 
     ...mapMutations('ui', ['toggleToDoMenuFixed']),
 
-    saveToDoCollection () {
-      this.createNewToDoCollection({
-        name: this.collection.name,
-        userId: this.currentUser.uid
-      })
-      this.clearToDoCollectionInput()
+    async saveToDoCollection () {
+      const name = this.collection.name.trim()
+      if (this.isSavingCollection || !name || !this.currentUser) return
+
+      this.isSavingCollection = true
+      try {
+        const response = await this.createNewToDoCollection({
+          name,
+          userId: this.currentUser.uid
+        })
+        if (!response.error) {
+          this.collection.name = ''
+          this.collection.visible = false
+        }
+      } finally {
+        this.isSavingCollection = false
+      }
     },
 
     clearToDoCollectionInput () {
+      if (this.isSavingCollection) return
       this.collection.name = ''
       this.collection.visible = false
     },
 
     toggleCollectionForm () {
+      if (this.isSavingCollection) return
       this.collection.visible = !this.collection.visible
     },
 

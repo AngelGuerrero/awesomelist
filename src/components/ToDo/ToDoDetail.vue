@@ -15,8 +15,8 @@ sidebar(id="todo__detail" ref="container")
 
       template(#footer)
         div(class="d-flex justify-content-between")
-          vs-button(primary transparent @click="modal.active = false") Cancelar
-          vs-button(danger transparent @click="deleteToDo") Confirmar
+          vs-button(primary transparent :disabled="isDeleting" @click="modal.active = false") Cancelar
+          vs-button(danger transparent :disabled="isDeleting" @click="deleteToDo") Confirmar
 
     //- Content
     .sidebar__content.container
@@ -24,7 +24,7 @@ sidebar(id="todo__detail" ref="container")
         b-list-group
           //- Tarea
           b-list-group-item(button class="list-item mb-0")
-            vs-checkbox(:value="todo.done" @change="toggleToDoCompleted()" class="mr-3")
+            vs-checkbox(:value="todo.done" :disabled="isCompleting" @change="toggleToDoCompleted()" class="mr-3")
             .todotitle__editable(contenteditable
                                 v-text="todo.title"
                                 @blur="onEditToDoTitle"
@@ -130,6 +130,8 @@ export default {
   data () {
     return {
       todo: null,
+      isDeleting: false,
+      isCompleting: false,
 
       modal: {
         active: false
@@ -316,9 +318,17 @@ export default {
       this.duedate.context = ctx
     },
 
-    toggleToDoCompleted () {
-      this.onToggleToDo({ ...this.todo, id: this.todo.id, done: !this.todo.done })
-      this.close()
+    async toggleToDoCompleted () {
+      if (this.isCompleting) return
+
+      const id = this.todo.id
+      this.isCompleting = true
+      try {
+        const response = await this.onToggleToDo({ ...this.todo, id: this.todo.id, done: !this.todo.done })
+        if (!response.error && this.id === id && this.$refs.container) this.close()
+      } finally {
+        this.isCompleting = false
+      }
     },
 
     toggleDueDate () {
@@ -345,10 +355,20 @@ export default {
       this.toggleDueDate()
     },
 
-    deleteToDo () {
-      this.deleteToDoById(this.todo.id)
-      this.modal.active = false
-      this.close()
+    async deleteToDo () {
+      if (this.isDeleting) return
+
+      const id = this.todo.id
+      this.isDeleting = true
+      try {
+        const response = await this.deleteToDoById(id)
+        if (response.error || this.id !== id || !this.$refs.container) return
+
+        this.modal.active = false
+        this.close()
+      } finally {
+        this.isDeleting = false
+      }
     },
 
     close () {

@@ -1,5 +1,7 @@
 module.exports = {
   presets: [
-    '@vue/app'
+    process.env.NODE_ENV === 'test'
+      ? ['@babel/preset-env', { targets: { node: 'current' } }]
+      : '@vue/app'
   ]
 }

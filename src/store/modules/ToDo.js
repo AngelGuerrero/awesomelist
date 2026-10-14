@@ -5,7 +5,7 @@ import List from '../../data/ListClass'
 export default {
   namespaced: true,
 
-  state: {
+  state: () => ({
     //
     // All collection of To Do's
     todos: [],
@@ -26,8 +26,8 @@ export default {
     // The list is showed currently,
     // this object contains the options
     // of filtered To Do's
-    currentList: 'default'
-  },
+    currentList: new List('default', 'Tareas', 'default', 'Todas las tareas', '#0078d7')
+  }),
 
   getters: {
     getUncompletedToDos: (state) => {
@@ -72,6 +72,7 @@ export default {
       let copyCollections = Array.from(state.collections)
 
       const collection = copyCollections.find(el => el.id === collectionId)
+      if (!collection) return
       Object.assign(collection, { lists })
 
       state.collections = copyCollections
@@ -124,7 +125,8 @@ export default {
       return returnValue
     },
 
-    createNewToDoCollection: async ({ dispatch }, { name, userId }) => {
+    createNewToDoCollection: async ({ commit }, { name, userId }) => {
+      const returnValue = { error: false, message: '', data: null }
       const collection = {
         name,
         created: new Date(),
@@ -132,19 +134,27 @@ export default {
         userId: userId
       }
 
-      db.collection('collections')
-        .add(collection)
-        .then(_ => {
-          console.log('Colección creada correctamente!')
-          dispatch('getCollections', userId)
-        })
-        .catch(error => {
-          console.log(`Ocurrió un error al crear la colección: ${error}`)
-        })
+      try {
+        const response = await db.collection('collections').add(collection)
+        returnValue.message = 'Colección creada correctamente'
+        returnValue.data = { ...collection, id: response.id }
+        // Existing Vuexfire bindings receive the new collection automatically.
+      } catch (error) {
+        returnValue.error = true
+        returnValue.message = error.message
+        commit('ui/showNotification', {
+          show: true,
+          color: 'danger',
+          title: 'Algo salió mal',
+          text: returnValue.message
+        }, { root: true })
+      }
+
+      return returnValue
     },
 
     saveToDo: async ({ commit, dispatch }, payload) => {
-      const returnValue = { error: false, message: '', data: payload }
+      const returnValue = { error: false, message: '', data: { ...payload } }
 
       await db.collection('todos')
         .add(payload)
@@ -200,12 +210,23 @@ export default {
       return returnValue
     },
 
-    deleteToDoById: async (_ctx, id) => {
-      db.collection('todos')
-        .doc(id)
-        .delete()
-        .then(() => console.log('ToDo deleted successfully'))
-        .catch((error) => console.error(`Something went wrong: ${error}`))
+    deleteToDoById: async ({ commit }, id) => {
+      const returnValue = { error: false, message: 'Tarea eliminada correctamente' }
+
+      try {
+        await db.collection('todos').doc(id).delete()
+      } catch (error) {
+        returnValue.error = true
+        returnValue.message = error.message
+        commit('ui/showNotification', {
+          show: true,
+          color: 'danger',
+          title: 'Algo salió mal',
+          text: returnValue.message
+        }, { root: true })
+      }
+
+      return returnValue
     },
 
     //
@@ -215,6 +236,8 @@ export default {
       const updated = { ...todo, id: todo.id, lastUpdated: new Date() }
 
       const responseDispatch = await dispatch('updateToDoById', updated)
+
+      if (responseDispatch.error) return responseDispatch
 
       commit('ui/showNotification', {
         show: true,
@@ -234,6 +257,8 @@ export default {
 
       const responseDispatch = await dispatch('updateToDoById', updated)
 
+      if (responseDispatch.error) return responseDispatch
+
       commit('ui/showNotification', {
         show: true,
         progress: 'auto',
@@ -249,6 +274,8 @@ export default {
       const updated = { ...todo, id: todo.id, isImportant: value }
 
       const responseDispatch = await dispatch('updateToDoById', updated)
+
+      if (responseDispatch.error) return responseDispatch
 
       commit('ui/showNotification', {
         show: true,

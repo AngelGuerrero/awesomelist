@@ -5,6 +5,7 @@ import router from './router'
 import VueFormulate from '@braid/vue-formulate'
 import { firestorePlugin } from 'vuefire'
 import { firebase } from '@firebase/app'
+import 'animate.css/animate.min.css'
 
 //
 // Bootstrap

@@ -1,6 +1,6 @@
 <template lang="pug">
   div
-    b-input(placeholder="Nueva tarea" v-model="inputText" @change="createToDo")
+    b-input(placeholder="Nueva tarea" v-model="inputText" :disabled="isSaving" @change="createToDo")
 </template>
 
 <script>
@@ -9,7 +9,8 @@ import { mapGetters, mapActions, mapState } from 'vuex'
 export default {
 
   data: () => ({
-    inputText: null
+    inputText: null,
+    isSaving: false
   }),
 
   computed: {
@@ -26,8 +27,11 @@ export default {
     ...mapActions('todo', [ 'saveToDo' ]),
 
     async createToDo () {
+      const title = (this.inputText || '').trim()
+      if (this.isSaving || !title || !this.currentUser) return
+
       const todo = {
-        title: this.inputText,
+        title,
         done: false,
         created: new Date(),
         lastUpdated: null,
@@ -41,11 +45,16 @@ export default {
         todo[filter] = true
       }
 
-      const getval = await this.saveToDo(todo)
-      if (getval.error) return
+      this.isSaving = true
+      try {
+        const getval = await this.saveToDo(todo)
+        if (getval.error) return
 
-      this.clearInput()
-      this.$emit('createdToDo', getval.data)
+        this.clearInput()
+        this.$emit('createdToDo', getval.data)
+      } finally {
+        this.isSaving = false
+      }
     },
 
     clearInput () {
