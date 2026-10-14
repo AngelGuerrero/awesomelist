@@ -2,9 +2,12 @@
   "name": "awesomelist",
   "version": "0.1.0",
   "private": false,
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "node --openssl-legacy-provider node_modules/@vue/cli-service/bin/vue-cli-service.js build",
     "lint": "vue-cli-service lint",
     "test:unit": "jest --runInBand",
     "test:unit:coverage": "jest --runInBand --coverage",

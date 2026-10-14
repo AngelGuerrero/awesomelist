@@ -61,6 +61,14 @@ Validación: las 34 pruebas iniciales mostraron 22 fallos antes de corregir el c
 Cobertura de referencia: 63 % de sentencias y 62.15 % de líneas de los archivos seleccionados en `jest.config.js`. Las pruebas unitarias sustituyen Firebase y bloquean solicitudes HTTP inesperadas.
 
 Siguiente entrega: inicio/carga del perfil y limpieza de sesión (M01 y M04), y validación remota de correo (M10). Después siguen edición del título/notas, fechas y liberación de listeners. El acceso real a Firebase y la revisión visual necesitan una configuración de desarrollo y datos de prueba.
+# 14 de octubre de 2026 — Node 24 y despliegue en Vercel
+
+Se declara `engines.node: 24.x` en el manifiesto y el lockfile, con `.nvmrc` para desarrollo local. Docker ya utilizaba Node 24.20.0. El comando de producción invoca Node con `--openssl-legacy-provider` para mantener compatible Webpack 4 fuera del contenedor.
+
+`vercel.json` configura instalación reproducible con npm ci, compilación y salida dist, más las rutas de la SPA para recargar dashboard, login, signup y restore-password. El README incluye el ajuste de Node en Vercel y las variables de Firebase necesarias para compilar.
+
+Validación: npm ci y npm run build completados en Windows con Node 24.20.0. Persisten los avisos existentes de Sass y tamaño del bundle. No se ha realizado un despliegue remoto. La compilación de Docker se detuvo tras demorarse la creación del contenedor; la validación se completó con Node local.
+
 # 13 de octubre de 2026 — Selector de colecciones y barra de tareas
 
 El selector del detalle abre un modal BootstrapVue con búsqueda sin distinguir mayúsculas o acentos, selección actual resaltada, opción Sin colección y lista con scroll. Se importa BModal localmente y se retira el plugin del select nativo. Carga y errores tienen estados propios; los movimientos pendientes bloquean controles y los errores permiten reintentar.

@@ -75,7 +75,21 @@ APP_PORT=18080 docker compose up --build
 
 En ese caso abre [http://localhost:18080](http://localhost:18080).
 
-Webpack 4 utiliza `NODE_OPTIONS=--openssl-legacy-provider` con Node moderno. Es una medida temporal de compatibilidad del entorno de desarrollo. `.npmrc` activa `legacy-peer-deps` por las declaraciones antiguas de Vue CLI 3. Ambos puntos están registrados en el plan de mantenimiento.
+Webpack 4 requiere `--openssl-legacy-provider` con Node moderno. Docker lo configura mediante `NODE_OPTIONS`; el script `npm run build` lo aplica directamente para compilar también fuera de Docker, incluido Vercel. Es una medida temporal de compatibilidad. `.npmrc` activa `legacy-peer-deps` por las declaraciones antiguas de Vue CLI 3. Ambos puntos están registrados en el plan de mantenimiento.
+
+## Despliegue en Vercel
+
+El proyecto declara Node `24.x` en `package.json` y `.nvmrc` selecciona la misma versión mayor para desarrollo. Docker fija una versión concreta de Node 24. Vercel utiliza la versión 24.x disponible en su plataforma.
+
+En el proyecto de Vercel, abre **Settings → Build and Deployment → Node.js Version**, selecciona **24.x** y guarda. `vercel.json` configura instalación con `npm ci`, compilación con `npm run build` y salida en `dist`.
+
+Configura en Vercel las variables `VUE_APP_*` indicadas en `.env.example` para el entorno que desplegarás. Se incorporan al frontend durante la compilación. Después, desde la raíz del proyecto, puedes generar un despliegue de vista previa en Bash:
+
+```bash
+npx vercel
+```
+
+La configuración del proyecto está documentada en [las versiones de Node de Vercel](https://vercel.com/docs/functions/runtimes/node-js/node-js-versions). Los cambios se aplican en un nuevo despliegue.
 
 ## Desarrollo sin Docker
 
