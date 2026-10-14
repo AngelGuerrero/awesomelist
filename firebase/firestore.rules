@@ -1,0 +1,59 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny: only the explicit owner-scoped paths below are accessible.
+    function owns(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    function validName(name) {
+      return name is string && name.size() > 0 && name.size() <= 200
+        && name.matches('.*\\S.*');
+    }
+
+    function validMembership(data) {
+      let id = data.get('collectionId', null);
+      return id == null || (
+        id is string && id.size() > 0 && !id.matches('.*[/].*')
+        && exists(/databases/$(database)/documents/collections/$(id))
+        && get(/databases/$(database)/documents/collections/$(id)).data.userId == request.auth.uid
+      );
+    }
+
+    match /users/{uid} {
+      allow read, create, update: if owns(uid);
+      // Account deletion needs coordination with Firebase Auth and its tasks.
+      allow delete: if false;
+    }
+
+    // The current frontend no longer uses /lists or nested collection lists.
+    // Unknown and legacy paths remain inaccessible; their data is retained.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    match /collections/{collectionId} {
+      allow read: if owns(resource.data.userId);
+      allow create: if owns(request.resource.data.userId)
+        && validName(request.resource.data.name);
+      allow update: if owns(resource.data.userId)
+        && request.resource.data.userId == resource.data.userId
+        && validName(request.resource.data.name);
+      // Removing a group needs an explicit strategy for its assigned tasks.
+      allow delete: if false;
+    }
+
+    match /todos/{todoId} {
+      allow read: if owns(resource.data.createdBy);
+      allow create: if owns(request.resource.data.createdBy)
+        && validMembership(request.resource.data);
+      allow update: if owns(resource.data.createdBy)
+        && request.resource.data.createdBy == resource.data.createdBy
+        && (
+          request.resource.data.get('collectionId', null) == resource.data.get('collectionId', null)
+          || validMembership(request.resource.data)
+        );
+      allow delete: if owns(resource.data.createdBy);
+    }
+  }
+}

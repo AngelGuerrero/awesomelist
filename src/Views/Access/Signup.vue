@@ -7,7 +7,6 @@ div
       @model='fullName => { user.fullName = fullName; }')
     //- Email
     email-form(
-      :validateExists='false',
       @passValidation='val => { validations.email = val; }',
       v-model='user.email')
 

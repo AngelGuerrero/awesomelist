@@ -99,7 +99,21 @@ docker compose run --rm web npm run test:unit
 docker compose run --rm web npm run test:unit:coverage
 ```
 
-También puedes ejecutar los mismos scripts de npm después de `npm ci` sin Docker. El reporte de cobertura queda en `coverage/`; su vista HTML está en `coverage/lcov-report/index.html`. La cobertura corresponde a los archivos incluidos en `jest.config.js`, no a toda la aplicación. Las pruebas actuales cubren tareas y colecciones; los flujos de autenticación, las reglas de Firestore y la comprobación visual siguen en el plan.
+También puedes ejecutar los mismos scripts de npm después de `npm ci` sin Docker. El reporte de cobertura queda en `coverage/`; su vista HTML está en `coverage/lcov-report/index.html`. La cobertura corresponde a los archivos incluidos en `jest.config.js`, no a toda la aplicación. Los flujos de autenticación y la comprobación visual siguen en el plan.
+
+## Agrupar tareas en colecciones
+
+Crea un grupo con «Nueva colección», selecciónalo en el menú y agrega tareas. Para mover una tarea existente o dejarla sin grupo, usa «Colección» en su detalle. Una tarea pertenece como máximo a un grupo; «Mi día» e «Importante» siguen reuniendo tareas de cualquier colección.
+
+El [patrón de colecciones](docs/colecciones.md) documenta el esquema de Firestore, las transacciones, la compatibilidad con datos antiguos y las reglas propuestas.
+
+Prueba las reglas en el emulador local, sin credenciales reales:
+
+```bash
+docker compose --profile tools run --build --rm firestore-tests
+```
+
+El servicio adicional contiene Java 21 y las herramientas de Firebase aisladas del frontend. Su configuración usa `firebase.emulators.json` y el proyecto local `demo-awesomelist`. Las reglas ya incorporan perfiles privados por UID; aplica primero el frontend actualizado antes de publicarlas en Firebase, como indica el documento del patrón.
 
 ## Framework UI
 

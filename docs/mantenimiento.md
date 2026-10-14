@@ -104,7 +104,7 @@ Las pruebas unitarias no verifican reglas desplegadas de Firestore, entrega de c
 5. Edición y fechas: M05–M08.
 6. Ciclo de vida, verificación visual, controles automáticos y cierre de documentación: M09 y etapa 4; registrar M12 como mantenimiento posterior de estilos y rendimiento.
 
-M11 queda como decisión de producto pendiente. Cada entrega debe poder revisarse, probarse y revertirse de forma independiente. Evitar prometer fechas antes de reproducir los fallos y validar las dependencias de pruebas.
+M11 se resuelve con la decisión posterior de colecciones con tareas directas, documentada en `colecciones.md`. Cada entrega debe poder revisarse, probarse y revertirse de forma independiente. Evitar prometer fechas antes de reproducir los fallos y validar las dependencias de pruebas.
 
 ## Notas para una futura modernización
 
@@ -150,3 +150,11 @@ La respuesta HTTP comprueba que el servidor sirve el frontend, no que autenticac
 - Cobertura inicial de los archivos seleccionados: 63 % de sentencias y 62.15 % de líneas. No representa cobertura global de la aplicación.
 
 Se mantienen Options API, Vuex, Pug, BootstrapVue, Vuesax y las reglas de estilos de los componentes. Se agregan estados temporales de bloqueo durante operaciones pendientes. La validación visual en navegador con Firebase sigue pendiente.
+
+## Colecciones — 13 de octubre de 2026
+
+Decisión del usuario: colección → tareas, con una única pertenencia opcional por tarea. Implementado M11 en el frontend y preparado el patrón de datos y permisos en Firestore. El modelo usa `todos.collectionId`, conserva los documentos actuales y elimina la dependencia de listas anidadas del flujo visible.
+
+Pasaron 85 pruebas unitarias y 14 casos con el emulador de Firestore en la primera implementación. Posteriormente se integraron las reglas publicadas compartidas por el usuario: perfiles privados, acceso por propietario y cierre de listas antiguas. M10 se resuelve retirando la consulta pública de correos de los formularios y delegando acceso, registro y recuperación a Firebase Auth.
+
+Siguen pendientes la publicación y validación contra un proyecto Firebase de desarrollo, y la revisión de datos reales en listas antiguas si los hubiera. Detalles y comandos en `colecciones.md`.

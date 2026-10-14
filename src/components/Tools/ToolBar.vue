@@ -2,7 +2,7 @@
 .toolbar
   .toolbar__container
     b-button.my-2.btn__bg(
-      v-if='$store.getters["todo/thereAreCompletedToDos"]',
+      :disabled='!showCompletedToDos && !$store.getters["todo/thereAreCompletedToDos"]',
       :variant='showCompletedToDos ? "primary" : "outline-primary"',
       size='sm',
       @click='toggleCompletedToDos()') {{ `${this.showCompletedToDos ? "Ocultar" : "Mostrar"} tareas completadas` }}
@@ -12,16 +12,13 @@
 export default {
   name: 'ToolBar',
 
-  data () {
-    return {
-      showCompletedToDos: false
-    }
+  props: {
+    showCompletedToDos: { type: Boolean, default: false }
   },
 
   methods: {
     toggleCompletedToDos () {
-      this.showCompletedToDos = !this.showCompletedToDos
-      this.$emit('toggleCompletedToDos', this.showCompletedToDos)
+      this.$emit('toggleCompletedToDos', !this.showCompletedToDos)
     }
   }
 }

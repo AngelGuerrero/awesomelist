@@ -1,0 +1,12 @@
+{
+  "name": "awesomelist-firestore-tests",
+  "private": true,
+  "scripts": {
+    "test:rules": "firebase emulators:exec --only firestore --project demo-awesomelist --config ../../firebase.emulators.json \"node --test rules.test.cjs\""
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "6.0.0",
+    "firebase": "13.0.0",
+    "firebase-tools": "15.33.0"
+  }
+}

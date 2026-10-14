@@ -35,12 +35,15 @@ export default {
         done: false,
         created: new Date(),
         lastUpdated: null,
-        createdBy: this.currentUser.uid
+        createdBy: this.currentUser.uid,
+        collectionId: null
       }
 
       //
       // Add the filter for category of the current list
-      if (this.getCurrentList.name !== 'default') {
+      if (this.getCurrentList.filter === 'collectionId') {
+        todo.collectionId = this.getCurrentList.collectionId
+      } else if (this.getCurrentList.name !== 'default') {
         const filter = this.getCurrentList.filter
         todo[filter] = true
       }

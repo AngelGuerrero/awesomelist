@@ -17,7 +17,11 @@ module.exports = {
     'vue-jest': { pug: { doctype: 'html' } }
   },
   collectCoverageFrom: [
+    'src/Views/Access/Shared/EmailForm.vue',
     'src/store/modules/ToDo.js',
+    'src/data/ToDoCollections.js',
+    'src/components/ToDo/ToDoCollections.vue',
+    'src/components/ToDo/ToDoCollectionPicker.vue',
     'src/components/ToDo/ToDoCreate.vue',
     'src/components/ToDo/ToDoConfirmDelete.vue',
     'src/components/ToDo/ToDoMenu.vue',

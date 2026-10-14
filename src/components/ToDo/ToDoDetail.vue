@@ -32,6 +32,7 @@ sidebar(id="todo__detail" ref="container")
                                 class="py-1 radius w-100 font-weight-bolder")
 
       div
+        to-do-collection-picker(:todo='todo')
         //- Related to 'Add to my day'
         b-list-group.my-2
           b-list-group-item(button @click="toMyDay()" :variant="getToDoToMyDayVariant")
@@ -111,12 +112,14 @@ sidebar(id="todo__detail" ref="container")
 <script>
 import moment from 'moment'
 import Sidebar from '@/components/Layout/Sidebar'
+import ToDoCollectionPicker from '@/components/ToDo/ToDoCollectionPicker'
 import { mapActions, mapMutations } from 'vuex'
 import { db } from '@/data/FirebaseConfig'
 
 export default {
   components: {
-    Sidebar
+    Sidebar,
+    ToDoCollectionPicker
   },
 
   props: {

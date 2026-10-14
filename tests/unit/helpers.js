@@ -8,15 +8,19 @@ export function createTestStore (todoOptions = {}) {
     modules: {
       todo: {
         namespaced: true,
-        state: { categories: { DEFAULT: { name: 'default', filter: 'default' } } },
+        state: { collections: [], todos: [], categories: { DEFAULT: { name: 'default', filter: 'default' } } },
+        mutations: { selectCollection: jest.fn() },
         getters: { getCurrentList: () => ({ name: 'default', filter: 'default' }) },
         ...todoOptions
       },
       user: { namespaced: true, state: { currentUser: { uid: 'user-1' } } },
       ui: {
         namespaced: true,
-        state: { toDoMenu: { isFixed: false } },
-        mutations: { toggleToDoMenuFixed: jest.fn(), setSelectedComponent: jest.fn() }
+        state: { toDoMenu: { isFixed: false }, selectedComponent: { name: null, props: {} } },
+        mutations: {
+          toggleToDoMenuFixed: jest.fn(),
+          setSelectedComponent: jest.fn((state, component) => { state.selectedComponent = component })
+        }
       }
     }
   })

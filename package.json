@@ -7,7 +7,8 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "test:unit": "jest --runInBand",
-    "test:unit:coverage": "jest --runInBand --coverage"
+    "test:unit:coverage": "jest --runInBand --coverage",
+    "test:rules": "npm --prefix tests/firestore ci --no-audit --no-fund && npm --prefix tests/firestore run test:rules"
   },
   "dependencies": {
     "@braid/vue-formulate": "^2.4.3",

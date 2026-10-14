@@ -2,7 +2,7 @@ import todo from '@/store/modules/ToDo'
 import { db } from '@/data/FirebaseConfig'
 import { deferred } from './helpers'
 
-const context = () => ({ commit: jest.fn(), dispatch: jest.fn() })
+const context = () => ({ commit: jest.fn(), dispatch: jest.fn(), rootState: { user: { currentUser: { uid: 'user-1' } } } })
 
 describe('Persistencia de tareas', () => {
   let add
@@ -156,9 +156,9 @@ describe('Filtros de tareas', () => {
     expect(second.collections).toEqual([])
   })
 
-  test('una respuesta tardía de una colección ausente se ignora', () => {
-    const state = { collections: [] }
-    expect(() => todo.mutations.setListToCollection(state, { collectionId: 'removed', lists: [] })).not.toThrow()
-    expect(state.collections).toEqual([])
+  test('seleccionar una colección define su filtro por identificador', () => {
+    const state = todo.state()
+    todo.mutations.selectCollection(state, { id: 'collection-1', name: 'Trabajo' })
+    expect(state.currentList).toMatchObject({ title: 'Trabajo', filter: 'collectionId', collectionId: 'collection-1' })
   })
 })

@@ -1,6 +1,7 @@
 <template lang="pug">
 div
   formulate-input#input__email(
+    ref='emailInput',
     type='email',
     label='Email',
     placeholder='micorreo@email.com',
@@ -8,49 +9,33 @@ div
     :input-class='customClasses.input',
     @keyup='performValidation()',
     @validation='validations = $event',
-    validation='bail|required|max:50|email|emailExists',
-    :validation-rules='getCustomValidationsRules',
+    validation='bail|required|max:50|email',
     :validation-messages='getValidationMessages',
     :show-errors='showErrors')
 </template>
 
 <script>
-import { mapActions } from 'vuex'
-
 export default {
   props: {
-    validateExists: {
-      type: Boolean,
-      required: true
-    },
     value: {
       type: String,
       required: true
     }
   },
 
-  data: () => ({
-    validations: {},
-    showErrors: false,
-    customValidations: {
-      emailExists: {
-        message: ''
-      }
-    },
-    email: '',
+  data () {
+    return {
+      validations: {},
+      showErrors: false,
+      email: this.value,
 
-    customClasses: {
-      input: ['border-white']
+      customClasses: {
+        input: ['border-white']
+      }
     }
-  }),
+  },
 
   computed: {
-    getCustomValidationsRules () {
-      return {
-        emailExists: value => this.performEmailValidation(value)
-      }
-    },
-
     getValidationMessages () {
       return {
         required: 'El email es requerido.',
@@ -58,14 +43,15 @@ export default {
         max: context =>
           `El email debe ser un máximo de ${context.args[0]} caracteres.`,
 
-        email: context => `'${context.value}' no es un email válido.`,
-
-        emailExists: this.customValidations.emailExists.message
+        email: context => `'${context.value}' no es un email válido.`
       }
     }
   },
 
   watch: {
+    value (value) {
+      this.email = value
+    },
     email (newEmail) {
       this.$emit('input', newEmail)
     },
@@ -78,6 +64,7 @@ export default {
 
         if (!this.showErrors) {
           this.customClasses.input.push('border-default')
+          this.$emit('passValidation', this.validations.hasErrors === false)
           return
         }
 
@@ -86,48 +73,26 @@ export default {
     }
   },
 
-  methods: {
-    ...mapActions('user', ['getUserByEmail']),
+  async mounted () {
+    const input = this.$refs.emailInput
+    await input.performValidation()
+    // Formulate emits only when its error list changes. A valid initial
+    // value also needs to notify the parent even when that list stays empty.
+    if (this.$refs.emailInput === input) this.validations = { hasErrors: input.hasErrors }
+  },
 
+  methods: {
     performValidation () {
       this.customClasses.input = []
       this.showErrors = true
 
-      if (this.validations.hasErrors) {
+      if (this.validations.hasErrors !== false) {
         this.customClasses.input.push('border-danger')
         this.$emit('passValidation', false)
       } else {
         this.customClasses.input.push('border-success')
         this.$emit('passValidation', true)
       }
-    },
-
-    async performEmailValidation ({ value }) {
-      if (this.validations.hasErrors === undefined) return
-
-      let passValidation = false
-
-      const response = await this.getUserByEmail(value)
-      const userExists = response.data !== null
-
-      if (this.validateExists) {
-        passValidation = userExists
-
-        this.customValidations.emailExists.message = userExists
-          ? 'Parece correcto.'
-          : 'No existe una cuenta con este email.'
-        //
-      } else {
-        //
-        // Validate the email doesn't exist
-        passValidation = !userExists
-
-        this.customValidations.emailExists.message = userExists
-          ? 'Este email ya está registrado, intenta con otro.'
-          : 'Parece correcto.'
-      }
-
-      return passValidation
     }
   }
 }

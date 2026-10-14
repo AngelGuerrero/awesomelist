@@ -11,7 +11,7 @@
   //- =============
 
   navbar
-  tool-bar(@toggleCompletedToDos='onToggleCompletedToDos')
+  tool-bar(:showCompletedToDos='isCompletedList' @toggleCompletedToDos='onToggleCompletedToDos')
   .dashboard__content
     to-do(:list='toDoList')
 </template>
@@ -44,7 +44,11 @@ export default {
   computed: {
     ...mapState('ui', ['notification', 'doneTaskSound', 'addTaskSound']),
 
-    ...mapGetters('todo', ['getUncompletedToDos', 'getCompletedToDos']),
+    ...mapGetters('todo', ['getUncompletedToDos', 'getCompletedToDos', 'getCurrentList']),
+
+    currentListKey () {
+      return this.getCurrentList.collectionId || this.getCurrentList.name
+    },
 
     toDoList () {
       return this.isCompletedList ? this.getCompletedToDos : this.getUncompletedToDos
@@ -52,6 +56,10 @@ export default {
   },
 
   watch: {
+    currentListKey () {
+      this.isCompletedList = false
+    },
+
     notification (val) {
       if (val.show) this.$vs.notification(val)
     },

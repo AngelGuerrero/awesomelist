@@ -1,6 +1,22 @@
 import { db } from '@/data/FirebaseConfig'
 import { firestoreAction } from 'vuexfire'
 import List from '../../data/ListClass'
+import {
+  createCollectionList,
+  filterToDosByList,
+  normalizeCollectionId,
+  getCurrentUserId,
+  getOwnedCollection
+} from '@/data/ToDoCollections'
+
+function notifyError (commit, message) {
+  commit('ui/showNotification', {
+    show: true,
+    color: 'danger',
+    title: 'Algo salió mal',
+    text: message
+  }, { root: true })
+}
 
 export default {
   namespaced: true,
@@ -10,11 +26,11 @@ export default {
     // All collection of To Do's
     todos: [],
     //
-    // Grouped To Do's lists
+    // User-owned groups of tasks
     collections: [],
-    //
-    // Group of To Do's
-    lists: [],
+    collectionsLoading: false,
+    collectionsError: null,
+    collectionUserId: null,
     //
     // Instances of list for categories
     categories: {
@@ -35,11 +51,7 @@ export default {
         .filter(el => !el.done)
         .sort((a, b) => b.created - a.created)
 
-      if (state.currentList.filter === 'default') return todos
-
-      const filtered = todos.filter(el => el[state.currentList.filter])
-
-      return filtered
+      return filterToDosByList(todos, state.currentList)
     },
 
     getCompletedToDos: (state) => {
@@ -49,11 +61,7 @@ export default {
         .filter(el => el.done)
         .sort((a, b) => a.created - b.created)
 
-      if (state.currentList.filter === 'default') return todos
-
-      const filtered = todos.filter(el => el[state.currentList.filter])
-
-      return filtered
+      return filterToDosByList(todos, state.currentList)
     },
 
     thereAreCompletedToDos: (state, getters) => {
@@ -68,18 +76,26 @@ export default {
       state.collections = payload
     },
 
-    setListToCollection (state, { collectionId, lists }) {
-      let copyCollections = Array.from(state.collections)
-
-      const collection = copyCollections.find(el => el.id === collectionId)
-      if (!collection) return
-      Object.assign(collection, { lists })
-
-      state.collections = copyCollections
+    selectCollection (state, collection) {
+      state.currentList = createCollectionList(collection)
     },
 
-    setLists (state, payload) {
-      state.lists = payload
+    syncCollectionTitle (state, { id, name }) {
+      if (state.currentList.filter === 'collectionId' && state.currentList.collectionId === id) {
+        state.currentList = createCollectionList({ id, name })
+      }
+    },
+
+    setCollectionsLoading (state, value) {
+      state.collectionsLoading = value
+    },
+
+    setCollectionsError (state, value) {
+      state.collectionsError = value
+    },
+
+    setCollectionUserId (state, uid) {
+      state.collectionUserId = uid
     },
 
     setCurrentList (state, payload) {
@@ -92,49 +108,34 @@ export default {
       return bindFirestoreRef('todos', db.collection('todos').where('createdBy', '==', uid))
     }),
 
-    getCollections: firestoreAction(({ bindFirestoreRef }, uid) => {
-      return bindFirestoreRef('collections', db.collection('collections').where('userId', '==', uid))
+    getCollections: firestoreAction(async ({ state, commit, bindFirestoreRef, unbindFirestoreRef }, uid) => {
+      commit('setCollectionUserId', uid)
+      commit('setCollections', [])
+      commit('setCollectionsError', null)
+      commit('setCollectionsLoading', !!uid)
+      if (!uid) {
+        unbindFirestoreRef('collections')
+        return { error: false }
+      }
+      try {
+        await bindFirestoreRef('collections', db.collection('collections').where('userId', '==', uid))
+        return { error: false }
+      } catch (error) {
+        if (state.collectionUserId === uid) commit('setCollectionsError', error.message)
+        return { error: true, message: error.message }
+      } finally {
+        if (state.collectionUserId === uid) commit('setCollectionsLoading', false)
+      }
     }),
 
-    getListsFromCollection: async ({ state, commit }, collectionId) => {
-      const returnValue = { error: false, message: 'ok', data: [] }
-
-      const query = await db
-        .collection('collections')
-        .doc(collectionId)
-        .collection('lists')
-
-      try {
-        const response = await query.get()
-
-        response.forEach((record) => {
-          returnValue.data.push({
-            id: record.id,
-            collectionId,
-            ...record.data()
-          })
-        })
-
-        commit('setLists', returnValue.data)
-        commit('setListToCollection', { collectionId, lists: returnValue.data })
-      } catch (error) {
-        returnValue.error = true
-        returnValue.message = error.message
-      }
-
-      return returnValue
-    },
-
-    createNewToDoCollection: async ({ commit }, { name, userId }) => {
+    createNewToDoCollection: async ({ commit, rootState }, { name }) => {
       const returnValue = { error: false, message: '', data: null }
-      const collection = {
-        name,
-        created: new Date(),
-        lastUpdated: null,
-        userId: userId
-      }
 
       try {
+        const userId = getCurrentUserId(rootState)
+        const trimmedName = typeof name === 'string' ? name.trim() : ''
+        if (!trimmedName || trimmedName.length > 200) throw new Error('El nombre debe tener entre 1 y 200 caracteres')
+        const collection = { name: trimmedName, created: new Date(), lastUpdated: null, userId }
         const response = await db.collection('collections').add(collection)
         returnValue.message = 'Colección creada correctamente'
         returnValue.data = { ...collection, id: response.id }
@@ -142,46 +143,68 @@ export default {
       } catch (error) {
         returnValue.error = true
         returnValue.message = error.message
-        commit('ui/showNotification', {
-          show: true,
-          color: 'danger',
-          title: 'Algo salió mal',
-          text: returnValue.message
-        }, { root: true })
+        notifyError(commit, returnValue.message)
       }
 
       return returnValue
     },
 
-    saveToDo: async ({ commit, dispatch }, payload) => {
+    renameCollection: async ({ commit, rootState }, { id, name }) => {
+      try {
+        const uid = getCurrentUserId(rootState)
+        const collectionId = normalizeCollectionId(id)
+        if (!collectionId) throw new Error('La colección seleccionada no es válida')
+        const trimmedName = typeof name === 'string' ? name.trim() : ''
+        if (!trimmedName || trimmedName.length > 200) throw new Error('El nombre debe tener entre 1 y 200 caracteres')
+        await db.runTransaction(async transaction => {
+          await getOwnedCollection(transaction, db, collectionId, uid)
+          transaction.update(db.collection('collections').doc(collectionId), { name: trimmedName, lastUpdated: new Date() })
+        })
+        commit('syncCollectionTitle', { id: collectionId, name: trimmedName })
+        return { error: false }
+      } catch (error) {
+        notifyError(commit, error.message)
+        return { error: true, message: error.message }
+      }
+    },
+
+    saveToDo: async ({ commit, dispatch, rootState }, payload) => {
       const returnValue = { error: false, message: '', data: { ...payload } }
 
-      await db.collection('todos')
-        .add(payload)
-        .then(response => {
-          returnValue.message = 'Tarea creada correctamente'
-          returnValue.data.id = response.id
+      try {
+        const uid = getCurrentUserId(rootState)
+        const collectionId = normalizeCollectionId(payload.collectionId)
+        const title = typeof payload.title === 'string' ? payload.title.trim() : ''
+        if (!title) throw new Error('Escribe un título para la tarea')
+        const data = { ...payload, title, createdBy: uid, collectionId }
+        delete data.id
+        let response
+        if (collectionId === null) {
+          response = await db.collection('todos').add(data)
+        } else {
+          const reference = db.collection('todos').doc()
+          await db.runTransaction(async transaction => {
+            await getOwnedCollection(transaction, db, collectionId, uid)
+            transaction.set(reference, data)
+          })
+          response = reference
+        }
+        returnValue.data = { ...data, id: response.id }
+        returnValue.message = 'Tarea creada correctamente'
 
-          commit('ui/showNotification', {
-            show: true,
-            color: 'success',
-            title: returnValue.message,
-            text: payload.title
-          }, { root: true })
+        commit('ui/showNotification', {
+          show: true,
+          color: 'success',
+          title: returnValue.message,
+          text: data.title
+        }, { root: true })
 
-          dispatch('ui/playAddTaskSound', true, { root: true })
-        })
-        .catch(error => {
-          returnValue.error = true
-          returnValue.message = `Something went wrong ${error.message}`
-
-          commit('ui/showNotification', {
-            show: true,
-            color: 'danger',
-            title: 'Algo salió mal',
-            text: returnValue.message
-          }, { root: true })
-        })
+        dispatch('ui/playAddTaskSound', true, { root: true })
+      } catch (error) {
+        returnValue.error = true
+        returnValue.message = error.message
+        notifyError(commit, returnValue.message)
+      }
 
       return returnValue
     },
@@ -189,7 +212,8 @@ export default {
     updateToDoById: async ({ commit }, todo) => {
       const returnValue = { error: false, message: '' }
 
-      const { id, ...data } = todo
+      // Membership changes use a transaction, never a stale detail snapshot.
+      const { id, collectionId, ...data } = todo
 
       await db.collection('todos')
         .doc(id)
@@ -207,6 +231,36 @@ export default {
           }, { root: true })
         })
 
+      return returnValue
+    },
+
+    moveToDoToCollection: async ({ commit, rootState }, { id, collectionId }) => {
+      const returnValue = { error: false, message: '', data: null }
+      try {
+        const uid = getCurrentUserId(rootState)
+        const targetId = normalizeCollectionId(collectionId)
+        if (typeof id !== 'string' || !id || id.includes('/')) throw new Error('La tarea no es válida')
+        returnValue.data = await db.runTransaction(async transaction => {
+          const reference = db.collection('todos').doc(id)
+          const snapshot = await transaction.get(reference)
+          if (!snapshot.exists || snapshot.data().createdBy !== uid) {
+            throw new Error('La tarea no existe o no pertenece a tu cuenta')
+          }
+          if (targetId !== null) await getOwnedCollection(transaction, db, targetId, uid)
+          transaction.update(reference, { collectionId: targetId, lastUpdated: new Date() })
+          return { id, collectionId: targetId }
+        })
+        returnValue.message = targetId === null ? 'Tarea sin colección' : 'Tarea movida a la colección'
+        commit('ui/showNotification', {
+          show: true,
+          border: 'success',
+          title: returnValue.message
+        }, { root: true })
+      } catch (error) {
+        returnValue.error = true
+        returnValue.message = error.message
+        notifyError(commit, returnValue.message)
+      }
       return returnValue
     },
 

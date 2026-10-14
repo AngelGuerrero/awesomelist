@@ -2,6 +2,7 @@ services:
   web:
     build:
       context: .
+      target: development
       args:
         NODE_VERSION: ${DOCKER_NODE_VERSION:-24.20.0}
     init: true
@@ -16,6 +17,23 @@ services:
       - node_modules:/app/node_modules
       - npm_cache:/home/node/.npm
 
+  firestore-tests:
+    profiles: ["tools"]
+    build:
+      context: .
+      target: firebase-tests
+      args:
+        NODE_VERSION: ${DOCKER_NODE_VERSION:-24.20.0}
+    init: true
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+      - rules_node_modules:/app/tests/firestore/node_modules
+      - npm_cache:/home/node/.npm
+      - firebase_cache:/home/node/.cache/firebase
+
 volumes:
   node_modules:
   npm_cache:
+  rules_node_modules:
+  firebase_cache:

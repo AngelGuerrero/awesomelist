@@ -1,57 +1,55 @@
 <template lang="pug">
 .collections__wrapper
-  .no_collections(v-if='collections.length <= 0')
-    //- b-spinner(label="Cargando..." small class="mr-2")
-    | No hay colecciones.
-
+  .no_collections(v-if='collectionsLoading')
+    b-spinner.mr-2(small label='Cargando colecciones')
+    | Cargando...
+  .no_collections.flex-column(v-else-if='collectionsError')
+    span.text-danger No se pudieron cargar las colecciones.
+    b-button.mt-2(variant='light' size='sm' @click='retry') Reintentar
+  .no_collections(v-else-if='collections.length <= 0') No hay colecciones.
   .collections(v-else)
     .collections__header
       .header__title Colecciones
-      .header__options
-        b-icon.icon__button(
-          icon='arrows-collapse',
-          @click='collapseAllRegisterItems')
-        b-icon.icon__button(icon='arrows-expand', @click='expandAll')
-
+      .header__options.d-flex
+        b-button.icon__button.border-0.p-0.mr-2(variant='light' size='sm' title='Contraer todas las colecciones' aria-label='Contraer todas las colecciones' @click='collapseAll')
+          b-icon.icon(icon='arrows-collapse')
+        b-button.icon__button.border-0.p-0(variant='light' size='sm' title='Expandir todas las colecciones' aria-label='Expandir todas las colecciones' @click='expandAll')
+          b-icon.icon(icon='arrows-expand')
     .collections__content
-      .collection__wrapper.border-bottom(
-        v-for='(collection, index) in collections',
-        :key='collection.id')
-        .collection__item(
-          v-b-toggle='\'collapse-\' + index',
-          @click='downloadListsFromCollection(collection); registerCollapsedItems("collapse-", index)')
+      .collection__wrapper.border-bottom(v-for='collection in collections' :key='collection.id')
+        b-button.collection__item.w-100.rounded-0.border-0.d-flex.align-items-center.text-left(
+          variant='light',
+          :class='{ "text-primary": isSelected(collection) }',
+          :pressed='isSelected(collection)',
+          :aria-expanded='isExpanded(collection) ? "true" : "false"',
+          :aria-controls='collapseId(collection)',
+          @click='toggleCollection(collection)')
           b-icon.icon--left(icon='files')
           .item__text.flex-grow-1 {{ collection.name }}
-          b-icon.icon--right(icon='arrow-right-short')
-
-        //- Lists from current collection
-        b-collapse(:id='`collapse-${index}`')
-          .no_lists(v-if='!collection.lists')
-            b-spinner.mr-2(label='Cargando listas...', small)
-            span Cargando...
-          div(v-else)
-            .no_lists(v-if='collection.lists.length <= 0')
-              span Colección vacía
-            .list__item(
-              v-else,
-              v-for='list in collection.lists',
-              :key='list.id')
-              b-icon.icon--left(icon='list')
-              .item__text.w-75 {{ list.name }}
+          span.text-muted.mr-2(:title='taskCount(collection) + " tareas"') {{ taskCount(collection) }}
+          b-icon.icon--right(:icon='isExpanded(collection) ? "arrow-down-short" : "arrow-right-short"')
+        b-collapse(:id='collapseId(collection)' :visible='isExpanded(collection)')
+          .collection__tasks
+            .no_lists(v-if='taskCount(collection) === 0') Colección vacía
+            b-button.list__item.w-100.rounded-0.border-0.d-flex.align-items-center.text-left(
+              v-for='todo in collectionTasks(collection)',
+              :key='todo.id',
+              variant='light',
+              @click='showTask(collection, todo)')
+              b-icon.icon--left(:icon='todo.done ? "check-circle" : "list-task"')
+              span.item__text.flex-grow-1.text-truncate(:class='{ "task--completed": todo.done }' :title='todo.title') {{ todo.title }}
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
   data () {
-    return {
-      collapsedCollections: []
-    }
+    return { expandedCollections: [] }
   },
 
   computed: {
-    ...mapState('todo', ['collections', 'lists']),
+    ...mapState('todo', ['collections', 'todos', 'currentList', 'collectionsLoading', 'collectionsError']),
     ...mapState('user', ['currentUser'])
   },
 
@@ -59,117 +57,63 @@ export default {
     currentUser: {
       immediate: true,
       handler (user) {
-        if (user) this.getCollections(user.uid)
+        this.expandedCollections = []
+        this.getCollections(user ? user.uid : null)
       }
     }
   },
 
   methods: {
-    ...mapActions('todo', ['getCollections', 'getListsFromCollection']),
+    ...mapActions('todo', ['getCollections']),
+    ...mapMutations('todo', ['selectCollection']),
+    ...mapMutations('ui', ['setSelectedComponent']),
 
-    downloadListsFromCollection (collection) {
-      this.getListsFromCollection(collection.id)
+    collectionTasks (collection) {
+      return this.todos.filter(todo => todo.collectionId === collection.id)
     },
 
-    noPropertyOrEmptyLists (collection) {
-      const returnValue = {
-        error: false,
-        warning: false,
-        message: 'ok'
-      }
-
-      if (!collection.lists) {
-        returnValue.error = true
-        returnValue.message = 'No existe la propiedad'
-        return returnValue
-      }
-
-      if (collection.lists.length <= 0) {
-        returnValue.error = false
-        returnValue.warning = true
-        returnValue.message = 'No hay listas aún'
-        return returnValue
-      }
-
-      return returnValue
+    taskCount (collection) {
+      return this.collectionTasks(collection).length
     },
 
-    registerCollapsedItems (attr, id) {
-      const composedId = attr + id
-
-      const addItem = param => this.collapsedCollections.push(param)
-
-      try {
-        const found = this.collapsedCollections.find(
-          element => element === composedId
-        )
-        if (found) { return setTimeout(_ => this.removeFromItemsCollapsed(composedId)) }
-
-        setTimeout(_ => addItem(attr + id))
-      } catch (error) {
-        console.log('error :>> ', error.message)
-      }
+    collapseId (collection) {
+      return 'collection-tasks-' + collection.id
     },
 
-    removeFromItemsCollapsed (identifier) {
-      this.collapsedCollections = this.collapsedCollections.filter(
-        element => element !== identifier
-      )
+    isExpanded (collection) {
+      return this.expandedCollections.includes(collection.id)
     },
 
-    collapseAllRegisterItems () {
-      const removeAll = () => {
-        this.collapsedCollections = []
-      }
-
-      const collapseAll = () =>
-        this.collapsedCollections.map(element =>
-          this.$root.$emit('bv::toggle::collapse', element)
-        )
-
-      setTimeout(_ => {
-        collapseAll()
-        removeAll()
-      })
+    toggleCollection (collection) {
+      this.selectCollection(collection)
+      this.expandedCollections = this.isExpanded(collection)
+        ? this.expandedCollections.filter(id => id !== collection.id)
+        : this.expandedCollections.concat(collection.id)
     },
 
-    toggleCollapseAll () {
-      this.collections.forEach(element =>
-        this.$root.$emit('bv::toggle::collapse', element)
-      )
+    collapseAll () {
+      this.expandedCollections = []
     },
 
     expandAll () {
-      const collectionsToExpand = this.collections.reduce(
-        (acc, curr, index, arr) => {
-          const composedId = 'collapse-' + index
+      this.expandedCollections = this.collections.map(collection => collection.id)
+    },
 
-          const found = this.collapsedCollections.find(
-            element => element === composedId
-          )
+    showTask (collection, todo) {
+      this.selectCollection(collection)
+      this.setSelectedComponent({ name: 'ToDoDetail', props: { id: todo.id } })
+    },
 
-          if (!found) acc.push({ composedId, data: curr, index })
+    isSelected (collection) {
+      return this.currentList && this.currentList.filter === 'collectionId' && this.currentList.collectionId === collection.id
+    },
 
-          return acc
-        },
-        []
-      )
-
-      const expandItems = () =>
-        collectionsToExpand.forEach(el => {
-          this.$root.$emit('bv::toggle::collapse', el.composedId)
-          this.downloadListsFromCollection(el.data)
-        })
-
-      setTimeout(_ => expandItems())
-      collectionsToExpand.forEach(el =>
-        this.registerCollapsedItems('collapse-', el.index)
-      )
+    retry () {
+      this.getCollections(this.currentUser ? this.currentUser.uid : null)
     }
   }
 }
 </script>
-
 <style lang="scss" scoped>
 .no_collections {
   width: 100%;
@@ -208,8 +152,36 @@ export default {
 
 .collections__content {
   flex-grow: 1;
-  overflow: auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
   background-color: $sidebar_contrast_light;
+}
+
+.header__options .icon__button {
+  background: transparent;
+  line-height: 1;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.collection__tasks {
+  height: 180px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: white;
+}
+
+.item__text {
+  min-width: 0;
+}
+
+.task--completed {
+  text-decoration: line-through;
+  opacity: 0.6;
 }
 
 .no_lists {
@@ -220,6 +192,8 @@ export default {
 }
 
 .collection__item {
+  font-size: 13px;
+  line-height: 1.5;
   width: 100%;
   padding: 5px 0;
   display: flex;
@@ -248,22 +222,25 @@ export default {
 }
 
 .icon {
-  font-size: 1.1rem;
-  min-width: 20%;
+  width: $toDoMenu_icon_size;
+  height: $toDoMenu_icon_size;
+  font-size: $toDoMenu_icon_size;
+  flex-shrink: 0;
   padding: 0;
 }
 
 .icon__button {
-  @extend .icon;
   cursor: pointer;
 }
 
 .icon--left {
   @extend .icon;
-  margin-right: 0.5rem;
+  margin-left: 12px;
+  margin-right: 20px;
 }
 
 .icon--right {
   @extend .icon;
+  margin-right: 12px;
 }
 </style>

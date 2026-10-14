@@ -5,8 +5,8 @@
     b-button.rounded-0(
       variant='light',
       @click='toggleToDoMenuFixed(!toDoMenu.isFixed)')
-      b-icon(v-if='toDoMenu.isFixed', icon='toggle-on', variant='primary')
-      b-icon.text-muted(v-else, icon='toggle-off')
+      b-icon.menu__icon(v-if='toDoMenu.isFixed', icon='toggle-on', variant='primary')
+      b-icon.menu__icon.text-muted(v-else, icon='toggle-off')
   .menu__header.h-25
     //- Header: Mi día
     .item_button__container
@@ -14,7 +14,7 @@
         block,
         variant='light',
         @click='showMyDayList')
-        b-icon.h5.mb-0.mr-3.p-0(icon='brightness-high', variant='danger')
+        b-icon.menu__icon.mb-0.mr-3.p-0(icon='brightness-high', variant='danger')
         .w-100.text-left
           span.text-small Mi día
     //- Header: Importante
@@ -23,7 +23,7 @@
         block,
         variant='light',
         @click='showImportantList')
-        b-icon.h5.mb-0.mr-3.p-0(icon='star', variant='warning')
+        b-icon.menu__icon.mb-0.mr-3.p-0(icon='star', variant='warning')
         .w-100.text-left
           span.text-small Importante
     //- Header: Tareas
@@ -32,7 +32,7 @@
         block,
         variant='light',
         @click='showDefaultList')
-        b-icon.h5.mb-0.mr-3.p-0(icon='list-task', variant='primary')
+        b-icon.menu__icon.mb-0.mr-3.p-0(icon='list-task', variant='primary')
         .w-100.text-left
           span.text-small Tareas
 
@@ -45,25 +45,26 @@
     //- Collection: Form
     .item_button__container.d-flex.row-v-center.bg-white(
       v-if='collection.visible')
-      b-icon.h2.mb-0.ml-2.mr-1.pl-1(icon='box', variant='dark')
+      b-icon.menu__icon.collection__form-icon.mb-0.mr-1(icon='box', variant='dark')
       b-input.bg-white.rounded-0.border-0(
         ref='collection__name',
         type='text',
         v-model='collection.name',
+        maxlength='200',
         :disabled='isSavingCollection',
         @keyup.enter='saveToDoCollection',
         @keyup.esc='clearToDoCollectionInput',
         @blur='clearToDoCollectionInput',
         placeholder='Colección')
       b-button.rounded-0.bg-white(variant='light', size='sm', :disabled='isSavingCollection', @mousedown.prevent, @click='saveToDoCollection')
-        b-icon(icon='file-plus', variant='primary')
+        b-icon.menu__icon(icon='file-plus', variant='primary')
     //- Collection: Active button
     .item_button__container
       b-button.d-flex.row-v-center.rounded-0(
         block,
         variant='light',
         @click='toggleCollectionForm')
-        b-icon.h5.mb-0.mr-3.p-0(icon='plus', variant='primary')
+        b-icon.menu__icon.mb-0.mr-3.p-0(icon='plus', variant='primary')
         .w-100.text-left
           span.text-small Nueva colección
 </template>
@@ -101,7 +102,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations('todo', ['setCurrentList']),
+    ...mapMutations('todo', ['setCurrentList', 'selectCollection']),
     ...mapActions('todo', ['createNewToDoCollection']),
 
     ...mapMutations('ui', ['toggleToDoMenuFixed']),
@@ -117,6 +118,7 @@ export default {
           userId: this.currentUser.uid
         })
         if (!response.error) {
+          if (response.data) this.selectCollection(response.data)
           this.collection.name = ''
           this.collection.visible = false
         }
@@ -211,5 +213,16 @@ export default {
 
 .text-small {
   font-size: 13px !important;
+}
+
+.menu__icon {
+  width: $toDoMenu_icon_size;
+  height: $toDoMenu_icon_size;
+  font-size: $toDoMenu_icon_size;
+  flex-shrink: 0;
+}
+
+.collection__form-icon {
+  margin-left: 12px;
 }
 </style>

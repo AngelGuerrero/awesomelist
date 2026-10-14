@@ -4,12 +4,29 @@ import ToDoCreate from '@/components/ToDo/ToDoCreate'
 import ToDoConfirmDelete from '@/components/ToDo/ToDoConfirmDelete'
 import ToDoDetail from '@/components/ToDo/ToDoDetail'
 import ToDoMenu from '@/components/ToDo/ToDoMenu'
+import ToolBar from '@/components/Tools/ToolBar'
 import { db } from '@/data/FirebaseConfig'
 import { createTestStore, deferred } from './helpers'
 
 const settle = async () => {
   for (let i = 0; i < 10; i++) await Promise.resolve()
 }
+
+describe('Barra de tareas', () => {
+  test('mantiene panel y botón visibles sin completadas y permite salir de esa vista', async () => {
+    const options = createTestStore({ getters: { thereAreCompletedToDos: () => false } })
+    options.localVue.component('b-button', BButton)
+    const wrapper = mount(ToolBar, options)
+    expect(wrapper.find('.toolbar__container').exists()).toBe(true)
+    expect(wrapper.find('button').text()).toBe('Mostrar tareas completadas')
+    expect(wrapper.find('button').element.disabled).toBe(true)
+    await wrapper.setProps({ showCompletedToDos: true })
+    expect(wrapper.find('button').element.disabled).toBe(false)
+    await wrapper.find('button').trigger('click')
+    expect(wrapper.emitted('toggleCompletedToDos')[0]).toEqual([false])
+    wrapper.destroy()
+  })
+})
 
 describe('Crear tareas', () => {
   let wrapper

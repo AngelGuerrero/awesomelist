@@ -3,7 +3,8 @@
   .menu
     to-do-menu
   .content.flex-grow-1.h-100.p-3
-    h1.h3(:style='getStyle') {{ getCurrentList.title }}
+    to-do-collection-title(v-if='getCurrentList.filter === "collectionId"' :list='getCurrentList')
+    h1.h3(v-else :style='getStyle') {{ getCurrentList.title }}
 
     to-do-create(@createdToDo='selectToDo')
 
@@ -23,6 +24,7 @@
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 
 import ToDoMenu from '@/components/ToDo/ToDoMenu'
+import ToDoCollectionTitle from '@/components/ToDo/ToDoCollectionTitle'
 import ToDoList from '@/components/ToDo/ToDoList'
 import ToDoCreate from '@/components/ToDo/ToDoCreate'
 import ToDoDetail from '@/components/ToDo/ToDoDetail'
@@ -31,6 +33,7 @@ import UserProfile from '@/components/User/UserProfile'
 export default {
   components: {
     ToDoMenu,
+    ToDoCollectionTitle,
     ToDoList,
     ToDoCreate,
     //

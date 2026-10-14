@@ -3,7 +3,6 @@ div
   formulate-form(@submit='login()')
     //- email
     email-form(
-      :validateExists='true',
       v-model='user.email',
       @passValidation='val => { validations.email = val; }')
 
